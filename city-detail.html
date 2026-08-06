@@ -1,0 +1,1512 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>鄂州市数字监管系统</title>
+  <style>
+    :root {
+      --bg: #08192b;
+      --panel: rgba(9, 33, 57, 0.94);
+      --panel-inner: rgba(7, 24, 42, 0.96);
+      --line: rgba(72, 201, 255, 0.28);
+      --cyan: #16deff;
+      --blue: #1a86ff;
+      --green: #2bff73;
+      --text: #d8f4ff;
+      --muted: #89bcd1;
+      --shadow: 0 0 34px rgba(0, 184, 255, 0.2);
+      --panel-title-h: 48px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      overflow: auto;
+      background:
+        radial-gradient(ellipse at 50% 46%, rgba(44, 112, 86, 0.34), transparent 58%),
+        linear-gradient(180deg, #061423, #0b2239);
+      color: var(--text);
+      font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .viewport {
+      width: 3840px;
+      height: 1080px;
+      position: relative;
+    }
+
+    .stage {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(13, 42, 75, 0.98), rgba(8, 29, 52, 0.98)),
+        radial-gradient(ellipse at 50% 52%, rgba(104, 143, 91, 0.64), transparent 44%);
+      border: 1px solid rgba(78, 211, 255, 0.42);
+    }
+
+    .top-line {
+      position: absolute;
+      inset: 0 0 auto;
+      height: 80px;
+      z-index: 8;
+      background:
+        linear-gradient(90deg, rgba(11, 44, 78, 0.98), rgba(26, 99, 144, 0.72) 28%, transparent 40%, transparent 60%, rgba(26, 99, 144, 0.72) 72%, rgba(11, 44, 78, 0.98)),
+        linear-gradient(180deg, rgba(24, 64, 104, 0.98), rgba(10, 32, 58, 0.92));
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35), inset 0 -1px 0 rgba(26, 197, 255, 0.24);
+    }
+
+    .system-title {
+      position: absolute;
+      left: 50%;
+      top: 22px;
+      z-index: 10;
+      transform: translateX(-50%);
+      width: 850px;
+      height: 68px;
+      display: grid;
+      place-items: center;
+      color: #dff6ff;
+      font-size: 40px;
+      font-weight: 900;
+      letter-spacing: 4px;
+      text-shadow: 0 0 18px rgba(95, 200, 255, 0.64);
+      background: radial-gradient(ellipse at 50% 100%, rgba(48, 153, 255, 0.22), transparent 72%);
+      clip-path: polygon(8% 0, 92% 0, 100% 50%, 84% 100%, 16% 100%, 0 50%);
+    }
+
+    .meta {
+      position: absolute;
+      right: 140px;
+      top: 52px;
+      z-index: 11;
+      color: #b8d9ec;
+      font-size: 14px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .back {
+      position: absolute;
+      right: 18px;
+      top: 28px;
+      z-index: 12;
+      width: 120px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      color: #ecfbff;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #176ac8, #0bc9ff);
+      border: 1px solid rgba(150, 230, 255, 0.62);
+      box-shadow: 0 0 18px rgba(11, 201, 255, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+
+    .selected-note {
+      position: absolute;
+      left: 50%;
+      top: 102px;
+      transform: translateX(-50%);
+      z-index: 7;
+      color: #e8fbff;
+      font-size: 20px;
+      font-weight: 900;
+      text-shadow: 0 0 15px rgba(19, 217, 255, 0.45);
+    }
+
+    .side {
+      position: absolute;
+      top: 86px;
+      bottom: 50px;
+      width: 1100px;
+      display: grid;
+      gap: 0;
+      z-index: 7;
+    }
+
+    .left { left: 0; grid-template-rows: 310px 312px 1fr; }
+    .right {
+      right: 0;
+      grid-template-rows: 310px 312px 1fr;
+      gap: 8px;
+    }
+
+    .panel {
+      position: relative;
+      min-height: 0;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(12, 46, 82, 0.94), rgba(7, 28, 52, 0.88));
+      border-bottom: 1px solid rgba(57, 217, 255, 0.3);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-title {
+      height: var(--panel-title-h);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-left: 28px;
+      color: #e9fbff;
+      font-size: 24px;
+      font-weight: 900;
+      background: linear-gradient(90deg, rgba(0, 169, 236, 0.78), transparent 72%);
+      border-bottom: 1px solid rgba(57, 217, 255, 0.48);
+    }
+
+    .panel-title::before {
+      content: "";
+      width: 7px;
+      height: 24px;
+      background: linear-gradient(180deg, #ffe269, #12e9ff);
+      box-shadow: 0 0 14px rgba(18, 233, 255, 0.42);
+      transform: skewX(-12deg);
+    }
+
+    .base-profile {
+      height: calc(100% - var(--panel-title-h));
+      padding: 16px 28px 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 70px 62px 72px;
+      gap: 12px 16px;
+    }
+
+    .honor-card {
+      min-width: 0;
+      padding: 10px 16px;
+      background:
+        linear-gradient(135deg, rgba(13, 123, 177, 0.64), rgba(6, 36, 67, 0.54)),
+        radial-gradient(circle at 18% 0, rgba(63, 231, 255, 0.35), transparent 60%);
+      border: 1px solid rgba(84, 222, 255, 0.42);
+      box-shadow: inset 0 0 22px rgba(22, 170, 255, 0.16), 0 0 18px rgba(0, 196, 255, 0.18);
+      clip-path: polygon(0 0, 96% 0, 100% 24%, 100% 100%, 4% 100%, 0 76%);
+    }
+
+    .honor-card span,
+    .base-info span,
+    .base-stat span {
+      display: block;
+      color: #89bbd0;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .honor-card b {
+      display: block;
+      margin-top: 5px;
+      color: #eafcff;
+      font-size: 18px;
+      line-height: 1.15;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .base-info {
+      padding: 10px 16px;
+      background: linear-gradient(90deg, rgba(19, 86, 130, 0.5), rgba(8, 39, 70, 0.38));
+      border-left: 3px solid #16dbff;
+      border-bottom: 1px solid rgba(74, 211, 255, 0.34);
+    }
+
+    .base-info b {
+      display: block;
+      margin-top: 5px;
+      color: #edfaff;
+      font-size: 21px;
+      font-weight: 900;
+    }
+
+    .base-stats {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .base-stat {
+      position: relative;
+      min-width: 0;
+      padding: 12px 10px 10px;
+      display: grid;
+      align-content: center;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(12, 78, 125, 0.62), rgba(6, 31, 58, 0.46));
+      border: 1px solid rgba(65, 197, 255, 0.32);
+      box-shadow: inset 0 0 20px rgba(21, 146, 255, 0.12);
+    }
+
+    .base-stat::before {
+      content: "";
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      top: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #22e7ff, transparent);
+    }
+
+    .base-stat b {
+      color: #f3fdff;
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 16px rgba(24, 217, 255, 0.34);
+      white-space: nowrap;
+    }
+
+    .air-board {
+      height: calc(100% - var(--panel-title-h));
+      padding: 14px 18px 16px;
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      grid-template-rows: 118px 1fr;
+      gap: 12px 18px;
+      background: linear-gradient(180deg, rgba(6, 22, 39, 0.92), rgba(5, 18, 32, 0.96));
+    }
+
+    .air-dashboard {
+      min-width: 0;
+      padding: 10px 12px 12px;
+      display: grid;
+      grid-template-columns: 104px 1fr;
+      gap: 12px;
+      align-items: center;
+      background: linear-gradient(180deg, rgba(9, 36, 62, 0.88), rgba(7, 24, 43, 0.96));
+      border: 1px solid rgba(60, 138, 187, 0.22);
+      box-shadow: inset 0 0 24px rgba(22, 118, 186, 0.12);
+    }
+
+    .aqi-dial {
+      position: relative;
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background: conic-gradient(from 230deg, #20e768 0 62deg, #f4d94f 62deg 118deg, #ff972f 118deg 154deg, #f44a3f 154deg 224deg, rgba(70, 96, 120, 0.34) 224deg 360deg);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 0 18px rgba(31, 184, 255, 0.22);
+    }
+
+    .aqi-dial::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: 50%;
+      background: #0a223b;
+      box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.3);
+    }
+
+    .aqi-dial::after {
+      content: "";
+      position: absolute;
+      width: 30px;
+      height: 3px;
+      left: 46px;
+      top: 43px;
+      transform-origin: left center;
+      transform: rotate(236deg);
+      background: #eefbff;
+      box-shadow: 0 0 8px rgba(238, 251, 255, 0.52);
+    }
+
+    .aqi-core {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .aqi-core b {
+      display: block;
+      color: #f0fdff;
+      font-size: 22px;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .aqi-core span {
+      display: block;
+      margin-top: 6px;
+      color: #86b8cf;
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .aqi-meta {
+      min-width: 0;
+      display: grid;
+      gap: 7px;
+      align-content: center;
+    }
+
+    .aqi-meta-row {
+      color: #e6f7ff;
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .aqi-meta-row span { color: #89bbd0; }
+
+    .aqi-scale {
+      margin-top: 4px;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #16e25f 0 16%, #6fe448 16% 32%, #f0dd4f 32% 48%, #ffab35 48% 64%, #ff593f 64% 82%, #9a3040 82% 100%);
+      box-shadow: 0 0 10px rgba(31, 184, 255, 0.12);
+    }
+
+    .air-copy {
+      min-width: 0;
+      padding: 12px 16px;
+      display: grid;
+      align-content: center;
+      gap: 8px;
+      background: linear-gradient(90deg, rgba(11, 43, 70, 0.88), rgba(7, 24, 43, 0.92));
+      border: 1px solid rgba(60, 138, 187, 0.18);
+    }
+
+    .air-copy-note {
+      color: #f0fbff;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    .air-copy-note span { color: #86b8cf; }
+
+    .air-stations {
+      grid-column: 1 / -1;
+      min-height: 0;
+      padding: 8px 8px 6px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 12px;
+      background: linear-gradient(180deg, rgba(8, 26, 45, 0.9), rgba(5, 18, 31, 0.96));
+      border: 1px solid rgba(55, 128, 176, 0.16);
+    }
+
+    .air-station {
+      min-width: 0;
+      height: 28px;
+      display: grid;
+      grid-template-columns: 16px 1fr 42px;
+      align-items: center;
+      gap: 8px;
+      padding: 0 8px 0 4px;
+      color: #dff4ff;
+      font-size: 12px;
+      font-weight: 800;
+      background: linear-gradient(90deg, rgba(9, 43, 73, 0.72), rgba(6, 24, 41, 0.22));
+      border-bottom: 1px solid rgba(62, 132, 172, 0.14);
+    }
+
+    .air-station i {
+      width: 12px;
+      height: 18px;
+      display: grid;
+      place-items: center;
+      color: #ffffff;
+      font-style: normal;
+      font-size: 9px;
+      font-weight: 900;
+      background: linear-gradient(180deg, #3ca7ff, #2570df);
+    }
+
+    .air-station span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .air-ok {
+      color: #26ff65;
+      text-align: right;
+    }
+
+    .traffic-board {
+      height: calc(100% - var(--panel-title-h));
+      padding: 14px 30px 16px;
+      display: grid;
+      grid-template-rows: 1fr 2fr;
+      gap: 10px;
+    }
+
+    .traffic-top {
+      display: grid;
+      grid-template-columns: 250px 1fr 190px;
+      gap: 14px;
+      min-height: 0;
+    }
+
+    .traffic-total,
+    .traffic-mini {
+      background: linear-gradient(135deg, rgba(12, 86, 133, 0.62), rgba(6, 35, 64, 0.5));
+      border: 1px solid rgba(70, 209, 255, 0.35);
+      box-shadow: inset 0 0 20px rgba(18, 168, 255, 0.12);
+    }
+
+    .traffic-total {
+      padding: 10px 16px;
+      display: grid;
+      align-content: center;
+      border-left: 4px solid #18e0ff;
+    }
+
+    .traffic-total span,
+    .traffic-mini span,
+    .ratio-row span,
+    .traffic-chart-title {
+      color: #8fc2d8;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .traffic-total b {
+      margin-top: 4px;
+      color: #f2fdff;
+      font-size: 34px;
+      line-height: 1;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 16px rgba(25, 219, 255, 0.36);
+    }
+
+    .traffic-ratio {
+      display: grid;
+      align-content: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(8, 40, 72, 0.44);
+      border-bottom: 1px solid rgba(73, 203, 255, 0.28);
+    }
+
+    .ratio-row {
+      display: grid;
+      grid-template-columns: 86px 1fr 54px;
+      align-items: center;
+      gap: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .ratio-row b { color: #dffaff; font-size: 13px; text-align: right; }
+
+    .ratio-track {
+      height: 8px;
+      background: rgba(63, 105, 136, 0.48);
+      overflow: hidden;
+    }
+
+    .ratio-track i {
+      display: block;
+      width: var(--w);
+      height: 100%;
+      background: linear-gradient(90deg, #16dfff, #2489ff);
+      box-shadow: 0 0 14px rgba(22, 223, 255, 0.45);
+    }
+
+    .traffic-mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .traffic-mini {
+      padding: 9px 8px;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .traffic-mini b {
+      color: #f2fdff;
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 900;
+      margin-bottom: 5px;
+    }
+
+    .traffic-charts {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .traffic-chart {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: 20px 1fr;
+      gap: 4px;
+      padding: 8px 12px 8px;
+      background: linear-gradient(180deg, rgba(9, 50, 86, 0.48), rgba(6, 30, 56, 0.35));
+      border: 1px solid rgba(65, 185, 245, 0.24);
+      overflow: hidden;
+    }
+
+    .traffic-bars {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: end;
+      gap: 10px;
+      padding: 8px 8px 0;
+      border-left: 1px solid rgba(98, 164, 194, 0.22);
+      border-bottom: 1px solid rgba(98, 164, 194, 0.22);
+      background:
+        linear-gradient(to top, rgba(92, 160, 196, 0.14) 1px, transparent 1px),
+        linear-gradient(to top, rgba(92, 160, 196, 0.1) 1px, transparent 1px),
+        linear-gradient(to top, rgba(92, 160, 196, 0.08) 1px, transparent 1px);
+      background-size: 100% 25%, 100% 50%, 100% 75%;
+      background-repeat: no-repeat;
+      background-position: left bottom, left bottom, left bottom;
+    }
+
+    .traffic-bars::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 12px;
+      background: linear-gradient(180deg, transparent, rgba(10, 25, 42, 0.5));
+      pointer-events: none;
+    }
+
+    .traffic-bar {
+      height: 100%;
+      display: grid;
+      align-content: end;
+      justify-items: center;
+      gap: 5px;
+      color: #9fcadf;
+      font-size: 10px;
+      font-weight: 900;
+      text-align: center;
+      min-width: 0;
+      z-index: 1;
+    }
+
+    .traffic-bar i {
+      position: relative;
+      width: 26px;
+      height: var(--h);
+      min-height: 8px;
+      border-radius: 3px 3px 0 0;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.26), transparent 32%),
+        linear-gradient(180deg, #70f4ff 0%, #2fbfff 38%, #177dff 100%);
+      border: 1px solid rgba(165, 241, 255, 0.26);
+      border-bottom: 0;
+      box-shadow:
+        0 0 16px rgba(28, 209, 255, 0.32),
+        inset 0 0 8px rgba(255, 255, 255, 0.08);
+    }
+
+    .traffic-bar i::before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      right: 4px;
+      top: 4px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.42);
+    }
+
+    .traffic-bar i::after {
+      content: "";
+      position: absolute;
+      left: -3px;
+      right: -3px;
+      bottom: -5px;
+      height: 5px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(35, 201, 255, 0.45), transparent 72%);
+    }
+
+    .traffic-bar b {
+      color: #e8fbff;
+      font-size: 11px;
+      line-height: 1;
+      text-shadow: 0 0 8px rgba(21, 210, 255, 0.22);
+    }
+
+    .traffic-bar span {
+      display: block;
+      line-height: 1.08;
+    }
+
+    .metric-board {
+      height: calc(100% - var(--panel-title-h));
+      display: grid;
+      grid-template-columns: 600px 1fr;
+      gap: 26px;
+      padding: 24px 32px;
+    }
+
+    .metric-list { display: grid; gap: 20px; }
+
+    .metric {
+      display: grid;
+      grid-template-columns: 58px 1fr 130px 130px;
+      align-items: center;
+      gap: 18px;
+      height: 70px;
+      background: linear-gradient(90deg, rgba(12, 78, 122, 0.6), transparent);
+      border-bottom: 1px solid rgba(80, 206, 255, 0.36);
+      clip-path: polygon(0 0, 100% 0, 94% 100%, 0 100%);
+    }
+
+    .metric-icon {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #8df6ff;
+      background: radial-gradient(circle, rgba(14, 218, 255, 0.28), rgba(8, 35, 64, 0.8));
+      border: 1px solid rgba(120, 232, 255, 0.35);
+      box-shadow: inset 0 0 20px rgba(29, 202, 255, 0.18);
+      font-size: 24px;
+    }
+
+    .metric-name { color: #86c6dd; font-size: 16px; font-weight: 900; }
+    .metric-value { color: #dcf8ff; font-size: 26px; font-weight: 900; font-variant-numeric: tabular-nums; }
+    .metric-value small { display: block; color: #88afc4; font-size: 12px; margin-top: 4px; }
+
+    .legend {
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      padding-top: 10px;
+    }
+
+    .legend-row {
+      height: 24px;
+      display: grid;
+      grid-template-columns: 16px 1fr 56px;
+      gap: 10px;
+      align-items: center;
+      color: #b7d8ea;
+      font-size: 13px;
+      background: rgba(35, 105, 154, 0.42);
+      padding: 0 8px;
+    }
+
+    .legend-dot { width: 9px; height: 9px; background: var(--c); }
+
+    .safety-board {
+      height: calc(100% - var(--panel-title-h));
+      padding: 14px 16px 16px;
+      display: grid;
+      grid-template-columns: 1.02fr 1.02fr 1.32fr;
+      gap: 10px;
+      background:
+        linear-gradient(180deg, rgba(7, 28, 46, 0.96), rgba(5, 18, 31, 0.98)),
+        radial-gradient(circle at 100% 0, rgba(31, 168, 255, 0.12), transparent 34%);
+    }
+
+    .safety-col {
+      min-width: 0;
+      padding: 12px 12px 10px;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      background: linear-gradient(180deg, rgba(10, 44, 73, 0.78), rgba(7, 24, 42, 0.5));
+      border: 1px solid rgba(60, 136, 180, 0.18);
+      box-shadow: inset 0 0 18px rgba(17, 120, 190, 0.12);
+    }
+
+    .safety-col-title {
+      color: #eefbff;
+      font-size: 15px;
+      font-weight: 900;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(66, 150, 194, 0.16);
+    }
+
+    .safety-rate {
+      display: grid;
+      gap: 8px;
+    }
+
+    .safety-rate-main {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      color: #effcff;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .safety-rate-main b {
+      font-size: 28px;
+      line-height: 1;
+      color: #f0fdff;
+      text-shadow: 0 0 12px rgba(29, 216, 255, 0.2);
+    }
+
+    .safety-progress {
+      height: 10px;
+      overflow: hidden;
+      background: rgba(57, 92, 116, 0.44);
+      border: 1px solid rgba(72, 151, 193, 0.16);
+    }
+
+    .safety-progress i {
+      display: block;
+      width: 84.35%;
+      height: 100%;
+      background: linear-gradient(90deg, #18e35f, #17dfff);
+      box-shadow: 0 0 14px rgba(23, 223, 255, 0.32);
+    }
+
+    .safety-progress-note {
+      color: #8fc0d6;
+      font-size: 11px;
+      font-weight: 900;
+      text-align: right;
+    }
+
+    .safety-device-list,
+    .safety-event-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .safety-device-row,
+    .safety-event-row {
+      min-width: 0;
+      padding: 8px 10px;
+      display: grid;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(90deg, rgba(12, 52, 83, 0.62), rgba(7, 24, 42, 0.3));
+      border: 1px solid rgba(60, 132, 176, 0.16);
+      color: #ecfbff;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .safety-device-row {
+      grid-template-columns: 1fr auto;
+    }
+
+    .safety-device-row span,
+    .safety-event-row span,
+    .safety-warning span {
+      color: #8ec2d7;
+    }
+
+    .safety-device-row b,
+    .safety-event-row b {
+      color: #f0fdff;
+      font-size: 14px;
+    }
+
+    .safety-event-head {
+      display: grid;
+      grid-template-columns: 1fr 68px 88px;
+      gap: 8px;
+      color: #87b9cf;
+      font-size: 11px;
+      font-weight: 900;
+      padding: 0 2px;
+    }
+
+    .safety-event-row {
+      grid-template-columns: 1fr 68px 88px;
+    }
+
+    .safety-event-row em {
+      color: #7dd9ff;
+      font-style: normal;
+      font-size: 11px;
+      text-align: right;
+    }
+
+    .safety-event-row .slow {
+      color: #f4d84f;
+    }
+
+    .safety-trend {
+      display: grid;
+      grid-template-rows: minmax(166px, 1fr) auto auto;
+      gap: 6px;
+      min-height: 0;
+    }
+
+    .safety-chart {
+      position: relative;
+      min-height: 0;
+      padding: 0;
+      background: linear-gradient(180deg, rgba(10, 40, 66, 0.44), rgba(6, 23, 39, 0.18));
+      border: 1px solid rgba(89, 158, 196, 0.18);
+    }
+
+    .safety-chart svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .safety-chart path {
+      fill: none;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 6px currentColor);
+    }
+
+    .safety-chart .axis,
+    .safety-chart .grid-line {
+      fill: none;
+      stroke-linecap: square;
+      stroke-linejoin: miter;
+      filter: none;
+    }
+
+    .safety-chart .axis {
+      stroke: rgba(141, 214, 242, 0.82);
+      stroke-width: 1.2;
+    }
+
+    .safety-chart .grid-line {
+      stroke: rgba(118, 178, 207, 0.22);
+      stroke-width: 1;
+      stroke-dasharray: 4 5;
+    }
+
+    .safety-chart text {
+      fill: #8fc0d6;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .safety-chart .line-emergency { color: #26ff73; stroke: #26ff73; }
+    .safety-chart .line-city { color: #26b7ff; stroke: #26b7ff; }
+    .safety-chart .line-eco { color: #ffd45e; stroke: #ffd45e; }
+    .safety-chart .line-fire { color: #ff6b5b; stroke: #ff6b5b; }
+
+    .safety-legend {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 8px;
+    }
+
+    .safety-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #dff5ff;
+      font-size: 10px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .safety-legend-item i {
+      width: 18px;
+      height: 3px;
+      background: var(--line-color);
+      box-shadow: 0 0 8px var(--line-color);
+    }
+
+    .safety-warning {
+      padding: 6px 8px;
+      background: linear-gradient(90deg, rgba(71, 48, 20, 0.36), rgba(40, 23, 10, 0.12));
+      border: 1px solid rgba(255, 182, 68, 0.18);
+      color: #f2f7ff;
+      font-size: 10px;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .vitality-board {
+      height: calc(100% - var(--panel-title-h));
+      padding: 14px 16px 16px;
+      display: grid;
+      grid-template-rows: 1fr 74px;
+      gap: 10px;
+      background:
+        linear-gradient(180deg, rgba(7, 28, 46, 0.96), rgba(5, 18, 31, 0.98)),
+        radial-gradient(circle at 100% 0, rgba(31, 168, 255, 0.12), transparent 34%);
+    }
+
+    .vitality-banner,
+    .vitality-footer {
+      min-width: 0;
+      padding: 10px 16px;
+      display: grid;
+      align-content: center;
+      background: linear-gradient(90deg, rgba(12, 62, 100, 0.72), rgba(8, 28, 49, 0.46));
+      border: 1px solid rgba(60, 140, 186, 0.2);
+    }
+
+    .vitality-banner {
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .vitality-panel-title {
+      justify-content: flex-start;
+      padding-right: 22px;
+    }
+
+    .vitality-panel-meta {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-width: 0;
+      margin-left: auto;
+    }
+
+    .vitality-banner-stat {
+      color: #e9fbff;
+      font-size: 15px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .vitality-banner-stat span {
+      color: #8ec2d7;
+      font-size: 12px;
+      margin-right: 6px;
+    }
+
+    .vitality-up { color: #29f36f; }
+    .vitality-rank { color: #f2dc67; }
+
+    .vitality-grid {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .vitality-card {
+      min-width: 0;
+      padding: 12px 14px;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      background: linear-gradient(180deg, rgba(10, 44, 73, 0.78), rgba(7, 24, 42, 0.5));
+      border: 1px solid rgba(60, 136, 180, 0.18);
+      box-shadow: inset 0 0 18px rgba(17, 120, 190, 0.12);
+    }
+
+    .vitality-card-title {
+      color: #e8fbff;
+      font-size: 16px;
+      font-weight: 900;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(66, 150, 194, 0.16);
+    }
+
+    .vitality-item {
+      color: #ecfbff;
+      font-size: 14px;
+      font-weight: 900;
+      line-height: 1.45;
+    }
+
+    .vitality-item span {
+      color: #8dc1d8;
+      margin-right: 8px;
+    }
+
+    .vitality-fire { color: #ffb33f; }
+
+    .vitality-footer {
+      grid-template-columns: 1.2fr 1fr;
+      gap: 18px;
+    }
+
+    .vitality-footer-block {
+      min-width: 0;
+      display: grid;
+      align-content: center;
+      gap: 8px;
+    }
+
+    .vitality-footer-title {
+      color: #f0fbff;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .vitality-footer-line {
+      color: #dff6ff;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.5;
+      white-space: nowrap;
+    }
+
+    .vitality-footer-line span {
+      color: #8dc1d8;
+      margin-right: 10px;
+    }
+
+    .security-board {
+      height: calc(100% - var(--panel-title-h));
+      padding: 14px 18px 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 2fr 1fr;
+      gap: 10px;
+      background:
+        radial-gradient(circle at 100% 0, rgba(34, 142, 222, 0.18), transparent 36%),
+        linear-gradient(180deg, rgba(7, 23, 42, 0.92), rgba(4, 15, 29, 0.96));
+    }
+
+    .security-group,
+    .security-focus {
+      min-height: 0;
+      padding: 8px 10px 8px;
+      background: linear-gradient(180deg, rgba(9, 28, 47, 0.92), rgba(6, 18, 34, 0.94));
+      border: 1px solid rgba(66, 140, 198, 0.18);
+      box-shadow: inset 0 0 24px rgba(17, 112, 178, 0.12);
+    }
+
+    .security-group-title {
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #eef9ff;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, rgba(51, 74, 104, 0.72), rgba(26, 44, 70, 0.2));
+      text-shadow: 0 0 10px rgba(124, 220, 255, 0.22);
+    }
+
+    .security-grid {
+      margin-top: 6px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 10px;
+    }
+
+    .security-item {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 7px 7px 6px;
+      background: linear-gradient(90deg, rgba(12, 52, 83, 0.62), rgba(7, 24, 42, 0.3));
+      border: 1px solid rgba(60, 132, 176, 0.16);
+    }
+
+    .security-icon {
+      position: relative;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      color: #c8f7ff;
+      font-size: 14px;
+      font-style: normal;
+      background: radial-gradient(circle at 50% 38%, rgba(47, 176, 255, 0.34), rgba(7, 24, 42, 0.92) 68%);
+      border-radius: 50%;
+      border: 1px solid rgba(85, 196, 255, 0.34);
+      box-shadow: inset 0 0 12px rgba(20, 145, 255, 0.16);
+    }
+
+    .security-icon::after {
+      content: "";
+      position: absolute;
+      left: 4px;
+      right: 4px;
+      bottom: -5px;
+      height: 6px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(21, 157, 255, 0.62), rgba(8, 52, 101, 0.12) 72%, transparent 74%);
+    }
+
+    .security-copy {
+      min-width: 0;
+      color: #eef9ff;
+      font-size: 11px;
+      font-weight: 900;
+      line-height: 1.12;
+    }
+
+    .security-copy b {
+      display: block;
+      margin-bottom: 3px;
+      color: #eaf9ff;
+      font-size: 12px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .security-copy span {
+      display: block;
+      color: #eef9ff;
+      font-size: 11px;
+      font-weight: 900;
+      white-space: normal;
+    }
+
+    .security-focus-grid {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .security-focus-item {
+      min-width: 0;
+      text-align: center;
+      padding: 8px 4px 7px;
+      background: linear-gradient(180deg, rgba(13, 58, 94, 0.58), rgba(7, 25, 43, 0.36));
+      border: 1px solid rgba(60, 132, 176, 0.16);
+      color: #d8f4ff;
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .security-focus-item b {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 20px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 14px rgba(88, 205, 255, 0.22);
+    }
+
+    .security-focus-item:nth-child(1) b { color: #27b2ff; }
+    .security-focus-item:nth-child(2) b { color: #ffb52f; }
+    .security-focus-item:nth-child(3) b { color: #4fe1d6; }
+    .security-focus {
+      grid-column: 1 / -1;
+    }
+
+    .map-area {
+      position: absolute;
+      left: 1100px;
+      right: 1100px;
+      top: 86px;
+      bottom: 72px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 54%, rgba(117, 154, 98, 0.98), rgba(76, 112, 77, 0.96) 58%, rgba(28, 70, 77, 0.56) 78%, transparent 100%);
+      box-shadow: inset 0 0 70px rgba(25, 73, 92, 0.28), 0 0 45px rgba(74, 188, 255, 0.16);
+    }
+
+    .city-map {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .city-shape {
+      fill: rgba(204, 224, 207, 0.86);
+      stroke: rgba(241, 255, 244, 0.76);
+      stroke-width: 2;
+      filter: drop-shadow(0 0 10px rgba(230, 255, 238, 0.28));
+    }
+
+    .map-dot { fill: rgba(238, 248, 235, 0.95); opacity: 0.92; }
+
+    .tool-strip {
+      position: absolute;
+      left: 12px;
+      top: 14px;
+      width: 38px;
+      display: grid;
+      gap: 8px;
+      z-index: 5;
+    }
+
+    .tool-strip span {
+      height: 36px;
+      display: grid;
+      place-items: center;
+      color: #bfeaff;
+      background: rgba(3, 18, 30, 0.55);
+      border: 1px solid rgba(115, 198, 225, 0.2);
+      font-size: 18px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="viewport">
+    <main class="stage" id="stage">
+      <div class="top-line"></div>
+      <div class="system-title">鄂州市数字监管系统</div>
+      <div class="meta">2021-08-03　星期二　22:48:53　中雨　25-29°C</div>
+      <a class="back" href="index.html">返回主页</a>
+      <div class="selected-note" id="selectedNote">当前板块：城市基础</div>
+
+      <section class="side left">
+        <section class="panel">
+          <div class="panel-title">城市基础</div>
+          <div class="base-profile">
+            <div class="honor-card"><span>城市荣誉称号</span><b>全国数字城市建设示范市</b></div>
+            <div class="honor-card"><span>城市荣誉称号</span><b>中国快递示范城市</b></div>
+            <div class="base-info"><span>城市别名</span><b>吴都、古武昌</b></div>
+            <div class="base-info"><span>城市面积</span><b>1596km²</b></div>
+            <div class="base-stats">
+              <div class="base-stat"><b>5</b><span>个区县</span></div>
+              <div class="base-stat"><b>26</b><span>个街镇</span></div>
+              <div class="base-stat"><b>358</b><span>个社区</span></div>
+              <div class="base-stat"><b>128.4万</b><span>人口</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">城市环境</div>
+          <div class="air-board">
+            <div class="air-dashboard">
+              <div class="aqi-dial">
+                <div class="aqi-core"><b>29</b><span>AQI29</span></div>
+              </div>
+              <div class="aqi-meta">
+                <div class="aqi-meta-row"><span>更新时间：</span>2026年08月06日07时更新</div>
+                <div class="aqi-meta-row"><span>空气质量状况：</span>优</div>
+                <div class="aqi-meta-row"><span>首要污染物：</span>--</div>
+                <div class="aqi-scale"></div>
+              </div>
+            </div>
+            <div class="air-copy">
+              <div class="air-copy-note"><span>健康提示：</span>空气质量令人满意，基本无空气污染。</div>
+              <div class="air-copy-note"><span>建议措施：</span>各类人群正常活动。</div>
+            </div>
+            <div class="air-stations">
+              <div class="air-station"><i>Ⅰ</i><span>鄂州环境监测站</span><b class="air-ok">达标</b></div>
+              <div class="air-station"><i>Ⅰ</i><span>凤凰广场监测点</span><b class="air-ok">达标</b></div>
+              <div class="air-station"><i>Ⅰ</i><span>葛店开发区站</span><b class="air-ok">达标</b></div>
+              <div class="air-station"><i>Ⅰ</i><span>华容城区站</span><b class="air-ok">达标</b></div>
+              <div class="air-station"><i>Ⅰ</i><span>梁子湖生态站</span><b class="air-ok">达标</b></div>
+              <div class="air-station"><i>Ⅰ</i><span>临空经济区站</span><b class="air-ok">达标</b></div>
+              <div class="air-station"><i>Ⅰ</i><span>新庙监测点</span><b class="air-ok">达标</b></div>
+              <div class="air-station"><i>Ⅰ</i><span>洋澜湖周边站</span><b class="air-ok">达标</b></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">城市交通</div>
+          <div class="traffic-board">
+            <div class="traffic-top">
+              <div class="traffic-total"><span>城市道路总数</span><b>5554</b></div>
+              <div class="traffic-ratio">
+                <div class="ratio-row"><span>城际公路</span><div class="ratio-track"><i style="--w:93.3%"></i></div><b>5183</b></div>
+                <div class="ratio-row"><span>城市道路</span><div class="ratio-track"><i style="--w:6.7%"></i></div><b>371</b></div>
+              </div>
+              <div class="traffic-mini-grid">
+                <div class="traffic-mini"><b>45条</b><span>高速路</span></div>
+                <div class="traffic-mini"><b>6条</b><span>铁路</span></div>
+              </div>
+            </div>
+            <div class="traffic-charts">
+              <div class="traffic-chart">
+                <div class="traffic-chart-title">各区道路数量</div>
+                <div class="traffic-bars">
+                  <div class="traffic-bar"><b>1710</b><i style="--h:100%"></i><span>鄂城区</span></div>
+                  <div class="traffic-bar"><b>980</b><i style="--h:88%"></i><span>华容区</span></div>
+                  <div class="traffic-bar"><b>760</b><i style="--h:76%"></i><span>葛店区</span></div>
+                  <div class="traffic-bar"><b>1220</b><i style="--h:93%"></i><span>梁子湖区</span></div>
+                  <div class="traffic-bar"><b>884</b><i style="--h:84%"></i><span>临空区</span></div>
+                </div>
+              </div>
+              <div class="traffic-chart">
+                <div class="traffic-chart-title">道路类型数量</div>
+                <div class="traffic-bars">
+                  <div class="traffic-bar"><b>128</b><i style="--h:34%"></i><span>快速路</span></div>
+                  <div class="traffic-bar"><b>412</b><i style="--h:48%"></i><span>主干路</span></div>
+                  <div class="traffic-bar"><b>936</b><i style="--h:68%"></i><span>次干路</span></div>
+                  <div class="traffic-bar"><b>3890</b><i style="--h:100%"></i><span>支路</span></div>
+                  <div class="traffic-bar"><b>188</b><i style="--h:40%"></i><span>其他</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="map-area">
+        <div class="tool-strip"><span>▦</span><span>⌕</span><span>□</span><span>⊙</span><span>＋</span><span>－</span></div>
+        <svg class="city-map" viewBox="0 0 1600 860" preserveAspectRatio="xMidYMid meet">
+          <path class="city-shape" d="M760 58 C890 22 1026 82 1042 214 C1056 338 1174 328 1262 414 C1378 528 1270 688 1118 646 C1000 614 940 742 814 706 C724 680 704 598 600 612 C482 628 404 540 466 432 C522 334 408 250 500 160 C568 94 656 94 760 58Z"/>
+          <path class="city-shape" d="M584 450 C678 392 798 420 824 526 C856 650 726 730 608 674 C496 620 478 514 584 450Z"/>
+          <g id="randomDots"></g>
+        </svg>
+      </section>
+
+      <section class="side right">
+        <section class="panel">
+          <div class="panel-title">城市保障</div>
+          <div class="security-board">
+            <div class="security-group">
+              <div class="security-group-title">民生保障</div>
+              <div class="security-grid">
+                <div class="security-item"><i class="security-icon">养</i><div class="security-copy"><b>34 所</b><span>养老服务机构</span></div></div>
+                <div class="security-item"><i class="security-icon">餐</i><div class="security-copy"><b>86 所</b><span>幸福食堂</span></div></div>
+                <div class="security-item"><i class="security-icon">服</i><div class="security-copy"><b>300 所</b><span>养老服务设施</span></div></div>
+                <div class="security-item"><i class="security-icon">床</i><div class="security-copy"><b>6,365 张</b><span>床位数</span></div></div>
+              </div>
+            </div>
+            <div class="security-group">
+              <div class="security-group-title">社会保障</div>
+              <div class="security-grid">
+                <div class="security-item"><i class="security-icon">职</i><div class="security-copy"><b>372,598 人</b><span>城镇职工参保</span></div></div>
+                <div class="security-item"><i class="security-icon">居</i><div class="security-copy"><b>441,862 人</b><span>城乡居民参保</span></div></div>
+                <div class="security-item"><i class="security-icon">保</i><div class="security-copy"><b>3,943 人</b><span>城镇最低保障</span></div></div>
+                <div class="security-item"><i class="security-icon">乡</i><div class="security-copy"><b>16,687 人</b><span>农村最低保障</span></div></div>
+              </div>
+            </div>
+            <div class="security-focus">
+              <div class="security-group-title">重点关注对象</div>
+              <div class="security-focus-grid">
+                <div class="security-focus-item"><b>53</b><span>人防工程</span></div>
+                <div class="security-focus-item"><b>23</b><span>易涝点</span></div>
+                <div class="security-focus-item"><b>60</b><span>桥梁</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">城市安全</div>
+          <div class="safety-board">
+            <div class="safety-col">
+              <div class="safety-col-title">汇聚视频总数7440个</div>
+              <div class="safety-rate">
+                <div class="safety-rate-main"><span>在线率</span><b>84.35%</b></div>
+                <div class="safety-progress"><i></i></div>
+                <div class="safety-progress-note">离线率 15.65%</div>
+              </div>
+              <div class="safety-device-list">
+                <div class="safety-device-row"><span>枪机</span><b>6190</b></div>
+                <div class="safety-device-row"><span>球机</span><b>845</b></div>
+                <div class="safety-device-row"><span>其他</span><b>405</b></div>
+              </div>
+            </div>
+            <div class="safety-col">
+              <div class="safety-col-title">事件处置数量</div>
+              <div class="safety-event-head"><span>类型</span><span>事件量</span><span>处置时长</span></div>
+              <div class="safety-event-list">
+                <div class="safety-event-row"><span>应急</span><b>4860件</b><em>avg31min</em></div>
+                <div class="safety-event-row"><span>消防</span><b>4件</b><em>avg27min</em></div>
+                <div class="safety-event-row"><span>城管</span><b>2239件</b><em class="slow">avg308min ↓41.5%</em></div>
+                <div class="safety-event-row"><span>生态</span><b>286件</b><em>avg210min</em></div>
+              </div>
+            </div>
+            <div class="safety-col">
+              <div class="safety-trend">
+                <div class="safety-chart">
+                  <svg viewBox="0 0 360 182" preserveAspectRatio="none" aria-label="事件量趋势折线图">
+                    <path class="grid-line" d="M40 28 H342"></path>
+                    <path class="grid-line" d="M40 64 H342"></path>
+                    <path class="grid-line" d="M40 100 H342"></path>
+                    <path class="grid-line" d="M40 136 H342"></path>
+                    <path class="axis" d="M40 12 V154 H342"></path>
+                    <text x="8" y="18">件</text>
+                    <text x="12" y="31">500</text>
+                    <text x="12" y="67">400</text>
+                    <text x="12" y="103">300</text>
+                    <text x="12" y="139">200</text>
+                    <text x="12" y="156">0</text>
+                    <text x="42" y="172">周一</text>
+                    <text x="84" y="172">周二</text>
+                    <text x="126" y="172">周三</text>
+                    <text x="168" y="172">周四</text>
+                    <text x="210" y="172">周五</text>
+                    <text x="252" y="172">周六</text>
+                    <text x="294" y="172">周日</text>
+                    <path class="line-emergency" d="M42 114 L84 84 L126 92 L168 48 L210 56 L252 40 L294 62 L336 26"></path>
+                    <path class="line-city" d="M42 54 L84 66 L126 78 L168 92 L210 100 L252 110 L294 116 L336 124"></path>
+                    <path class="line-eco" d="M42 124 L84 120 L126 118 L168 114 L210 112 L252 108 L294 110 L336 106"></path>
+                    <path class="line-fire" d="M42 136 L84 138 L126 136 L168 137 L210 135 L252 136 L294 134 L336 135"></path>
+                  </svg>
+                </div>
+                <div class="safety-legend">
+                  <div class="safety-legend-item" style="--line-color:#26ff73"><i></i><span>应急 ↗ 本周脉冲高发</span></div>
+                  <div class="safety-legend-item" style="--line-color:#26b7ff"><i></i><span>城管 ↘ 持续下降</span></div>
+                  <div class="safety-legend-item" style="--line-color:#ffd45e"><i></i><span>生态 → 基本持平</span></div>
+                  <div class="safety-legend-item" style="--line-color:#ff6b5b"><i></i><span>消防 → 低位稳定</span></div>
+                </div>
+                <div class="safety-warning"><span>⚠ 预警：</span>应急事件量较大，城管处置时间仍偏高。</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title vitality-panel-title"><span>城市活力</span><div class="vitality-panel-meta"><div class="vitality-banner-stat"><span>GDP</span>1416.02亿 <b class="vitality-up">↑6.7%</b></div><div class="vitality-banner-stat"><span>人均</span>13.20万 <b class="vitality-rank">(全省第3)</b></div></div></div>
+          <div class="vitality-board">
+            <div class="vitality-grid">
+              <div class="vitality-card">
+                <div class="vitality-card-title">经济实力</div>
+                <div class="vitality-item"><span>GDP</span>1416.02亿 <b class="vitality-up">↑6.7%</b></div>
+                <div class="vitality-item"><span>人均</span>13.20万 <b class="vitality-rank">(全省第3)</b></div>
+              </div>
+              <div class="vitality-card">
+                <div class="vitality-card-title">对外贸易</div>
+                <div class="vitality-item"><span>出口</span>363亿 <b class="vitality-up">↑642%</b><b class="vitality-fire"> 🔥</b></div>
+                <div class="vitality-item"><span>进口</span>43.59亿 <b class="vitality-up">↑46%</b></div>
+              </div>
+              <div class="vitality-card">
+                <div class="vitality-card-title">创新动能</div>
+                <div class="vitality-item"><span>高企</span>512家 <b class="vitality-up">↑26.1%</b></div>
+                <div class="vitality-item"><span>增势</span>创新主体持续扩容</div>
+              </div>
+            </div>
+            <div class="vitality-footer">
+              <div class="vitality-footer-block">
+                <div class="vitality-footer-title">人才底盘</div>
+                <div class="vitality-footer-line"><span>总量</span>22.9万　<span>技能</span>11.5万(50.2%)　<span>专业</span>9.32万(40.6%)</div>
+              </div>
+              <div class="vitality-footer-block">
+                <div class="vitality-footer-title">智力下沉</div>
+                <div class="vitality-footer-line"><span>院士</span>63　<span>副职</span>6　<span>副总</span>15　<span>博士团</span>11　<span>特派员</span>109</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const selected = new URLSearchParams(location.search).get("section") || "城市基础";
+    document.getElementById("selectedNote").textContent = `当前板块：${selected}`;
+
+    function fillCityDots() {
+      const group = document.getElementById("randomDots");
+      const dots = [];
+      for (let i = 0; i < 980; i += 1) {
+        const x = 470 + Math.random() * 790;
+        const y = 70 + Math.random() * 650;
+        const inMain = ((x - 840) ** 2 / 215000 + (y - 380) ** 2 / 125000) < 1;
+        const inLower = ((x - 630) ** 2 / 48000 + (y - 550) ** 2 / 34000) < 1;
+        if (inMain || inLower) {
+          dots.push(`<circle class="map-dot" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(1.2 + Math.random() * 1.6).toFixed(1)}"/>`);
+        }
+      }
+      group.innerHTML = dots.join("");
+    }
+
+    fillCityDots();
+  </script>
+</body>
+</html>

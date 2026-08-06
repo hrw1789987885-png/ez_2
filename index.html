@@ -1,0 +1,1427 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>鄂州城市安全风险监测预警平台</title>
+  <style>
+    :root {
+      --page: #edf3fb;
+      --panel: rgba(248, 252, 255, .84);
+      --panel-strong: rgba(251, 254, 255, .94);
+      --panel-soft: rgba(238, 248, 255, .7);
+      --line: rgba(27, 95, 178, .13);
+      --line-strong: rgba(35, 113, 207, .25);
+      --ink: #0d3268;
+      --ink-2: #2b5c91;
+      --muted: #718baa;
+      --blue: #1f72e8;
+      --cyan: #18bad0;
+      --red: #f24b3f;
+      --orange: #f59a23;
+      --yellow: #f3bd28;
+      --green: #19c59d;
+      --shadow: 0 28px 70px -46px rgba(16, 70, 130, .42);
+      --soft-shadow: 0 14px 36px -26px rgba(30, 92, 158, .32);
+      --inner-line: inset 0 1px 0 rgba(255, 255, 255, .9), inset 0 -1px 0 rgba(31, 112, 205, .05);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      color: var(--ink);
+      background: linear-gradient(180deg, #f6fbff, #eaf6ff);
+      font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible { outline: 2px solid rgba(33, 125, 255, .38); outline-offset: 2px; }
+
+    .screen {
+      position: relative;
+      width: 100vw;
+      height: 100dvh;
+      min-width: 1440px;
+      min-height: 760px;
+      background:
+        radial-gradient(840px 250px at 50% 4%, rgba(67, 158, 245, .2), transparent 72%),
+        radial-gradient(520px 260px at 0 100%, rgba(33, 125, 255, .1), transparent 68%),
+        radial-gradient(520px 260px at 100% 100%, rgba(24, 186, 208, .1), transparent 68%),
+        linear-gradient(180deg, #f8fbff 0%, var(--page) 100%);
+    }
+    .screen::before,
+    .screen::after {
+      content: "";
+      position: absolute;
+      z-index: 4;
+      top: 74px;
+      bottom: 0;
+      width: 430px;
+      pointer-events: none;
+    }
+    .screen::before {
+      left: 0;
+      background: linear-gradient(90deg, rgba(239, 247, 255, .82), rgba(239, 247, 255, .26) 64%, transparent);
+    }
+    .screen::after {
+      right: 0;
+      background: linear-gradient(270deg, rgba(239, 247, 255, .82), rgba(239, 247, 255, .26) 64%, transparent);
+    }
+
+    #map {
+      position: absolute;
+      inset: 74px 0 0;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 44%, rgba(195, 231, 255, .34), transparent 50%),
+        radial-gradient(ellipse at 50% 70%, rgba(69, 154, 231, .12), transparent 58%),
+        linear-gradient(180deg, #dbeaf6 0%, #edf6fd 43%, #d9edf9 100%);
+      cursor: grab;
+      user-select: none;
+    }
+    #map.dragging { cursor: grabbing; }
+    .gis-viewport {
+      position: absolute;
+      inset: 0;
+      transform-origin: 50% 50%;
+    }
+    .gis-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .gis-bg-grid {
+      opacity: .28;
+      mix-blend-mode: multiply;
+    }
+    .district {
+      fill: rgba(232, 246, 255, .54);
+      stroke: rgba(33, 112, 203, .32);
+      stroke-width: 2;
+      stroke-dasharray: 10 8;
+    }
+    .district-fill-a { fill: rgba(210, 239, 255, .38); }
+    .district-fill-b { fill: rgba(225, 248, 238, .34); }
+    .water {
+      fill: none;
+      stroke: rgba(55, 168, 225, .44);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 7px rgba(78, 183, 235, .28));
+    }
+    .water-main { stroke-width: 34; }
+    .water-branch { stroke-width: 14; opacity: .72; }
+    .road {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .road-main {
+      stroke: rgba(232, 169, 62, .86);
+      stroke-width: 8;
+      filter: drop-shadow(0 1px 0 rgba(255, 255, 255, .8));
+    }
+    .road-main-shadow { stroke: rgba(255, 255, 255, .82); stroke-width: 13; }
+    .road-secondary { stroke: rgba(107, 164, 220, .62); stroke-width: 4; }
+    .road-minor { stroke: rgba(107, 156, 205, .4); stroke-width: 2; }
+    .boundary-line {
+      fill: none;
+      stroke: rgba(24, 111, 205, .38);
+      stroke-width: 2;
+      stroke-dasharray: 7 7;
+    }
+    .building {
+      fill: rgba(246, 251, 255, .92);
+      stroke: rgba(55, 128, 205, .23);
+      stroke-width: 1;
+      filter: drop-shadow(4px 6px 5px rgba(70, 130, 190, .16));
+    }
+    .building.hot { fill: rgba(199, 231, 255, .9); }
+    .map-label-text {
+      fill: rgba(30, 82, 132, .62);
+      font-size: 13px;
+      font-weight: 800;
+      paint-order: stroke;
+      stroke: rgba(250, 254, 255, .8);
+      stroke-width: 4px;
+    }
+    .heat-blob {
+      opacity: .42;
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+    .track-line {
+      fill: none;
+      stroke: #f59a23;
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 14 10;
+      filter: drop-shadow(0 0 8px rgba(245, 154, 35, .38));
+    }
+    .gis-points {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .gis-point {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      z-index: 4;
+      transform: translate(-50%, -100%);
+      display: grid;
+      place-items: center;
+      pointer-events: auto;
+      border: 0;
+      background: transparent;
+      padding: 0;
+    }
+    .gis-point .pin {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px 16px 16px 4px;
+      transform: rotate(-45deg);
+      color: #fff;
+      background: var(--c);
+      border: 3px solid rgba(255,255,255,.92);
+      box-shadow: 0 0 0 8px color-mix(in srgb, var(--c) 16%, transparent), 0 12px 20px rgba(60, 118, 180, .2);
+    }
+    .gis-point .pin span { transform: rotate(45deg); font-size: 13px; font-weight: 900; }
+    .gis-point .pin-base {
+      width: 34px;
+      height: 12px;
+      margin-top: 5px;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--c) 24%, transparent);
+      box-shadow: 0 0 14px color-mix(in srgb, var(--c) 38%, transparent);
+    }
+    .map-scale {
+      position: absolute;
+      z-index: 5;
+      left: 450px;
+      bottom: 86px;
+      width: 128px;
+      color: rgba(22, 72, 118, .7);
+      font-size: 11px;
+      font-weight: 800;
+      pointer-events: none;
+    }
+    .map-scale::before {
+      content: "";
+      display: block;
+      width: 96px;
+      height: 8px;
+      margin-bottom: 3px;
+      border-left: 2px solid rgba(22, 72, 118, .5);
+      border-right: 2px solid rgba(22, 72, 118, .5);
+      border-bottom: 2px solid rgba(22, 72, 118, .5);
+    }
+    .map-compass {
+      position: absolute;
+      z-index: 5;
+      right: 438px;
+      bottom: 86px;
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #1a67b8;
+      background: rgba(249, 253, 255, .78);
+      border: 1px solid rgba(73, 148, 225, .16);
+      box-shadow: var(--soft-shadow);
+      font-size: 12px;
+      font-weight: 900;
+      pointer-events: none;
+    }
+
+    .map-haze {
+      position: absolute;
+      inset: 74px 0 0;
+      z-index: 2;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 50% 48%, rgba(255, 255, 255, .01), rgba(255, 255, 255, .15) 67%, rgba(232, 244, 255, .72) 100%),
+        linear-gradient(180deg, rgba(255, 255, 255, .34), transparent 20%, transparent 74%, rgba(234, 247, 255, .7));
+      box-shadow: inset 0 0 84px rgba(232, 244, 255, .62);
+    }
+
+    .topbar {
+      position: absolute;
+      inset: 0 0 auto;
+      height: 74px;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: 430px 1fr 370px;
+      align-items: start;
+      background:
+        linear-gradient(90deg, rgba(247, 251, 255, .98), rgba(226, 241, 255, .74) 27%, transparent 38%, transparent 62%, rgba(226, 241, 255, .74) 73%, rgba(247, 251, 255, .98)),
+        linear-gradient(180deg, #fbfdff, rgba(236, 246, 255, .76));
+      border-bottom: 1px solid rgba(27, 95, 178, .1);
+      box-shadow: 0 12px 34px -26px rgba(31, 87, 150, .38);
+    }
+
+    .top-left, .top-right {
+      height: 58px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 26px;
+      color: #315f94;
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .weather strong { color: #17457e; font-size: 20px; }
+    .weather i { color: #f2bd38; font-style: normal; font-size: 20px; }
+    .top-right { justify-content: flex-end; }
+    .style-toggle-btn {
+      height: 34px;
+      padding: 0 16px;
+      border: 1px solid rgba(59, 126, 208, .26);
+      border-radius: 999px;
+      color: #13529a;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .96), rgba(230, 241, 255, .92));
+      box-shadow: 0 10px 22px -18px rgba(28, 93, 165, .45), inset 0 1px 0 rgba(255,255,255,.92);
+      font-size: 14px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .style-toggle-btn:hover {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(217, 235, 255, .96));
+    }
+    .style-toggle-btn.alt {
+      color: #eaf6ff;
+      background: linear-gradient(180deg, rgba(33, 102, 190, .92), rgba(19, 67, 136, .92));
+      border-color: rgba(134, 206, 255, .38);
+      box-shadow: 0 14px 28px -18px rgba(11, 61, 130, .72), inset 0 1px 0 rgba(255,255,255,.18);
+    }
+    .style-image-view {
+      position: absolute;
+      inset: 0;
+      z-index: 60;
+      display: none;
+      background: #0f2749;
+    }
+    .style-image-view.is-active {
+      display: block;
+    }
+    .style-image-view img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+    }
+    .style-image-toolbar {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .alarm-dot {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      display: grid;
+      place-items: center;
+    }
+    .alarm-dot::before { content: "♧"; color: #6d92bd; font-size: 17px; }
+    .alarm-dot::after {
+      content: "12";
+      position: absolute;
+      right: -9px;
+      top: -5px;
+      width: 17px;
+      height: 14px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--red);
+      font-size: 9px;
+      line-height: 14px;
+      text-align: center;
+    }
+
+    .title-shell {
+      position: relative;
+      height: 96px;
+      max-width: 760px;
+      min-width: 660px;
+      margin: 0 auto;
+      padding-top: 19px;
+      text-align: center;
+      background:
+        radial-gradient(230px 48px at 50% 100%, rgba(31, 114, 232, .2), transparent 72%),
+        linear-gradient(180deg, rgba(252, 254, 255, .98), rgba(235, 246, 255, .9));
+      clip-path: polygon(0 0, 100% 0, 88% 82%, 54% 82%, 50% 96%, 46% 82%, 12% 82%);
+      filter: drop-shadow(0 15px 22px rgba(43, 101, 172, .16));
+    }
+    .title-shell::before, .title-shell::after {
+      content: "";
+      position: absolute;
+      top: 35px;
+      width: 240px;
+      height: 28px;
+      border-top: 3px solid rgba(31, 114, 232, .44);
+      border-radius: 50%;
+      opacity: .75;
+    }
+    .title-shell::before { left: -170px; transform: rotate(8deg); }
+    .title-shell::after { right: -170px; transform: rotate(-8deg); }
+    h1 {
+      margin: 0;
+      color: #00499b;
+      font-size: 33px;
+      line-height: 1.05;
+      font-weight: 900;
+      letter-spacing: 0;
+      text-shadow: 0 2px 0 rgba(255, 255, 255, .88);
+    }
+
+    .panel {
+      position: absolute;
+      z-index: 8;
+      width: 392px;
+      height: 330px;
+      border-radius: 8px;
+      border: 1px solid rgba(27, 95, 178, .12);
+      background:
+        linear-gradient(180deg, rgba(253, 254, 255, .9), rgba(241, 248, 255, .76)),
+        radial-gradient(380px 150px at 12% 0, rgba(65, 154, 238, .12), transparent 70%);
+      box-shadow: var(--soft-shadow);
+      backdrop-filter: blur(14px);
+      overflow: hidden;
+    }
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      box-shadow: var(--inner-line);
+    }
+    .panel-title {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 15px;
+      color: #0a3a78;
+      font-size: 16px;
+      font-weight: 900;
+      border-bottom: 1px solid rgba(27, 95, 178, .1);
+      background: linear-gradient(90deg, rgba(226, 242, 255, .64), rgba(255, 255, 255, .18));
+    }
+    .panel-title b {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-title b::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--blue);
+      box-shadow: 0 0 0 5px rgba(31, 114, 232, .11);
+    }
+    .panel-title span { color: #b5cde8; font-size: 12px; letter-spacing: 3px; }
+
+    .city-panel {
+      left: 22px;
+      top: 112px;
+      width: 392px;
+      height: 330px;
+      background:
+        linear-gradient(180deg, rgba(253, 254, 255, .9), rgba(239, 248, 255, .72));
+    }
+    .sense-panel {
+      left: 22px;
+      top: 454px;
+      width: 392px;
+      height: 330px;
+      background:
+        linear-gradient(180deg, rgba(253, 254, 255, .92), rgba(241, 248, 255, .78)),
+        radial-gradient(320px 150px at 12% 6%, rgba(77, 154, 255, .13), transparent 72%);
+    }
+    .scene-panel {
+      right: 22px;
+      top: 112px;
+      width: 392px;
+      height: 330px;
+    }
+    .loop-panel {
+      right: 22px;
+      top: 454px;
+      width: 392px;
+      height: 330px;
+    }
+
+    .city-body {
+      height: calc(100% - 36px);
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+      background: rgba(235, 247, 255, .2);
+    }
+    .city-panel .city-body { height: calc(100% - 36px); }
+    .city-image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: saturate(1.04);
+    }
+    .city-hotspot {
+      position: absolute;
+      display: block;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: rgba(33, 125, 255, 0);
+      transition: background .16s ease, border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+    }
+    .city-hotspot:hover,
+    .city-hotspot:focus-visible {
+      background: rgba(33, 125, 255, .08);
+      border-color: rgba(33, 125, 255, .32);
+      box-shadow: 0 0 18px rgba(33, 125, 255, .28);
+      outline: none;
+    }
+    .city-hotspot:active { transform: scale(.98); }
+    .hot-basic { left: 24%; top: 16%; width: 31%; height: 25%; }
+    .hot-support { left: 57%; top: 16%; width: 31%; height: 25%; }
+    .hot-env { left: 3%; top: 42%; width: 30%; height: 25%; }
+    .hot-safe { left: 68%; top: 42%; width: 30%; height: 25%; }
+    .hot-traffic { left: 26%; top: 68%; width: 30%; height: 25%; }
+    .hot-vitality { left: 57%; top: 68%; width: 30%; height: 25%; }
+
+    .sense-panel .panel-title {
+      height: 42px;
+      padding: 0 14px;
+      color: #183a64;
+      font-size: 20px;
+      letter-spacing: .5px;
+      border-bottom: 1px solid rgba(27, 95, 178, .11);
+      background:
+        linear-gradient(90deg, rgba(226, 242, 255, .72), rgba(255, 255, 255, .24)),
+        radial-gradient(180px 42px at 8% 0, rgba(69, 154, 238, .14), transparent 74%);
+    }
+    .sense-panel .panel-title b::before {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background:
+        radial-gradient(circle at 80% 78%, #a7cbff 0 22%, transparent 24%),
+        linear-gradient(145deg, #1c6df0, #6aa8ff);
+      clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+      box-shadow: 11px 6px 0 -2px rgba(33, 125, 255, .22), 0 8px 14px rgba(33, 125, 255, .16);
+    }
+    .sense-panel .panel-title span {
+      width: 48px;
+      height: 8px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 7px;
+      letter-spacing: 0;
+      font-size: 0;
+    }
+    .sense-panel .panel-title span::before,
+    .sense-panel .panel-title span::after {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #2f78f2;
+      box-shadow: -15px 0 0 rgba(188, 210, 238, .48), -30px 0 0 rgba(188, 210, 238, .48);
+    }
+    .sense-panel .panel-title span::after {
+      width: 8px;
+      background: transparent;
+      box-shadow: none;
+    }
+    .sense-body {
+      height: calc(100% - 42px);
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 1fr 1.08fr;
+      gap: 9px;
+      min-width: 0;
+    }
+    .sense-stack {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 9px;
+    }
+    .sense-block {
+      min-height: 0;
+      padding: 9px;
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .78), rgba(247, 252, 255, .62));
+      border: 1px solid rgba(36, 110, 195, .09);
+      box-shadow: 0 14px 28px -24px rgba(28, 88, 150, .34);
+      backdrop-filter: blur(10px);
+    }
+    .sense-block.auto {
+      min-width: 0;
+    }
+    .sense-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 22px;
+      color: #0b4aaa;
+      font-size: 15px;
+      font-weight: 900;
+      padding-bottom: 7px;
+      border-bottom: 1px solid rgba(54, 129, 221, .14);
+      white-space: nowrap;
+      min-width: 0;
+    }
+    .periods {
+      display: inline-flex;
+      gap: 4px;
+      margin-left: auto;
+    }
+    .periods span {
+      min-width: 27px;
+      height: 17px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      color: #7e99bd;
+      background: rgba(237, 244, 253, .78);
+      font-size: 9px;
+      font-weight: 900;
+    }
+    .periods span.active {
+      color: #fff;
+      background: linear-gradient(135deg, #1e6cf1, #5aa2ff);
+      box-shadow: 0 7px 14px rgba(33, 125, 255, .18);
+    }
+    .sense-cards {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      min-width: 0;
+    }
+    .sense-stack .sense-cards {
+      margin-top: 18px;
+    }
+    .sense-card {
+      min-height: 42px;
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr);
+      align-items: center;
+      gap: 5px;
+      color: #15365f;
+      font-size: 11px;
+      font-weight: 900;
+      min-width: 0;
+      white-space: nowrap;
+    }
+    .iot-title span,
+    .device-row span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: clip;
+      white-space: nowrap;
+    }
+    .sense-card div {
+      min-width: 0;
+      overflow: visible;
+      white-space: nowrap;
+    }
+    .sense-card i {
+      display: grid;
+      place-items: center;
+      width: 23px;
+      height: 23px;
+      border-radius: 7px;
+      color: #2f78f2;
+      background: linear-gradient(180deg, rgba(243, 248, 255, .96), rgba(229, 240, 253, .8));
+      border: 1px solid rgba(33,125,255,.18);
+      font-style: normal;
+      font-size: 11px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.86);
+    }
+    .sense-card b {
+      display: block;
+      margin-top: 3px;
+      color: #1052c7;
+      font-size: 14px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      letter-spacing: 0;
+    }
+    .device-list {
+      margin-top: 7px;
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+    }
+    .iot-title {
+      margin-top: 9px;
+      display: grid;
+      grid-template-columns: 30px minmax(0, 1fr);
+      align-items: center;
+      gap: 6px;
+      color: #15365f;
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+      min-width: 0;
+    }
+    .iot-title i {
+      width: 28px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 7px;
+      color: #2f78f2;
+      background: linear-gradient(180deg, rgba(243, 248, 255, .96), rgba(229, 240, 253, .8));
+      border: 1px solid rgba(33,125,255,.14);
+      font-style: normal;
+    }
+    .device-row {
+      height: 27px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 28px;
+      align-items: center;
+      padding: 0 8px;
+      border-radius: 6px;
+      background: rgba(241, 247, 255, .72);
+      color: #17375f;
+      font-size: 11px;
+      font-weight: 900;
+      box-shadow: inset 3px 0 0 #2f78f2;
+      min-width: 0;
+      white-space: nowrap;
+    }
+    .device-row b {
+      color: #1b62d8;
+      text-align: right;
+      font-size: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .scene-body {
+      height: calc(100% - 36px);
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 12px;
+      padding: 14px 16px 16px;
+      min-width: 0;
+    }
+    .scene-tabs {
+      display: grid;
+      gap: 8px;
+      align-content: start;
+      min-width: 0;
+    }
+    .scene-tab {
+      height: 38px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px 0 13px;
+      color: #0e68d0;
+      background: linear-gradient(90deg, rgba(45, 118, 216, .12), rgba(255,255,255,.12));
+      border-left: 4px solid rgba(45, 118, 216, .72);
+      border-radius: 6px;
+      border-top: 0;
+      border-right: 0;
+      border-bottom: 0;
+      font-size: 15px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .scene-tab.active {
+      border-left-color: #18c8e4;
+      color: #0b82d9;
+      background: linear-gradient(90deg, rgba(24, 186, 208, .2), rgba(255,255,255,.3));
+      box-shadow: inset 0 0 0 1px rgba(65, 143, 230, .08), 0 8px 18px -16px rgba(31, 114, 232, .38);
+    }
+    .risk-list {
+      display: grid;
+      gap: 7px;
+      align-content: start;
+      min-width: 0;
+      max-height: 100%;
+      overflow-y: auto;
+      padding: 1px 2px 2px 0;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(33, 125, 255, .32) transparent;
+    }
+    .risk-item {
+      display: grid;
+      grid-template-columns: 5px minmax(0, 1fr);
+      gap: 9px;
+      align-items: center;
+      min-height: 31px;
+      padding: 0 8px 0 0;
+      border: 0;
+      border-radius: 6px;
+      background: rgba(246, 251, 255, .62);
+      color: #284f81;
+      font-size: 12px;
+      font-weight: 900;
+      text-align: left;
+      white-space: nowrap;
+    }
+    .risk-item:hover,
+    .risk-item.active {
+      color: #0b5fc0;
+      background: rgba(232, 244, 255, .88);
+    }
+    .risk-item::before { content: ""; width: 3px; height: 18px; background: #f2b33d; border-radius: 999px; }
+
+    .loop-body {
+      height: calc(100% - 36px);
+      position: relative;
+      padding: 0;
+      overflow: hidden;
+    }
+    .loop-ring {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 158px;
+      height: 158px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 1px solid rgba(33, 125, 255, .18);
+      box-shadow:
+        inset 0 0 0 18px rgba(230, 244, 255, .24),
+        0 0 24px rgba(33, 125, 255, .1);
+    }
+    .loop-ring::before {
+      content: "";
+      position: absolute;
+      inset: 27px;
+      border-radius: 50%;
+      border: 9px solid rgba(83, 172, 255, .15);
+      border-top-color: rgba(33, 125, 255, .48);
+      border-right-color: rgba(27, 193, 209, .38);
+      transform: rotate(42deg);
+    }
+    .loop-lines {
+      position: absolute;
+      inset: 18px 24px;
+      pointer-events: none;
+    }
+    .hex {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      transform: translate(-50%, -50%);
+      width: 86px;
+      min-height: 78px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: #243f64;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .hex b {
+      width: 62px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 6px;
+      color: #111c2e;
+      font-size: 17px;
+      background:
+        linear-gradient(145deg, color-mix(in srgb, var(--c) 24%, #fff), rgba(255,255,255,.9));
+      border: 1px solid color-mix(in srgb, var(--c) 34%, transparent);
+      clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+      box-shadow: 0 12px 20px color-mix(in srgb, var(--c) 15%, transparent), inset 0 1px 0 rgba(255,255,255,.82);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bottom-nav {
+      position: absolute;
+      z-index: 19;
+      left: 50%;
+      top: 84px;
+      width: 660px;
+      height: 44px;
+      transform: translateX(-50%);
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 2px;
+      padding: 4px;
+      border-radius: 8px;
+      background: rgba(248, 252, 255, .86);
+      border: 1px solid rgba(27, 95, 178, .11);
+      box-shadow: 0 18px 46px -34px rgba(31, 92, 158, .42);
+      backdrop-filter: blur(14px);
+    }
+    .nav-item {
+      min-width: 0;
+      border: 0;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #234f82;
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+      border-radius: 6px;
+      transition: transform .16s ease, color .16s ease, background .16s ease, box-shadow .16s ease;
+    }
+    .nav-item:active { transform: translateY(1px) scale(.98); }
+    .nav-item.active {
+      color: #0a51b4;
+      background: linear-gradient(180deg, rgba(31, 114, 232, .13), rgba(255,255,255,.26));
+      box-shadow: inset 0 -2px 0 var(--blue), 0 10px 18px -16px rgba(31, 114, 232, .38);
+    }
+
+    .key-panel {
+      position: absolute;
+      z-index: 12;
+      left: 50%;
+      bottom: 82px;
+      transform: translateX(-50%);
+      width: 360px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(27, 95, 178, .13);
+      background: rgba(250, 253, 255, .9);
+      box-shadow: 0 18px 42px -30px rgba(31, 92, 158, .42);
+      color: #245a94;
+      font-size: 12px;
+      font-weight: 800;
+      backdrop-filter: blur(16px);
+    }
+    .key-panel h3 { margin: 0 0 7px; color: #0b438a; font-size: 15px; }
+    .key-panel p { margin: 0 0 8px; line-height: 1.5; }
+    .key-panel input {
+      width: 100%;
+      height: 30px;
+      margin-top: 6px;
+      padding: 0 9px;
+      border-radius: 5px;
+      border: 1px solid rgba(73, 148, 225, .18);
+      color: #143f80;
+      background: rgba(255,255,255,.76);
+    }
+    .key-panel button {
+      width: 100%;
+      height: 31px;
+      margin-top: 8px;
+      border: 0;
+      border-radius: 5px;
+      color: #fff;
+      background: #217dff;
+      font-weight: 900;
+    }
+
+    .amap-marker-label { border: 0; background: transparent; }
+    .biz-marker {
+      transform: translate(-50%, -100%);
+      display: grid;
+      place-items: center;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+    }
+    .pin {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px 16px 16px 4px;
+      transform: rotate(-45deg);
+      color: #fff;
+      background: var(--c);
+      border: 3px solid rgba(255,255,255,.92);
+      box-shadow: 0 0 0 8px color-mix(in srgb, var(--c) 16%, transparent), 0 12px 20px rgba(60, 118, 180, .2);
+    }
+    .pin span { transform: rotate(45deg); font-size: 13px; font-weight: 900; }
+    .pin-base {
+      width: 34px;
+      height: 12px;
+      margin-top: 5px;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--c) 24%, transparent);
+      box-shadow: 0 0 14px color-mix(in srgb, var(--c) 38%, transparent);
+    }
+
+    @media (max-width: 900px) {
+      body { overflow: auto; }
+      .screen { min-width: 0; height: auto; min-height: 100dvh; padding-top: 90px; }
+      #map, .map-haze { position: fixed; inset: 88px 0 0; }
+      .topbar { height: 88px; grid-template-columns: 1fr; }
+      .top-left, .top-right { display: none; }
+      .title-shell { min-width: 0; width: 100%; height: 88px; }
+      h1 { font-size: 22px; }
+      .panel { position: relative; left: auto; right: auto; top: auto; width: calc(100% - 20px); height: auto; min-height: 260px; margin: 12px 10px; }
+      .city-panel { margin-top: 590px; }
+      .sense-body, .loop-body { grid-template-columns: 1fr 1fr; }
+      .scene-body { grid-template-columns: 1fr; }
+      .bottom-nav { position: fixed; top: auto; bottom: 12px; width: calc(100% - 20px); grid-template-columns: repeat(6, 124px); overflow-x: auto; justify-content: start; }
+      .key-panel { width: calc(100% - 28px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="screen">
+    <div id="map" aria-label="仿 GIS 城市电子地图">
+      <div class="gis-viewport" id="gisViewport">
+        <svg class="gis-svg" id="gisSvg" viewBox="0 0 1440 760" preserveAspectRatio="none" role="img" aria-label="城市 GIS 电子地图底图">
+          <defs>
+            <pattern id="gridPattern" width="42" height="42" patternUnits="userSpaceOnUse">
+              <path d="M42 0H0V42" fill="none" stroke="rgba(73,148,225,.2)" stroke-width="1"/>
+            </pattern>
+            <radialGradient id="heatRed" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="rgba(242,75,63,.72)"/>
+              <stop offset="42%" stop-color="rgba(245,154,35,.34)"/>
+              <stop offset="100%" stop-color="rgba(245,154,35,0)"/>
+            </radialGradient>
+            <radialGradient id="heatBlue" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="rgba(27,193,209,.62)"/>
+              <stop offset="48%" stop-color="rgba(33,125,255,.24)"/>
+              <stop offset="100%" stop-color="rgba(33,125,255,0)"/>
+            </radialGradient>
+          </defs>
+          <rect width="1440" height="760" fill="url(#gridPattern)" class="gis-bg-grid"/>
+          <g id="districtLayer"></g>
+          <g id="waterLayer"></g>
+          <g id="roadLayer"></g>
+          <g id="buildingLayer"></g>
+          <g id="heatLayer"></g>
+          <g id="trackLayer"></g>
+          <g id="labelLayer"></g>
+        </svg>
+        <div class="gis-points" id="pointLayer"></div>
+      </div>
+      <div class="map-scale">约 2 km</div>
+      <div class="map-compass">N</div>
+    </div>
+    <div class="map-haze"></div>
+
+    <header class="topbar">
+      <div class="top-left">
+        <span class="weather"><i>☁</i> <strong>26°C</strong></span>
+        <span>多云 | 梁子湖微风</span>
+        <span>2026-08-06 16:30:00</span>
+      </div>
+      <div class="title-shell">
+        <h1>鄂州城市安全风险监测预警平台</h1>
+      </div>
+      <div class="top-right">
+        <button class="style-toggle-btn" type="button" id="styleToggleBtn">切换风格</button>
+        <span class="alarm-dot"></span>
+        <span>消息</span>
+        <span>全屏</span>
+        <span>admin⌄</span>
+      </div>
+    </header>
+
+    <section class="style-image-view" id="styleImageView" aria-hidden="true">
+      <div class="style-image-toolbar">
+        <button class="style-toggle-btn alt" type="button" id="styleToggleBackBtn">切换风格</button>
+      </div>
+      <img src="assets/style-toggle-reference.png" alt="第一屏图片风格参考图">
+    </section>
+
+    <section class="panel city-panel">
+      <div class="panel-title"><b>城市体征</b><span>···</span></div>
+      <div class="city-body">
+        <img class="city-image" src="assets/city-vitals.png" alt="城市体征：城市基础、城市保障、城市环境、城市安全、城市交通、城市活力">
+        <a class="city-hotspot hot-basic" href="city-detail.html?section=%E5%9F%8E%E5%B8%82%E5%9F%BA%E7%A1%80" aria-label="查看城市基础详情"></a>
+        <a class="city-hotspot hot-support" href="city-detail.html?section=%E5%9F%8E%E5%B8%82%E4%BF%9D%E9%9A%9C" aria-label="查看城市保障详情"></a>
+        <a class="city-hotspot hot-env" href="city-detail.html?section=%E5%9F%8E%E5%B8%82%E7%8E%AF%E5%A2%83" aria-label="查看城市环境详情"></a>
+        <a class="city-hotspot hot-safe" href="city-detail.html?section=%E5%9F%8E%E5%B8%82%E5%AE%89%E5%85%A8" aria-label="查看城市安全详情"></a>
+        <a class="city-hotspot hot-traffic" href="city-detail.html?section=%E5%9F%8E%E5%B8%82%E4%BA%A4%E9%80%9A" aria-label="查看城市交通详情"></a>
+        <a class="city-hotspot hot-vitality" href="city-detail.html?section=%E5%9F%8E%E5%B8%82%E6%B4%BB%E5%8A%9B" aria-label="查看城市活力详情"></a>
+      </div>
+    </section>
+
+    <section class="panel sense-panel">
+      <div class="panel-title"><b>智能感知</b><span>···</span></div>
+      <div class="sense-body">
+        <div class="sense-stack">
+          <div class="sense-block">
+            <div class="sense-head">主动 <span class="periods"><span class="active">本周</span><span>本月</span><span>本年</span></span></div>
+            <div class="sense-cards">
+              <div class="sense-card"><i>▧</i><div>新增<b>100起</b></div></div>
+              <div class="sense-card"><i>☑</i><div>办结<b>86起</b></div></div>
+            </div>
+          </div>
+          <div class="sense-block">
+            <div class="sense-head">被动 <span class="periods"><span class="active">本周</span><span>本月</span><span>本年</span></span></div>
+            <div class="sense-cards">
+              <div class="sense-card"><i>▧</i><div>新增<b>123起</b></div></div>
+              <div class="sense-card"><i>☑</i><div>办结<b>108</b></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="sense-block auto">
+          <div class="sense-head">自动 <span class="periods"><span class="active">本周</span><span>本月</span><span>本年</span></span></div>
+          <div class="sense-cards">
+            <div class="sense-card"><i>▷</i><div>视频监控<b>7799路</b></div></div>
+            <div class="sense-card"><i>AI</i><div>AI监测<b>86起</b></div></div>
+          </div>
+          <div class="iot-title"><i>▭</i><span>物联感知设备</span></div>
+          <div class="device-list">
+            <div class="device-row"><span>燃气管网</span><b>32</b></div>
+            <div class="device-row"><span>排水管网</span><b>25</b></div>
+            <div class="device-row"><span>供水管网</span><b>8</b></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel scene-panel">
+      <div class="panel-title"><b>重点场景</b><span>···</span></div>
+      <div class="scene-body">
+        <div class="scene-tabs" id="sceneTabs"></div>
+        <div class="risk-list" id="riskList"></div>
+      </div>
+    </section>
+
+    <section class="panel loop-panel">
+      <div class="panel-title"><b>闭环管理</b><span>···</span></div>
+      <div class="loop-body">
+        <svg class="loop-lines" viewBox="0 0 344 252" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <marker id="loopArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth">
+              <path d="M0 0 L8 4 L0 8 Z" fill="rgba(33,125,255,.5)"/>
+            </marker>
+          </defs>
+          <g fill="none" stroke="rgba(33,125,255,.34)" stroke-width="2" stroke-dasharray="6 5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M196 42 L258 70" marker-end="url(#loopArrow)"/>
+            <path d="M292 98 L292 154" marker-end="url(#loopArrow)"/>
+            <path d="M258 184 L198 210" marker-end="url(#loopArrow)"/>
+            <path d="M146 210 L86 184" marker-end="url(#loopArrow)"/>
+            <path d="M52 154 L52 98" marker-end="url(#loopArrow)"/>
+            <path d="M86 70 L148 42" marker-end="url(#loopArrow)"/>
+          </g>
+        </svg>
+        <div class="loop-ring"></div>
+        <div class="hex" style="--x:50%; --y:16%; --c:#19c59d"><b>71</b>感知</div>
+        <div class="hex" style="--x:80%; --y:33%; --c:#f25d6b"><b>0</b>监测</div>
+        <div class="hex" style="--x:80%; --y:68%; --c:#f3bd28"><b>0</b>研判</div>
+        <div class="hex" style="--x:50%; --y:84%; --c:#f3bd28"><b>55</b>预警</div>
+        <div class="hex" style="--x:20%; --y:68%; --c:#23bdf0"><b>16</b>处置</div>
+        <div class="hex" style="--x:20%; --y:33%; --c:#19c59d"><b>71</b>评估</div>
+      </div>
+    </section>
+
+    <nav class="bottom-nav" aria-label="风险场景分类">
+      <button class="nav-item active">道路</button>
+      <button class="nav-item">河流湖泊</button>
+      <button class="nav-item">交通场站</button>
+      <button class="nav-item">公共场所</button>
+      <button class="nav-item">文旅景观</button>
+      <button class="nav-item">地下设施</button>
+    </nav>
+
+    <aside class="key-panel" id="keyPanel">
+      <h3>GIS 电子地图</h3>
+      <p>当前为前端自绘 GIS 底图，已分离道路、水系、建筑、边界、点位、热力、轨迹图层，后续可替换为真实 GIS 接口数据。</p>
+    </aside>
+  </main>
+
+  <script>
+    const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const mapEl = document.getElementById("map");
+    const viewport = document.getElementById("gisViewport");
+    const keyPanel = document.getElementById("keyPanel");
+    const styleImageView = document.getElementById("styleImageView");
+    const styleToggleBtn = document.getElementById("styleToggleBtn");
+    const styleToggleBackBtn = document.getElementById("styleToggleBackBtn");
+    const state = { zoom: 1, panX: 0, panY: 0, cursor: 0, timer: null, dragging: false, startX: 0, startY: 0 };
+    const sceneData = [
+      {
+        name: "城市生命线工程",
+        risks: ["燃气管线泄漏爆炸风险", "餐饮场所燃气泄漏风险", "桥梁运行安全风险", "供排水管网泄漏风险", "地下设施中毒窒息风险"]
+      },
+      {
+        name: "公共安全",
+        risks: ["老旧房屋坍塌风险", "大客流风险", "建筑火灾风险", "城市电梯运行风险", "重点车辆运输风险"]
+      },
+      {
+        name: "生产安全",
+        risks: ["危化品生产经营安全风险", "尾矿库溃坝风险", "水库垮坝风险", "工程建设安全风险"]
+      },
+      {
+        name: "自然灾害",
+        risks: ["城市洪涝、内涝风险", "森林火灾风险", "地震地质灾害风险", "台风灾害风险"]
+      },
+      {
+        name: "其他",
+        risks: ["防溺水", "长江禁捕捞", "秸秆焚烧"]
+      }
+    ];
+
+    const mapData = {
+      districts: [
+        { cls: "district-fill-a", d: "M144 118 C260 58 436 78 548 144 C654 205 674 319 594 404 C494 510 278 498 164 407 C72 333 58 184 144 118Z" },
+        { cls: "district-fill-b", d: "M666 108 C826 48 1050 68 1190 160 C1326 250 1312 438 1160 530 C1016 618 788 596 674 486 C574 388 548 206 666 108Z" },
+        { cls: "district-fill-a", d: "M372 414 C500 350 692 370 826 456 C950 536 944 660 804 708 C640 764 410 724 308 626 C234 554 268 466 372 414Z" }
+      ],
+      water: [
+        { cls: "water water-main", d: "M-20 228 C132 196 252 232 380 278 C552 340 690 314 844 240 C1008 160 1166 162 1460 220" },
+        { cls: "water water-branch", d: "M760 246 C730 312 720 380 764 438 C822 514 918 528 1042 566" },
+        { cls: "water water-branch", d: "M384 284 C340 348 328 414 372 480 C420 552 510 580 622 604" }
+      ],
+      roads: {
+        main: [
+          "M-20 520 C190 456 366 442 570 472 C760 500 930 462 1118 390 C1238 344 1344 334 1460 352",
+          "M246 86 C316 214 396 326 520 420 C672 536 852 616 1044 724",
+          "M1110 88 C1026 218 928 316 808 404 C674 502 528 590 348 732"
+        ],
+        secondary: [
+          "M112 348 C290 318 482 326 660 370 C820 410 982 414 1262 358",
+          "M90 650 C278 600 436 592 626 626 C812 660 1002 648 1320 560",
+          "M186 162 C318 244 454 302 612 318 C790 338 984 308 1218 208",
+          "M558 120 C606 250 648 352 720 456 C792 558 878 632 1008 710"
+        ],
+        minor: [
+          "M142 245 C244 278 358 304 488 342",
+          "M210 420 C342 378 480 374 620 402",
+          "M780 164 C880 224 958 274 1068 338",
+          "M918 472 C1032 508 1148 512 1288 486",
+          "M514 202 C468 286 438 358 410 486",
+          "M1012 194 C970 306 946 410 936 590",
+          "M682 92 C694 208 706 314 736 414",
+          "M310 560 C426 536 540 544 662 586",
+          "M774 584 C874 548 982 540 1120 566"
+        ]
+      },
+      boundaries: [
+        "M92 112 C274 48 490 80 628 206 C760 326 736 520 584 628 C436 734 194 682 82 538 C-10 420 -22 184 92 112Z",
+        "M612 96 C806 16 1110 54 1280 202 C1434 336 1360 580 1140 684 C944 776 650 704 552 532 C452 354 466 158 612 96Z"
+      ],
+      labels: [
+        { x: 292, y: 198, text: "葛店开发区" },
+        { x: 638, y: 358, text: "鄂州主城区" },
+        { x: 972, y: 252, text: "临空经济区" },
+        { x: 1032, y: 594, text: "花湖机场片区" },
+        { x: 468, y: 612, text: "洋澜湖片区" }
+      ],
+      points: [
+        { type: "events", name: "燃气压力异常", x: 650, y: 386, level: "高风险", icon: "!", color: "#f24b3f" },
+        { type: "events", name: "积水报警", x: 536, y: 486, level: "中风险", icon: "!", color: "#f24b3f" },
+        { type: "events", name: "消防通道占用", x: 808, y: 332, level: "高风险", icon: "!", color: "#f24b3f" },
+        { type: "videos", name: "东广场球机", x: 720, y: 438, level: "在线", icon: "视", color: "#217dff" },
+        { type: "videos", name: "高速入口卡口", x: 984, y: 412, level: "在线", icon: "视", color: "#217dff" },
+        { type: "iot", name: "水位传感器", x: 616, y: 560, level: "正常", icon: "物", color: "#1bc1d1" },
+        { type: "iot", name: "危化监测", x: 1086, y: 530, level: "正常", icon: "物", color: "#1bc1d1" },
+        { type: "iot", name: "桥隧监测", x: 430, y: 312, level: "正常", icon: "物", color: "#f59a23" },
+        { type: "events", name: "森林火险提示", x: 1024, y: 246, level: "预警", icon: "!", color: "#f3bd28" }
+      ],
+      heat: [
+        { x: 650, y: 386, r: 118, fill: "url(#heatRed)" },
+        { x: 808, y: 332, r: 102, fill: "url(#heatRed)" },
+        { x: 616, y: 560, r: 108, fill: "url(#heatBlue)" },
+        { x: 1086, y: 530, r: 96, fill: "url(#heatBlue)" }
+      ],
+      track: [
+        [430, 312], [536, 486], [650, 386], [720, 438], [808, 332], [984, 412], [1086, 530]
+      ]
+    };
+
+    function svgEl(tag, attrs = {}) {
+      const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+      Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value));
+      return el;
+    }
+
+    function toggleStyleView(forceImageView) {
+      const showImageView = typeof forceImageView === "boolean"
+        ? forceImageView
+        : !styleImageView.classList.contains("is-active");
+      styleImageView.classList.toggle("is-active", showImageView);
+      styleImageView.setAttribute("aria-hidden", showImageView ? "false" : "true");
+    }
+
+    function renderScene(index = 0) {
+      const tabs = document.getElementById("sceneTabs");
+      const list = document.getElementById("riskList");
+      tabs.innerHTML = sceneData.map((scene, sceneIndex) => `
+        <button class="scene-tab ${sceneIndex === index ? "active" : ""}" data-scene-index="${sceneIndex}">${scene.name}</button>
+      `).join("");
+      list.innerHTML = sceneData[index].risks.map((risk, riskIndex) => `
+        <button class="risk-item ${riskIndex === 0 ? "active" : ""}" data-risk="${risk}">${risk}</button>
+      `).join("");
+      tabs.querySelectorAll(".scene-tab").forEach(button => {
+        button.addEventListener("click", () => renderScene(Number(button.dataset.sceneIndex)));
+      });
+      list.querySelectorAll(".risk-item").forEach(button => {
+        button.addEventListener("click", () => {
+          list.querySelectorAll(".risk-item").forEach(item => item.classList.remove("active"));
+          button.classList.add("active");
+          keyPanel.style.display = "block";
+          keyPanel.innerHTML = `<h3>${button.dataset.risk}</h3><p>已选中重点场景风险项，可接入预警、监测点位和处置流程数据。</p>`;
+        });
+      });
+    }
+
+    function pathD(points) {
+      return points.map((p, index) => `${index ? "L" : "M"}${p[0]} ${p[1]}`).join(" ");
+    }
+
+    function drawLayer(id, items, maker) {
+      const layer = document.getElementById(id);
+      layer.innerHTML = "";
+      items.forEach(item => layer.appendChild(maker(item)));
+    }
+
+    function renderBuildings() {
+      const layer = document.getElementById("buildingLayer");
+      layer.innerHTML = "";
+      const clusters = [
+        { ox: 520, oy: 330, cols: 8, rows: 5, hot: true },
+        { ox: 760, oy: 286, cols: 7, rows: 6, hot: true },
+        { ox: 920, oy: 440, cols: 8, rows: 5, hot: false },
+        { ox: 386, oy: 446, cols: 7, rows: 5, hot: false },
+        { ox: 1056, oy: 280, cols: 6, rows: 4, hot: false }
+      ];
+      clusters.forEach(cluster => {
+        for (let r = 0; r < cluster.rows; r += 1) {
+          for (let c = 0; c < cluster.cols; c += 1) {
+            const w = 14 + ((c + r) % 3) * 5;
+            const h = 18 + ((c * 2 + r) % 4) * 8;
+            const x = cluster.ox + c * 28 + (r % 2) * 9;
+            const y = cluster.oy + r * 26 - h;
+            layer.appendChild(svgEl("rect", { class: `building${cluster.hot ? " hot" : ""}`, x, y, width: w, height: h, rx: 2 }));
+          }
+        }
+      });
+    }
+
+    function renderMapLayers() {
+      drawLayer("districtLayer", mapData.districts, item => svgEl("path", { class: `district ${item.cls}`, d: item.d }));
+      mapData.boundaries.forEach(d => document.getElementById("districtLayer").appendChild(svgEl("path", { class: "boundary-line", d })));
+      drawLayer("waterLayer", mapData.water, item => svgEl("path", { class: item.cls, d: item.d }));
+      const roadLayer = document.getElementById("roadLayer");
+      roadLayer.innerHTML = "";
+      mapData.roads.main.forEach(d => roadLayer.appendChild(svgEl("path", { class: "road road-main-shadow", d })));
+      mapData.roads.minor.forEach(d => roadLayer.appendChild(svgEl("path", { class: "road road-minor", d })));
+      mapData.roads.secondary.forEach(d => roadLayer.appendChild(svgEl("path", { class: "road road-secondary", d })));
+      mapData.roads.main.forEach(d => roadLayer.appendChild(svgEl("path", { class: "road road-main", d })));
+      renderBuildings();
+      drawLayer("heatLayer", mapData.heat, item => svgEl("circle", { class: "heat-blob", cx: item.x, cy: item.y, r: item.r, fill: item.fill }));
+      const trackLayer = document.getElementById("trackLayer");
+      trackLayer.innerHTML = "";
+      trackLayer.appendChild(svgEl("path", { class: "track-line", d: pathD(mapData.track) }));
+      drawLayer("labelLayer", mapData.labels, item => {
+        const text = svgEl("text", { class: "map-label-text", x: item.x, y: item.y });
+        text.textContent = item.text;
+        return text;
+      });
+      renderPoints();
+    }
+
+    function renderPoints() {
+      const pointLayer = document.getElementById("pointLayer");
+      pointLayer.innerHTML = mapData.points.map(point => `
+        <button class="gis-point" data-type="${point.type}" data-name="${point.name}" data-level="${point.level}" style="--x:${point.x / 14.4}%; --y:${point.y / 7.6}%; --c:${point.color}">
+          <span class="pin"><span>${point.icon}</span></span><span class="pin-base"></span>
+        </button>
+      `).join("");
+      pointLayer.querySelectorAll(".gis-point").forEach(btn => {
+        btn.addEventListener("click", event => {
+          event.stopPropagation();
+          const typeName = btn.dataset.type === "events" ? "事件报警" : btn.dataset.type === "videos" ? "视频监控" : "物联网设备";
+          keyPanel.style.display = "block";
+          keyPanel.innerHTML = `<h3>${btn.dataset.name}</h3><p>${typeName} · ${btn.dataset.level}</p><p>该点位来自前端 GIS 数据层，后续可映射真实坐标和业务 ID。</p>`;
+        });
+      });
+    }
+
+    function applyTransform() {
+      viewport.style.transform = `translate(${state.panX}px, ${state.panY}px) scale(${state.zoom})`;
+    }
+
+    function toggleLayer(name, visible) {
+      const map = { events: "[data-type='events']", videos: "[data-type='videos']", iot: "[data-type='iot']" };
+      if (map[name]) {
+        document.querySelectorAll(map[name]).forEach(el => el.style.display = visible ? "" : "none");
+        return;
+      }
+      const layer = name === "heat" ? document.getElementById("heatLayer") : document.getElementById("trackLayer");
+      if (layer) layer.style.display = visible ? "" : "none";
+    }
+
+    function animateTrack() {
+      if (RM) return;
+      const trackLayer = document.getElementById("trackLayer");
+      const marker = svgEl("circle", { cx: mapData.track[0][0], cy: mapData.track[0][1], r: 8, fill: "#f59a23", stroke: "#fff", "stroke-width": 3 });
+      trackLayer.appendChild(marker);
+      clearInterval(state.timer);
+      state.timer = setInterval(() => {
+        if (trackLayer.style.display === "none") return;
+        state.cursor = (state.cursor + 1) % mapData.track.length;
+        marker.setAttribute("cx", mapData.track[state.cursor][0]);
+        marker.setAttribute("cy", mapData.track[state.cursor][1]);
+      }, 950);
+    }
+
+    function bindControls() {
+      styleToggleBtn?.addEventListener("click", () => toggleStyleView(true));
+      styleToggleBackBtn?.addEventListener("click", () => toggleStyleView(false));
+      document.querySelectorAll(".nav-item").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".nav-item").forEach(item => item.classList.remove("active"));
+          btn.classList.add("active");
+          const name = btn.textContent.trim();
+          keyPanel.style.display = "block";
+          keyPanel.innerHTML = `<h3>${name}</h3><p>已切换到“${name}”风险场景分类，地图业务图层保持当前状态。</p>`;
+        });
+      });
+      mapEl.addEventListener("click", () => {
+        keyPanel.style.display = "block";
+        keyPanel.innerHTML = `<h3>GIS 电子地图</h3><p>当前为仿 GIS 电子地图底图。数据结构集中在 mapData 中，后续可直接接入真实 GIS 服务。</p>`;
+      });
+      mapEl.addEventListener("pointerdown", event => {
+        state.dragging = true;
+        state.startX = event.clientX - state.panX;
+        state.startY = event.clientY - state.panY;
+        mapEl.classList.add("dragging");
+      });
+      window.addEventListener("pointermove", event => {
+        if (!state.dragging) return;
+        state.panX = event.clientX - state.startX;
+        state.panY = event.clientY - state.startY;
+        applyTransform();
+      });
+      window.addEventListener("pointerup", () => {
+        state.dragging = false;
+        mapEl.classList.remove("dragging");
+      });
+      mapEl.addEventListener("wheel", event => {
+        event.preventDefault();
+        state.zoom = Math.max(.86, Math.min(1.45, +(state.zoom + (event.deltaY > 0 ? -.06 : .06)).toFixed(2)));
+        applyTransform();
+      }, { passive: false });
+    }
+
+    renderMapLayers();
+    renderScene();
+    animateTrack();
+    bindControls();
+  </script>
+</body>
+</html>
