@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>鄂州城市安全风险监测预警平台</title>
+  <title>鄂州市城市安全风险监测预警平台</title>
   <style>
     :root {
       --page: #edf3fb;
@@ -281,21 +281,46 @@
     }
     .weather strong { color: #17457e; font-size: 20px; }
     .weather i { color: #f2bd38; font-style: normal; font-size: 20px; }
-    .top-right { justify-content: flex-end; }
+    .top-right {
+      justify-content: flex-end;
+      padding-left: 58px;
+    }
     .style-toggle-btn {
-      height: 34px;
-      padding: 0 16px;
+      position: absolute;
+      top: 13px;
+      right: 332px;
+      z-index: 63;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      display: inline-grid;
+      place-items: center;
       border: 1px solid rgba(59, 126, 208, .26);
-      border-radius: 999px;
+      border-radius: 9px;
       color: #13529a;
       background: linear-gradient(180deg, rgba(255, 255, 255, .96), rgba(230, 241, 255, .92));
       box-shadow: 0 10px 22px -18px rgba(28, 93, 165, .45), inset 0 1px 0 rgba(255,255,255,.92);
-      font-size: 14px;
-      font-weight: 900;
-      white-space: nowrap;
+      cursor: pointer;
+      transition: background .16s ease, border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+    }
+    .style-toggle-btn svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.1;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
     .style-toggle-btn:hover {
       background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(217, 235, 255, .96));
+      border-color: rgba(40, 127, 232, .42);
+      box-shadow: 0 0 16px rgba(42, 132, 235, .22), inset 0 1px 0 rgba(255,255,255,.95);
+      transform: translateY(-1px);
+    }
+    .style-toggle-btn:active {
+      transform: translateY(0);
     }
     .style-toggle-btn.alt {
       color: #eaf6ff;
@@ -322,12 +347,12 @@
     }
     .style-image-toolbar {
       position: absolute;
-      top: 20px;
-      right: 24px;
+      inset: 0;
       z-index: 2;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      pointer-events: none;
+    }
+    .style-image-toolbar .style-toggle-btn {
+      pointer-events: auto;
     }
     .alarm-dot {
       position: relative;
@@ -465,6 +490,11 @@
       top: 454px;
       width: 392px;
       height: 330px;
+      overflow: visible;
+      cursor: pointer;
+    }
+    .loop-panel:hover {
+      box-shadow: 0 28px 60px -42px rgba(24, 86, 154, .7), inset 0 0 0 1px rgba(33, 125, 255, .14);
     }
 
     .city-body {
@@ -605,6 +635,8 @@
       background: rgba(237, 244, 253, .78);
       font-size: 9px;
       font-weight: 900;
+      cursor: pointer;
+      user-select: none;
     }
     .periods span.active {
       color: #fff;
@@ -632,6 +664,15 @@
       font-weight: 900;
       min-width: 0;
       white-space: nowrap;
+      cursor: pointer;
+      border-radius: 7px;
+      transition: background .18s ease, box-shadow .18s ease, transform .18s ease;
+    }
+    .sense-card:hover,
+    .device-row:hover {
+      background: rgba(236, 246, 255, .9);
+      box-shadow: 0 10px 22px -18px rgba(24, 105, 200, .45);
+      transform: translateY(-1px);
     }
     .iot-title span,
     .device-row span {
@@ -711,12 +752,756 @@
       box-shadow: inset 3px 0 0 #2f78f2;
       min-width: 0;
       white-space: nowrap;
+      cursor: pointer;
+      transition: background .18s ease, box-shadow .18s ease, transform .18s ease;
     }
     .device-row b {
       color: #1b62d8;
       text-align: right;
       font-size: 10px;
       font-variant-numeric: tabular-nums;
+    }
+
+    .event-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      display: none;
+      place-items: center;
+      padding: 34px;
+      background:
+        radial-gradient(640px 320px at 50% 42%, rgba(35, 125, 255, .18), transparent 70%),
+        rgba(226, 240, 255, .42);
+      backdrop-filter: blur(8px);
+    }
+    .event-modal.is-open {
+      display: grid;
+    }
+    .event-dialog {
+      width: min(860px, calc(100vw - 80px));
+      height: min(560px, calc(100dvh - 82px));
+      border-radius: 10px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(250, 254, 255, .96), rgba(237, 248, 255, .9)),
+        radial-gradient(520px 180px at 10% 0, rgba(52, 143, 238, .18), transparent 68%);
+      border: 1px solid rgba(42, 119, 205, .22);
+      box-shadow: 0 34px 86px -46px rgba(14, 73, 142, .68), inset 0 1px 0 rgba(255, 255, 255, .92);
+      color: #123864;
+    }
+    .event-dialog-head {
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px 0 24px;
+      background: linear-gradient(90deg, rgba(30, 112, 226, .16), rgba(255, 255, 255, .48));
+      border-bottom: 1px solid rgba(42, 119, 205, .16);
+    }
+    .event-dialog-title {
+      display: grid;
+      gap: 2px;
+      font-weight: 900;
+      color: #0c4da7;
+      font-size: 20px;
+    }
+    .event-dialog-title span {
+      color: #6e8fb3;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .event-close {
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(42, 119, 205, .2);
+      border-radius: 8px;
+      color: #1d63ba;
+      background: rgba(245, 250, 255, .82);
+      font-size: 20px;
+      line-height: 1;
+      font-weight: 900;
+    }
+    .event-filters {
+      display: grid;
+      grid-template-columns: 1fr 150px 150px 86px;
+      gap: 12px;
+      padding: 16px 20px 12px;
+    }
+    .event-filters input,
+    .event-filters select {
+      min-width: 0;
+      height: 38px;
+      border-radius: 7px;
+      border: 1px solid rgba(35, 113, 207, .18);
+      background: rgba(247, 252, 255, .86);
+      color: #163b65;
+      padding: 0 12px;
+      font-size: 13px;
+      font-weight: 800;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.85);
+    }
+    .event-search-btn {
+      height: 38px;
+      border: 1px solid rgba(33, 125, 255, .28);
+      border-radius: 7px;
+      color: #fff;
+      background: linear-gradient(135deg, #1f72e8, #5aa2ff);
+      box-shadow: 0 12px 22px -18px rgba(31, 114, 232, .62), inset 0 1px 0 rgba(255, 255, 255, .26);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+    .event-search-btn:hover {
+      background: linear-gradient(135deg, #1665db, #4b96f7);
+    }
+    .event-table {
+      margin: 0 20px 20px;
+      height: calc(100% - 58px - 66px - 20px);
+      border: 1px solid rgba(35, 113, 207, .13);
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(246, 251, 255, .66);
+    }
+    .event-row {
+      display: grid;
+      grid-template-columns: 88px 1fr 86px 86px 108px;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+      padding: 0 14px;
+      border-bottom: 1px solid rgba(35, 113, 207, .09);
+      color: #17375f;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .event-row.head {
+      min-height: 38px;
+      color: #5e7fa5;
+      background: linear-gradient(90deg, rgba(229, 243, 255, .82), rgba(244, 250, 255, .7));
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .event-row:last-child {
+      border-bottom: 0;
+    }
+    .event-row:not(.head) {
+      cursor: pointer;
+      transition: background .16s ease, transform .16s ease, box-shadow .16s ease;
+    }
+    .event-row:not(.head):hover {
+      background: rgba(229, 244, 255, .86);
+      box-shadow: inset 3px 0 0 #217dff;
+      transform: translateX(2px);
+    }
+    .event-name {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .event-tag,
+    .event-status {
+      width: fit-content;
+      min-width: 46px;
+      height: 22px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 999px;
+      padding: 0 9px;
+      color: #1264b6;
+      background: rgba(222, 239, 255, .8);
+      border: 1px solid rgba(39, 128, 225, .14);
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .event-status.true {
+      color: #12866f;
+      background: rgba(218, 247, 239, .82);
+      border-color: rgba(25, 197, 157, .18);
+    }
+    .event-status.false {
+      color: #b66a0c;
+      background: rgba(255, 241, 213, .82);
+      border-color: rgba(245, 154, 35, .2);
+    }
+    .event-empty {
+      padding: 32px 0;
+      text-align: center;
+      color: #7e99bd;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .event-location-marker {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      z-index: 8;
+      transform: translate(-50%, -100%);
+      display: grid;
+      justify-items: center;
+      width: 42px;
+      pointer-events: none;
+      color: #0d4b92;
+      font-size: 12px;
+      font-weight: 900;
+      text-shadow: 0 1px 0 rgba(255,255,255,.9);
+    }
+    .event-location-pin {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px 18px 18px 4px;
+      transform: rotate(-45deg);
+      color: #fff;
+      background: linear-gradient(135deg, #f24b3f, #ff8a5c);
+      border: 3px solid rgba(255,255,255,.94);
+      box-shadow: 0 0 0 9px rgba(242, 75, 63, .16), 0 16px 28px rgba(100, 47, 40, .2);
+    }
+    .event-location-pin span {
+      transform: rotate(45deg);
+      font-size: 18px;
+      line-height: 1;
+    }
+    .event-location-marker em {
+      margin-top: 8px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(249, 253, 255, .9);
+      border: 1px solid rgba(242, 75, 63, .2);
+      box-shadow: 0 12px 24px -18px rgba(80, 118, 170, .32);
+      font-style: normal;
+      white-space: nowrap;
+    }
+    .event-location-card {
+      position: absolute;
+      left: 54px;
+      top: -30px;
+      width: 300px;
+      padding: 12px 13px 13px;
+      border-radius: 8px;
+      border: 1px solid rgba(42, 119, 205, .22);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.96), rgba(236,247,255,.92)),
+        radial-gradient(180px 80px at 0 0, rgba(33, 125, 255, .16), transparent 70%);
+      box-shadow: 0 20px 44px -28px rgba(24, 86, 154, .5), inset 0 1px 0 rgba(255,255,255,.9);
+      text-shadow: none;
+      color: #173960;
+      text-align: left;
+      backdrop-filter: blur(12px);
+    }
+    .event-location-card::before {
+      content: "";
+      position: absolute;
+      left: -7px;
+      top: 38px;
+      width: 12px;
+      height: 12px;
+      transform: rotate(45deg);
+      border-left: 1px solid rgba(42, 119, 205, .18);
+      border-bottom: 1px solid rgba(42, 119, 205, .18);
+      background: rgba(244, 250, 255, .95);
+    }
+    .event-location-card h4 {
+      margin: 0 0 8px;
+      color: #0c4da7;
+      font-size: 14px;
+      line-height: 1.35;
+      font-weight: 900;
+    }
+    .event-location-card h4 span {
+      display: inline-grid;
+      place-items: center;
+      min-width: 22px;
+      height: 18px;
+      margin-left: 5px;
+      border-radius: 4px;
+      color: #fff;
+      background: #1f72e8;
+      font-size: 11px;
+      vertical-align: 1px;
+    }
+    .event-location-info {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 6px 8px;
+      font-size: 12px;
+      line-height: 1.45;
+      font-weight: 800;
+    }
+    .event-location-info span:nth-child(odd) {
+      color: #6a87a8;
+    }
+    .event-location-info span:nth-child(even) {
+      color: #173960;
+      min-width: 0;
+    }
+    .event-location-info .event-location-desc {
+      line-height: 1.55;
+      white-space: normal;
+    }
+    .case-float {
+      position: fixed;
+      z-index: 95;
+      width: 330px;
+      max-height: calc(100dvh - 128px);
+      display: none;
+      grid-template-rows: 48px minmax(0, 1fr);
+      border-radius: 10px;
+      overflow: hidden;
+      color: #173960;
+      background:
+        linear-gradient(180deg, rgba(252, 254, 255, .97), rgba(236, 247, 255, .92)),
+        radial-gradient(280px 120px at 8% 0, rgba(33, 125, 255, .14), transparent 70%);
+      border: 1px solid rgba(42, 119, 205, .18);
+      box-shadow: 0 28px 70px -44px rgba(14, 73, 142, .62), inset 0 1px 0 rgba(255,255,255,.9);
+      backdrop-filter: blur(14px);
+    }
+    .case-float.is-open {
+      display: grid;
+    }
+    .case-detail-panel {
+      left: 24px;
+      top: 112px;
+    }
+    .case-flow-panel {
+      right: 24px;
+      top: 112px;
+    }
+    .case-float-head {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 0 12px 0 16px;
+      cursor: move;
+      color: #0c4da7;
+      background: linear-gradient(90deg, rgba(219, 239, 255, .9), rgba(255,255,255,.54));
+      border-bottom: 1px solid rgba(42, 119, 205, .14);
+      font-size: 17px;
+      font-weight: 900;
+    }
+    .case-float-close {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(42, 119, 205, .18);
+      border-radius: 7px;
+      color: #1d63ba;
+      background: rgba(247, 252, 255, .78);
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .case-float-body {
+      min-height: 0;
+      overflow-y: auto;
+      padding: 12px 14px 16px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(33, 125, 255, .34) transparent;
+    }
+    .case-summary {
+      display: grid;
+      gap: 6px;
+      padding: 10px;
+      border-radius: 8px;
+      color: #0f4c8d;
+      background: rgba(231, 244, 255, .72);
+      border: 1px solid rgba(42, 119, 205, .13);
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.45;
+    }
+    .case-info-grid {
+      display: grid;
+      grid-template-columns: 74px minmax(0, 1fr);
+      gap: 8px 10px;
+      margin-top: 12px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .case-info-grid span:nth-child(odd) {
+      color: #6c86a8;
+      font-weight: 900;
+    }
+    .case-info-grid span:nth-child(even) {
+      color: #173960;
+      font-weight: 900;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+    .case-section-title {
+      margin: 14px 0 9px;
+      padding-bottom: 7px;
+      color: #0c4da7;
+      border-bottom: 2px solid rgba(33, 125, 255, .72);
+      font-size: 14px;
+      font-weight: 900;
+    }
+    .case-photo-box {
+      height: 190px;
+      display: grid;
+      grid-template-columns: 32px 1fr 32px;
+      align-items: center;
+      gap: 8px;
+      padding: 9px;
+      border-radius: 8px;
+      background: rgba(235, 247, 255, .78);
+      border: 1px solid rgba(42, 119, 205, .16);
+    }
+    .case-photo-arrow {
+      height: 100%;
+      display: grid;
+      place-items: center;
+      color: #217dff;
+      font-size: 26px;
+      font-weight: 400;
+    }
+    .case-photo {
+      height: 100%;
+      display: grid;
+      place-items: center;
+      border-radius: 7px;
+      overflow: hidden;
+      color: #2d6ea8;
+      background:
+        linear-gradient(90deg, rgba(210, 226, 238, .38) 1px, transparent 1px),
+        linear-gradient(rgba(210, 226, 238, .38) 1px, transparent 1px),
+        linear-gradient(180deg, #d9e7f3, #eef6fd);
+      background-size: 20px 20px, 20px 20px, auto;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .case-dots {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      margin-top: -2px;
+    }
+    .case-dots i {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(127, 157, 190, .36);
+    }
+    .case-dots i.active {
+      width: 24px;
+      background: #1f9dff;
+    }
+    .share-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .share-tabs span {
+      min-width: 48px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 5px;
+      color: #1c5c9c;
+      background: rgba(231, 244, 255, .8);
+      border: 1px solid rgba(42, 119, 205, .16);
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .share-tabs span.active {
+      color: #fff;
+      background: linear-gradient(135deg, #1f72e8, #28b8ff);
+      border-color: rgba(33, 125, 255, .22);
+    }
+    .flow-timeline {
+      position: relative;
+      display: grid;
+      gap: 14px;
+      padding-left: 16px;
+    }
+    .flow-timeline::before {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 10px;
+      bottom: 10px;
+      width: 2px;
+      background: linear-gradient(180deg, rgba(33, 125, 255, .72), rgba(33, 125, 255, .12));
+    }
+    .flow-node {
+      position: relative;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: rgba(247, 252, 255, .82);
+      border: 1px solid rgba(42, 119, 205, .16);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.86);
+    }
+    .flow-node::before {
+      content: "";
+      position: absolute;
+      left: -16px;
+      top: 14px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #14a7ff;
+      border: 2px solid #eaf8ff;
+      box-shadow: 0 0 0 3px rgba(33, 125, 255, .16);
+    }
+    .flow-node-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 7px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid rgba(42, 119, 205, .12);
+      color: #0d5fc3;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .flow-node-head time {
+      color: #6e8fb3;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .flow-fields {
+      display: grid;
+      grid-template-columns: 62px minmax(0, 1fr);
+      gap: 5px 8px;
+      color: #173960;
+      font-size: 12px;
+      line-height: 1.45;
+      font-weight: 900;
+    }
+    .flow-fields span:nth-child(odd) {
+      color: #6c86a8;
+    }
+
+    .loop-event-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 95;
+      display: none;
+      place-items: center;
+      padding: 18px;
+      background:
+        radial-gradient(760px 360px at 50% 25%, rgba(60, 151, 238, .2), transparent 72%),
+        rgba(207, 229, 249, .48);
+      backdrop-filter: blur(8px);
+    }
+    .loop-event-modal.is-open { display: grid; }
+    .loop-event-dialog {
+      width: min(1180px, calc(100vw - 36px));
+      height: min(610px, calc(100dvh - 36px));
+      display: grid;
+      grid-template-rows: 46px auto 1fr 38px;
+      overflow: hidden;
+      border: 1px solid rgba(43, 132, 211, .28);
+      border-radius: 4px;
+      color: #17385f;
+      background:
+        linear-gradient(180deg, rgba(232, 247, 255, .91), rgba(244, 251, 255, .84)),
+        radial-gradient(720px 260px at 50% -10%, rgba(73, 166, 239, .25), transparent 72%);
+      box-shadow: 0 34px 90px -44px rgba(9, 64, 126, .62), inset 0 1px 0 rgba(255,255,255,.88);
+    }
+    .loop-event-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      background: linear-gradient(90deg, rgba(42, 127, 202, .3), rgba(255,255,255,.3));
+      border-bottom: 1px solid rgba(43, 132, 211, .22);
+    }
+    .loop-event-head h2 {
+      margin: 0;
+      color: #0b4f9f;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: .5px;
+    }
+    .loop-event-close {
+      width: 28px;
+      height: 28px;
+      border: 1px solid rgba(35, 113, 207, .24);
+      border-radius: 4px;
+      color: #1c65b5;
+      background: rgba(246, 252, 255, .78);
+      font-size: 20px;
+      line-height: 1;
+      font-weight: 900;
+    }
+    .loop-event-filters {
+      display: grid;
+      gap: 9px;
+      padding: 12px 18px;
+      background: linear-gradient(180deg, rgba(232, 247, 255, .64), rgba(255,255,255,.28));
+    }
+    .loop-filter-line {
+      display: grid;
+      grid-template-columns: 70px 1fr;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .loop-filter-line.department-line {
+      align-items: start;
+    }
+    .loop-filter-line.department-line .loop-filter-name {
+      padding-top: 4px;
+    }
+    .loop-filter-name {
+      color: #416a95;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .loop-keyword-line {
+      grid-template-columns: 70px 240px 80px 170px 1fr auto;
+    }
+    .loop-event-filters input {
+      height: 28px;
+      min-width: 0;
+      padding: 0 10px;
+      border: 1px solid rgba(38, 137, 218, .32);
+      border-radius: 2px;
+      background: rgba(255,255,255,.82);
+      color: #17385f;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .loop-date-range {
+      display: grid;
+      grid-template-columns: 1fr 18px 1fr;
+      align-items: center;
+      gap: 4px;
+    }
+    .loop-date-range span {
+      text-align: center;
+      color: #6d8daf;
+      font-weight: 900;
+    }
+    .loop-pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px 9px;
+      min-width: 0;
+    }
+    .loop-pill {
+      min-width: 76px;
+      height: 24px;
+      padding: 0 13px;
+      border: 1px solid rgba(34, 139, 219, .64);
+      border-radius: 999px;
+      color: #2470b4;
+      background: rgba(233, 247, 255, .68);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .loop-pill.active {
+      color: #fff;
+      border-color: #18a1dc;
+      background: linear-gradient(180deg, #1fb2e8, #1489d1);
+      box-shadow: 0 8px 18px -14px rgba(20, 137, 209, .75);
+    }
+    .loop-pill.level-red {
+      color: #d93432;
+      border-color: rgba(226, 58, 54, .64);
+      background: rgba(255, 235, 235, .78);
+    }
+    .loop-pill.level-orange {
+      color: #d87612;
+      border-color: rgba(238, 139, 25, .66);
+      background: rgba(255, 243, 226, .82);
+    }
+    .loop-pill.level-yellow {
+      color: #b68a00;
+      border-color: rgba(214, 169, 0, .62);
+      background: rgba(255, 249, 217, .86);
+    }
+    .loop-pill.level-blue {
+      color: #1f72e8;
+      border-color: rgba(31, 114, 232, .62);
+      background: rgba(231, 243, 255, .82);
+    }
+    .loop-pill.level-red.active { background: linear-gradient(180deg, #ff5a56, #df3030); }
+    .loop-pill.level-orange.active { background: linear-gradient(180deg, #ffad34, #ed811b); }
+    .loop-pill.level-yellow.active { background: linear-gradient(180deg, #ffd84e, #e8b513); color: #624b00; }
+    .loop-pill.level-blue.active { background: linear-gradient(180deg, #4ea7ff, #1f72e8); }
+    .loop-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    .loop-action {
+      width: 78px;
+      height: 30px;
+      border: 1px solid rgba(26, 131, 210, .58);
+      border-radius: 2px;
+      color: #1b72b9;
+      background: rgba(246, 252, 255, .7);
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .loop-action.primary {
+      color: #fff;
+      background: linear-gradient(180deg, #2aa6e8, #167fd0);
+    }
+    .loop-event-table {
+      margin: 0 18px;
+      overflow: hidden;
+      border: 1px solid rgba(43, 132, 211, .14);
+      background: rgba(255,255,255,.58);
+    }
+    .loop-event-row {
+      display: grid;
+      grid-template-columns: 42px 92px minmax(300px, 1.6fr) minmax(150px, .9fr) 100px 92px 148px;
+      align-items: center;
+      gap: 10px;
+      min-height: 38px;
+      padding: 0 10px;
+      border-bottom: 1px solid rgba(42, 119, 205, .08);
+      color: #294660;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .loop-event-row.head {
+      min-height: 34px;
+      color: #496d90;
+      background: rgba(233, 244, 253, .9);
+      font-weight: 900;
+    }
+    .loop-event-row:not(.head):nth-child(odd) { background: rgba(255,255,255,.6); }
+    .loop-event-row:not(.head):nth-child(even) { background: rgba(236, 246, 252, .46); }
+    .loop-event-row span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .loop-level {
+      font-weight: 900;
+    }
+    .loop-level.red { color: #e23a36; }
+    .loop-level.orange { color: #ee8b19; }
+    .loop-level.yellow { color: #d6a900; }
+    .loop-level.blue { color: #1f72e8; }
+    .loop-event-empty {
+      padding: 40px 0;
+      text-align: center;
+      color: #6686a8;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .loop-event-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      color: #335d87;
+      background: rgba(224, 242, 255, .72);
+      font-size: 12px;
+      font-weight: 900;
     }
 
     .scene-body {
@@ -792,65 +1577,89 @@
     .loop-body {
       height: calc(100% - 36px);
       position: relative;
-      padding: 0;
+      padding: 12px 16px 14px;
       overflow: hidden;
     }
-    .loop-ring {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 158px;
-      height: 158px;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      border: 1px solid rgba(33, 125, 255, .18);
-      box-shadow:
-        inset 0 0 0 18px rgba(230, 244, 255, .24),
-        0 0 24px rgba(33, 125, 255, .1);
+    .loop-flow {
+      height: 100%;
+      display: grid;
+      grid-template-rows: repeat(6, 1fr);
+      gap: 8px;
     }
-    .loop-ring::before {
+    .loop-flow-card {
+      position: relative;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 72px 1fr 64px;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px;
+      border: 1px solid color-mix(in srgb, var(--c) 26%, rgba(33, 125, 255, .12));
+      border-radius: 8px;
+      color: #183b65;
+      background:
+        linear-gradient(90deg, color-mix(in srgb, var(--c) 14%, rgba(255,255,255,.9)), rgba(255,255,255,.64)),
+        radial-gradient(120px 36px at 92% 50%, color-mix(in srgb, var(--c) 18%, transparent), transparent 70%);
+      box-shadow: 0 10px 22px -20px color-mix(in srgb, var(--c) 45%, rgba(31, 114, 232, .2)), inset 0 1px 0 rgba(255,255,255,.82);
+      cursor: pointer;
+    }
+    .loop-flow-card:not(:last-child)::after {
       content: "";
       position: absolute;
-      inset: 27px;
-      border-radius: 50%;
-      border: 9px solid rgba(83, 172, 255, .15);
-      border-top-color: rgba(33, 125, 255, .48);
-      border-right-color: rgba(27, 193, 209, .38);
-      transform: rotate(42deg);
+      left: 50%;
+      bottom: -8px;
+      z-index: 2;
+      width: 8px;
+      height: 8px;
+      transform: translate(-50%, 50%) rotate(45deg);
+      border-right: 2px solid color-mix(in srgb, var(--c) 56%, #69a6ec);
+      border-bottom: 2px solid color-mix(in srgb, var(--c) 56%, #69a6ec);
+      background: transparent;
     }
-    .loop-lines {
-      position: absolute;
-      inset: 18px 24px;
-      pointer-events: none;
-    }
-    .hex {
-      position: absolute;
-      left: var(--x);
-      top: var(--y);
-      transform: translate(-50%, -50%);
-      width: 86px;
-      min-height: 78px;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      color: #243f64;
-      font-size: 12px;
+    .loop-step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #0e4f9e;
+      font-size: 15px;
       font-weight: 900;
+      white-space: nowrap;
     }
-    .hex b {
-      width: 62px;
-      height: 52px;
+    .loop-step::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--c);
+      box-shadow: 0 0 0 5px color-mix(in srgb, var(--c) 14%, transparent);
+    }
+    .loop-desc {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #5b7798;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .loop-value {
+      justify-self: end;
+      min-width: 52px;
+      height: 30px;
       display: grid;
       place-items: center;
-      margin-bottom: 6px;
-      color: #111c2e;
+      color: #10294a;
       font-size: 17px;
+      font-weight: 900;
       background:
-        linear-gradient(145deg, color-mix(in srgb, var(--c) 24%, #fff), rgba(255,255,255,.9));
-      border: 1px solid color-mix(in srgb, var(--c) 34%, transparent);
-      clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
-      box-shadow: 0 12px 20px color-mix(in srgb, var(--c) 15%, transparent), inset 0 1px 0 rgba(255,255,255,.82);
+        linear-gradient(180deg, color-mix(in srgb, var(--c) 18%, #fff), rgba(255,255,255,.76));
+      border: 1px solid color-mix(in srgb, var(--c) 32%, rgba(255,255,255,.4));
+      border-radius: 7px;
       font-variant-numeric: tabular-nums;
+    }
+    .loop-flow-card:hover {
+      transform: translateX(2px);
+      box-shadow: 0 14px 28px -20px color-mix(in srgb, var(--c) 48%, rgba(31, 114, 232, .32)), inset 0 1px 0 rgba(255,255,255,.86);
     }
 
     .bottom-nav {
@@ -858,11 +1667,11 @@
       z-index: 19;
       left: 50%;
       top: 84px;
-      width: 660px;
+      width: 760px;
       height: 44px;
       transform: translateX(-50%);
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(7, 1fr);
       gap: 2px;
       padding: 4px;
       border-radius: 8px;
@@ -890,6 +1699,106 @@
       color: #0a51b4;
       background: linear-gradient(180deg, rgba(31, 114, 232, .13), rgba(255,255,255,.26));
       box-shadow: inset 0 -2px 0 var(--blue), 0 10px 18px -16px rgba(31, 114, 232, .38);
+    }
+    .layer-panel {
+      position: absolute;
+      z-index: 18;
+      left: 50%;
+      top: 128px;
+      width: 760px;
+      max-height: 285px;
+      transform: translateX(-50%);
+      display: none;
+      grid-template-rows: auto minmax(0, 1fr);
+      border-radius: 0 0 10px 10px;
+      border: 1px solid rgba(27, 95, 178, .12);
+      border-top: 0;
+      background:
+        linear-gradient(180deg, rgba(250, 253, 255, .96), rgba(232, 245, 255, .9)),
+        radial-gradient(320px 120px at 12% 0, rgba(33, 125, 255, .13), transparent 72%);
+      box-shadow: 0 18px 42px -28px rgba(31, 92, 158, .38), inset 0 1px 0 rgba(255,255,255,.9);
+      backdrop-filter: blur(16px);
+      overflow: hidden;
+    }
+    .layer-panel.is-open {
+      display: grid;
+    }
+    .layer-panel-head {
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 0 16px;
+      color: #0d5fc3;
+      border-bottom: 1px solid rgba(42, 119, 205, .12);
+      background: linear-gradient(90deg, rgba(224, 241, 255, .78), rgba(255,255,255,.42));
+      font-size: 14px;
+      font-weight: 900;
+    }
+    .layer-panel-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .layer-panel-title::before {
+      content: "";
+      width: 4px;
+      height: 18px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #21c8ff, #287ff0);
+      box-shadow: 0 0 12px rgba(33, 125, 255, .32);
+    }
+    .layer-check {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #2a5f99;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .layer-check input {
+      width: 15px;
+      height: 15px;
+      accent-color: #217dff;
+      cursor: pointer;
+    }
+    .layer-panel-list {
+      max-height: 243px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px 12px;
+      padding: 12px 16px 15px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(33, 125, 255, .34) transparent;
+    }
+    .layer-item {
+      min-width: 0;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      border-radius: 7px;
+      background: rgba(247, 252, 255, .78);
+      border: 1px solid rgba(42, 119, 205, .1);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.72);
+    }
+    .layer-item span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .layer-item:has(input:checked) {
+      color: #0b5fc0;
+      background: linear-gradient(180deg, rgba(230, 244, 255, .94), rgba(247, 252, 255, .8));
+      border-color: rgba(33, 125, 255, .22);
+      box-shadow: inset 0 0 0 1px rgba(33, 125, 255, .06), 0 8px 16px -16px rgba(31, 114, 232, .38);
     }
 
     .key-panel {
@@ -930,6 +1839,320 @@
       color: #fff;
       background: #217dff;
       font-weight: 900;
+    }
+
+    .video-panel {
+      position: absolute;
+      z-index: 18;
+      left: 430px;
+      top: 150px;
+      width: 292px;
+      max-height: calc(100dvh - 190px);
+      display: none;
+      color: #123864;
+      background:
+        linear-gradient(180deg, rgba(252, 254, 255, .94), rgba(235, 247, 255, .88)),
+        radial-gradient(260px 190px at 100% 0, rgba(70, 159, 244, .18), transparent 70%);
+      border: 1px solid rgba(35, 113, 207, .22);
+      box-shadow: 0 24px 58px -38px rgba(24, 86, 154, .52), inset 0 1px 0 rgba(255,255,255,.9);
+      backdrop-filter: blur(16px);
+      overflow: hidden;
+    }
+    .video-panel.is-open { display: block; }
+    .video-panel-head {
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px 0 12px;
+      color: #0c4da7;
+      background: linear-gradient(90deg, rgba(215, 237, 255, .9), rgba(250, 254, 255, .62));
+      border-bottom: 1px solid rgba(35, 113, 207, .16);
+      font-size: 15px;
+      font-weight: 900;
+    }
+    .video-panel-head button {
+      width: 26px;
+      height: 26px;
+      border: 1px solid rgba(35, 113, 207, .18);
+      border-radius: 4px;
+      color: #1d63ba;
+      background: rgba(246, 251, 255, .9);
+      font-size: 16px;
+      line-height: 1;
+      font-weight: 900;
+    }
+    .video-summary {
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      border-bottom: 1px solid rgba(35, 113, 207, .12);
+    }
+    .video-rate {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 8px;
+      color: #557aa2;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .video-rate b {
+      color: #0c4da7;
+      font-size: 18px;
+      font-variant-numeric: tabular-nums;
+    }
+    .video-rate-track {
+      height: 7px;
+      overflow: hidden;
+      background: rgba(214, 231, 247, .92);
+      border: 1px solid rgba(76, 143, 213, .2);
+    }
+    .video-rate-track i {
+      display: block;
+      width: 84.35%;
+      height: 100%;
+      background: linear-gradient(90deg, #1f72e8, #18bad0);
+      box-shadow: 0 0 12px rgba(31, 114, 232, .22);
+    }
+    .video-type-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+    }
+    .video-type-card {
+      min-width: 0;
+      padding: 7px 6px;
+      text-align: center;
+      background: rgba(244, 250, 255, .82);
+      border: 1px solid rgba(35, 113, 207, .14);
+      color: #6386ad;
+      font-size: 11px;
+      font-weight: 900;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.88);
+    }
+    .video-type-card b {
+      display: block;
+      margin-bottom: 3px;
+      color: #1052c7;
+      font-size: 16px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .video-search {
+      padding: 10px 10px 8px;
+      display: grid;
+      gap: 8px;
+    }
+    .video-search input[type="search"] {
+      width: 100%;
+      height: 30px;
+      border-radius: 4px;
+      border: 1px solid rgba(35, 113, 207, .2);
+      color: #143f80;
+      background: rgba(248, 252, 255, .9);
+      padding: 0 10px;
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.85);
+    }
+    .video-search input::placeholder { color: rgba(91, 125, 164, .62); }
+    .video-check {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #1b62d8;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .video-check input {
+      width: 14px;
+      height: 14px;
+      accent-color: #45a7ff;
+    }
+    .video-tree {
+      max-height: calc(100dvh - 442px);
+      overflow: auto;
+      padding: 0 8px 12px;
+    }
+    .video-node details { margin: 1px 0; }
+    .video-node summary {
+      min-height: 28px;
+      display: grid;
+      grid-template-columns: 14px 17px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 5px;
+      padding: 0 4px;
+      border-radius: 5px;
+      color: #17375f;
+      font-size: 12px;
+      font-weight: 900;
+      list-style: none;
+      cursor: pointer;
+    }
+    .video-node summary:hover {
+      background: rgba(224, 241, 255, .72);
+    }
+    .video-node summary::-webkit-details-marker { display: none; }
+    .video-node .arrow {
+      color: #2f78f2;
+      font-size: 11px;
+      transition: transform .16s ease;
+    }
+    .video-node details[open] > summary .arrow { transform: rotate(90deg); }
+    .video-node .folder { color: #e0a30d; font-size: 13px; }
+    .video-node .camera { color: #1f86d8; font-size: 12px; }
+    .video-node .name {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .video-node .count {
+      color: #244f82;
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+    }
+    .video-children { margin-left: 17px; }
+    .video-empty {
+      padding: 18px 0;
+      text-align: center;
+      color: #7e99bd;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .device-status-panel {
+      position: absolute;
+      z-index: 18;
+      left: 430px;
+      bottom: 112px;
+      width: 270px;
+      display: none;
+      padding: 6px 7px 7px;
+      color: #15365f;
+      background:
+        linear-gradient(180deg, rgba(252, 254, 255, .95), rgba(235, 247, 255, .9)),
+        radial-gradient(280px 120px at 0 0, rgba(74, 172, 255, .18), transparent 70%);
+      border: 1px solid rgba(35, 113, 207, .22);
+      box-shadow: 0 16px 38px -28px rgba(24, 86, 154, .5), inset 0 1px 0 rgba(255,255,255,.9);
+      backdrop-filter: blur(16px);
+    }
+    .device-status-panel.is-open { display: block; }
+    .device-status-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding-bottom: 7px;
+      border-bottom: 1px solid rgba(35, 113, 207, .13);
+      color: #0c4da7;
+      font-size: 10px;
+      font-weight: 900;
+    }
+    .device-status-head button {
+      width: 16px;
+      height: 16px;
+      border: 1px solid rgba(35, 113, 207, .18);
+      border-radius: 3px;
+      color: #1d63ba;
+      background: rgba(246, 251, 255, .9);
+      font-size: 10px;
+      line-height: 1;
+      font-weight: 900;
+    }
+    .device-status-list {
+      display: grid;
+      grid-template-columns: 88px 1px 1fr;
+      gap: 7px;
+      align-items: stretch;
+      padding-top: 6px;
+    }
+    .device-total-card {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      min-width: 0;
+    }
+    .device-total-card b {
+      color: #0f66dc;
+      font-size: 25px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 0;
+      font-variant-numeric: tabular-nums;
+    }
+    .device-total-card span {
+      display: block;
+      margin-top: 5px;
+      color: #244f82;
+      font-size: 10px;
+      line-height: 1.25;
+      font-weight: 900;
+    }
+    .device-total-icon {
+      position: relative;
+      width: 40px;
+      height: 34px;
+      margin-top: 7px;
+      border-radius: 9px;
+      background: linear-gradient(145deg, rgba(72, 136, 246, .9), rgba(39, 185, 236, .86));
+      box-shadow: 0 12px 22px -16px rgba(31, 114, 232, .6), inset 0 1px 0 rgba(255,255,255,.55);
+      transform: rotate(45deg);
+    }
+    .device-total-icon::before {
+      content: "◉";
+      position: absolute;
+      inset: -13px 0 auto;
+      transform: rotate(-45deg);
+      color: rgba(31, 114, 232, .72);
+      font-size: 23px;
+      text-shadow: 0 0 14px rgba(31, 114, 232, .18);
+    }
+    .device-status-divider {
+      width: 1px;
+      background: linear-gradient(180deg, transparent, rgba(35, 113, 207, .22), transparent);
+    }
+    .device-status-items {
+      display: grid;
+      gap: 7px;
+    }
+    .device-status-row {
+      display: grid;
+      grid-template-columns: 25px minmax(0, 1fr) 54px;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+    }
+    .device-status-icon {
+      width: 23px;
+      height: 23px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #1f72e8;
+      background: rgba(237, 247, 255, .88);
+      border: 1px solid rgba(35, 113, 207, .16);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.86);
+      font-size: 13px;
+    }
+    .device-status-label {
+      color: #0f66dc;
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .device-status-value {
+      height: 26px;
+      display: grid;
+      place-items: center;
+      color: #2682ef;
+      border: 1px solid rgba(35, 113, 207, .18);
+      border-radius: 5px;
+      background: rgba(248, 252, 255, .88);
+      font-size: 15px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
     }
 
     .amap-marker-label { border: 0; background: transparent; }
@@ -973,7 +2196,7 @@
       .city-panel { margin-top: 590px; }
       .sense-body, .loop-body { grid-template-columns: 1fr 1fr; }
       .scene-body { grid-template-columns: 1fr; }
-      .bottom-nav { position: fixed; top: auto; bottom: 12px; width: calc(100% - 20px); grid-template-columns: repeat(6, 124px); overflow-x: auto; justify-content: start; }
+      .bottom-nav { position: fixed; top: auto; bottom: 12px; width: calc(100% - 20px); grid-template-columns: repeat(7, 124px); overflow-x: auto; justify-content: start; }
       .key-panel { width: calc(100% - 28px); }
     }
 
@@ -1025,10 +2248,15 @@
         <span>2026-08-06 16:30:00</span>
       </div>
       <div class="title-shell">
-        <h1>鄂州城市安全风险监测预警平台</h1>
+        <h1>鄂州市城市安全风险监测预警平台</h1>
       </div>
       <div class="top-right">
-        <button class="style-toggle-btn" type="button" id="styleToggleBtn">切换风格</button>
+        <button class="style-toggle-btn" type="button" id="styleToggleBtn" aria-label="切换风格" title="切换风格">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 4 10 7h4l2-3 4 2.8-2.2 4-1.8-.8v9H8v-9l-1.8.8L4 6.8 8 4Z"/>
+            <path d="M10 7c.7.8 1.3 1.1 2 1.1S13.3 7.8 14 7"/>
+          </svg>
+        </button>
         <span class="alarm-dot"></span>
         <span>消息</span>
         <span>全屏</span>
@@ -1038,7 +2266,12 @@
 
     <section class="style-image-view" id="styleImageView" aria-hidden="true">
       <div class="style-image-toolbar">
-        <button class="style-toggle-btn alt" type="button" id="styleToggleBackBtn">切换风格</button>
+        <button class="style-toggle-btn alt" type="button" id="styleToggleBackBtn" aria-label="切换风格" title="切换风格">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 4 10 7h4l2-3 4 2.8-2.2 4-1.8-.8v9H8v-9l-1.8.8L4 6.8 8 4Z"/>
+            <path d="M10 7c.7.8 1.3 1.1 2 1.1S13.3 7.8 14 7"/>
+          </svg>
+        </button>
       </div>
       <img src="assets/style-toggle-reference.png" alt="第一屏图片风格参考图">
     </section>
@@ -1060,32 +2293,32 @@
       <div class="panel-title"><b>智能感知</b><span>···</span></div>
       <div class="sense-body">
         <div class="sense-stack">
-          <div class="sense-block">
-            <div class="sense-head">主动 <span class="periods"><span class="active">本周</span><span>本月</span><span>本年</span></span></div>
+          <div class="sense-block" data-sense-source="active">
+            <div class="sense-head">主动 <span class="periods"><span>本日</span><span class="active">本月</span><span>本年</span></span></div>
             <div class="sense-cards">
-              <div class="sense-card"><i>▧</i><div>新增<b>100起</b></div></div>
-              <div class="sense-card"><i>☑</i><div>办结<b>86起</b></div></div>
+              <div class="sense-card"><i>▧</i><div>已办结<b>100起</b></div></div>
+              <div class="sense-card"><i>☑</i><div>办理中<b>86起</b></div></div>
             </div>
           </div>
-          <div class="sense-block">
-            <div class="sense-head">被动 <span class="periods"><span class="active">本周</span><span>本月</span><span>本年</span></span></div>
+          <div class="sense-block" data-sense-source="passive">
+            <div class="sense-head">被动 <span class="periods"><span>本日</span><span class="active">本月</span><span>本年</span></span></div>
             <div class="sense-cards">
-              <div class="sense-card"><i>▧</i><div>新增<b>123起</b></div></div>
-              <div class="sense-card"><i>☑</i><div>办结<b>108</b></div></div>
+              <div class="sense-card"><i>▧</i><div>已办结<b>123起</b></div></div>
+              <div class="sense-card"><i>☑</i><div>办理中<b>108</b></div></div>
             </div>
           </div>
         </div>
-        <div class="sense-block auto">
-          <div class="sense-head">自动 <span class="periods"><span class="active">本周</span><span>本月</span><span>本年</span></span></div>
+        <div class="sense-block auto" data-sense-source="auto">
+          <div class="sense-head">自动 <span class="periods"><span>本日</span><span class="active">本月</span><span>本年</span></span></div>
           <div class="sense-cards">
-            <div class="sense-card"><i>▷</i><div>视频监控<b>7799路</b></div></div>
-            <div class="sense-card"><i>AI</i><div>AI监测<b>86起</b></div></div>
+            <div class="sense-card" data-action="video-list"><i>▷</i><div>视频监控<b>7799路</b></div></div>
+            <div class="sense-card" data-sense-source="ai"><i>AI</i><div>AI监测<b>86起</b></div></div>
           </div>
           <div class="iot-title"><i>▭</i><span>物联感知设备</span></div>
           <div class="device-list">
-            <div class="device-row"><span>燃气管网</span><b>32</b></div>
-            <div class="device-row"><span>排水管网</span><b>25</b></div>
-            <div class="device-row"><span>供水管网</span><b>8</b></div>
+            <div class="device-row" data-device="gas"><span>燃气管网</span><b>32</b></div>
+            <div class="device-row" data-device="drainage"><span>排水管网</span><b>25</b></div>
+            <div class="device-row" data-device="water"><span>供水管网</span><b>8</b></div>
           </div>
         </div>
       </div>
@@ -1099,31 +2332,29 @@
       </div>
     </section>
 
-    <section class="panel loop-panel">
+    <section class="panel loop-panel" role="button" tabindex="0" aria-label="打开闭环事件列表">
       <div class="panel-title"><b>闭环管理</b><span>···</span></div>
       <div class="loop-body">
-        <svg class="loop-lines" viewBox="0 0 344 252" preserveAspectRatio="none" aria-hidden="true">
-          <defs>
-            <marker id="loopArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth">
-              <path d="M0 0 L8 4 L0 8 Z" fill="rgba(33,125,255,.5)"/>
-            </marker>
-          </defs>
-          <g fill="none" stroke="rgba(33,125,255,.34)" stroke-width="2" stroke-dasharray="6 5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M196 42 L258 70" marker-end="url(#loopArrow)"/>
-            <path d="M292 98 L292 154" marker-end="url(#loopArrow)"/>
-            <path d="M258 184 L198 210" marker-end="url(#loopArrow)"/>
-            <path d="M146 210 L86 184" marker-end="url(#loopArrow)"/>
-            <path d="M52 154 L52 98" marker-end="url(#loopArrow)"/>
-            <path d="M86 70 L148 42" marker-end="url(#loopArrow)"/>
-          </g>
-        </svg>
-        <div class="loop-ring"></div>
-        <div class="hex" style="--x:50%; --y:16%; --c:#19c59d"><b>71</b>感知</div>
-        <div class="hex" style="--x:80%; --y:33%; --c:#f25d6b"><b>0</b>监测</div>
-        <div class="hex" style="--x:80%; --y:68%; --c:#f3bd28"><b>0</b>研判</div>
-        <div class="hex" style="--x:50%; --y:84%; --c:#f3bd28"><b>55</b>预警</div>
-        <div class="hex" style="--x:20%; --y:68%; --c:#23bdf0"><b>16</b>处置</div>
-        <div class="hex" style="--x:20%; --y:33%; --c:#19c59d"><b>71</b>评估</div>
+        <div class="loop-flow">
+          <div class="loop-flow-card" title="主动感知+被动感知+自动感知事件总量" style="--c:#19c59d">
+            <span class="loop-step">感知</span><span class="loop-desc">主动感知+被动感知+自动感知事件总量</span><b class="loop-value">71个</b>
+          </div>
+          <div class="loop-flow-card" title="自动感知事件总量" style="--c:#f25d6b">
+            <span class="loop-step">监测</span><span class="loop-desc">自动感知事件总量</span><b class="loop-value">0起</b>
+          </div>
+          <div class="loop-flow-card" title="AI舆情+新增事件总量" style="--c:#f3bd28">
+            <span class="loop-step">研判</span><span class="loop-desc">AI舆情+新增事件总量</span><b class="loop-value">0起</b>
+          </div>
+          <div class="loop-flow-card" title="已下发状态事件总量" style="--c:#f3bd28">
+            <span class="loop-step">预警</span><span class="loop-desc">已下发状态事件总量</span><b class="loop-value">55起</b>
+          </div>
+          <div class="loop-flow-card" title="已签收+已处置反馈状态事件总量" style="--c:#23bdf0">
+            <span class="loop-step">处置</span><span class="loop-desc">已签收+已处置反馈状态事件总量</span><b class="loop-value">16起</b>
+          </div>
+          <div class="loop-flow-card" title="指挥调度-评价事件总量" style="--c:#19c59d">
+            <span class="loop-step">评估</span><span class="loop-desc">指挥调度-评价事件总量</span><b class="loop-value">71起</b>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1136,10 +2367,211 @@
       <button class="nav-item">地下设施</button>
     </nav>
 
-    <aside class="key-panel" id="keyPanel">
-      <h3>GIS 电子地图</h3>
-      <p>当前为前端自绘 GIS 底图，已分离道路、水系、建筑、边界、点位、热力、轨迹图层，后续可替换为真实 GIS 接口数据。</p>
+    <section class="layer-panel" id="layerPanel" aria-label="图层列表">
+      <div class="layer-panel-head">
+        <div class="layer-panel-title" id="layerPanelTitle">道路图层</div>
+        <label class="layer-check">
+          <input type="checkbox" id="layerSelectAll">
+          <span>全选</span>
+        </label>
+      </div>
+      <div class="layer-panel-list" id="layerPanelList"></div>
+    </section>
+
+    <aside class="video-panel" id="videoPanel" aria-hidden="true">
+      <div class="video-panel-head">
+        <span>视频监控清单</span>
+        <button type="button" id="videoPanelClose" aria-label="关闭视频清单">×</button>
+      </div>
+      <div class="video-summary">
+        <div class="video-rate">
+          <span>在线率</span>
+          <div class="video-rate-track"><i></i></div>
+          <b>84.35%</b>
+        </div>
+        <div class="video-type-grid">
+          <div class="video-type-card"><b>6190</b>枪机</div>
+          <div class="video-type-card"><b>845</b>球机</div>
+          <div class="video-type-card"><b>405</b>其他</div>
+        </div>
+      </div>
+      <div class="video-search">
+        <input id="videoSearchInput" type="search" placeholder="请输入名称">
+        <label class="video-check"><input id="videoIncludeChildren" type="checkbox" checked>包含下级</label>
+      </div>
+      <div class="video-tree" id="videoTree"></div>
     </aside>
+
+    <aside class="device-status-panel" id="deviceStatusPanel" aria-hidden="true">
+      <div class="device-status-head">
+        <span id="deviceStatusTitle">燃气管道监测设备状态总览</span>
+        <button type="button" id="deviceStatusClose" aria-label="关闭设备状态弹窗">×</button>
+      </div>
+      <div class="device-status-list" id="deviceStatusList"></div>
+    </aside>
+
+    <aside class="key-panel" id="keyPanel" hidden></aside>
+
+    <aside class="case-float case-detail-panel" id="caseDetailPanel" aria-hidden="true">
+      <div class="case-float-head" data-drag-handle>
+        <span>案件详情</span>
+        <button class="case-float-close" type="button" data-case-close aria-label="关闭案件详情">×</button>
+      </div>
+      <div class="case-float-body">
+        <div class="case-summary">
+          <span>西山庵 东北72米发现设备感知类型</span>
+          <span>型</span>
+        </div>
+        <div class="case-info-grid">
+          <span>类型</span><span>城管</span>
+          <span>时间</span><span>2026-08-07 10:45:34</span>
+          <span>地点</span><span>西山庵东北72米</span>
+          <span>描述</span><span>在时间【2026-08-07 10:45:34】地址【西山庵东北72米】 设备巡查-气象环境监测站,西山风景区西山庵(落驾坪社区)-2026年8月7日）</span>
+        </div>
+        <div class="case-section-title">图片 (2/2)</div>
+        <div class="case-photo-box">
+          <div class="case-photo-arrow">‹</div>
+          <div class="case-photo">现场图片</div>
+          <div class="case-photo-arrow">›</div>
+          <div class="case-dots"><i></i><i class="active"></i></div>
+        </div>
+        <div class="case-section-title">数据共享清单</div>
+        <div class="share-tabs">
+          <span class="active">要素</span>
+          <span>人</span>
+          <span>物</span>
+          <span>组织</span>
+          <span>地</span>
+        </div>
+      </div>
+    </aside>
+
+    <aside class="case-float case-flow-panel" id="caseFlowPanel" aria-hidden="true">
+      <div class="case-float-head" data-drag-handle>
+        <span>事件流程图</span>
+        <button class="case-float-close" type="button" data-case-close aria-label="关闭事件流程图">×</button>
+      </div>
+      <div class="case-float-body">
+        <div class="flow-timeline">
+          <div class="flow-node">
+            <div class="flow-node-head"><span>1. Start</span><time>2026-08-07 10:21:57</time></div>
+            <div class="flow-fields">
+              <span>处理人:</span><span>罗芝舟</span>
+              <span>单位:</span><span>杜山镇</span>
+              <span>角色:</span><span>鄂城杜山镇岗</span>
+              <span>截止时间:</span><span>2026-08-07 10:21:57</span>
+              <span>意见:</span><span>开始节点默认操作</span>
+            </div>
+          </div>
+          <div class="flow-node">
+            <div class="flow-node-head"><span>2. End</span><time>2026-08-07 10:21:57</time></div>
+            <div class="flow-fields">
+              <span>截止时间:</span><span>2026-08-07 10:21:57</span>
+              <span>意见:</span><span>结束节点默认操作</span>
+            </div>
+          </div>
+          <div class="flow-node">
+            <div class="flow-node-head"><span>3. 区受理员（受理）</span><time>2026-08-07 10:21:57</time></div>
+            <div class="flow-fields">
+              <span>处理人:</span><span>喻豪</span>
+              <span>单位:</span><span>鄂城区城管执法局</span>
+              <span>角色:</span><span>鄂城受理员岗</span>
+              <span>截止时间:</span><span>2026-08-07 14:51:57</span>
+              <span>意见:</span><span>办结,自行处理</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <section class="event-modal" id="eventModal" aria-hidden="true">
+      <div class="event-dialog" role="dialog" aria-modal="true" aria-labelledby="eventDialogTitle">
+        <div class="event-dialog-head">
+          <div class="event-dialog-title" id="eventDialogTitle">事件内容<span>智能感知事件列表</span></div>
+          <button class="event-close" type="button" id="eventCloseBtn" aria-label="关闭事件弹窗">×</button>
+        </div>
+        <div class="event-filters">
+          <input id="eventKeyword" type="search" placeholder="输入关键字搜索">
+          <select id="eventTypeFilter" aria-label="事件类型">
+            <option value="城管">城管</option>
+          </select>
+          <select id="eventRealityFilter" aria-label="警情虚实">
+            <option value="">警情虚实</option>
+            <option value="是">是</option>
+            <option value="否">否</option>
+          </select>
+          <button class="event-search-btn" type="button" id="eventSearchBtn">搜索</button>
+        </div>
+        <div class="event-table">
+          <div class="event-row head">
+            <span>时间</span>
+            <span>事件内容</span>
+            <span>事件类型</span>
+            <span>警情虚实</span>
+            <span>处置状态</span>
+          </div>
+          <div id="eventList"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="loop-event-modal" id="loopEventModal" aria-hidden="true">
+      <div class="loop-event-dialog" role="dialog" aria-modal="true" aria-labelledby="loopEventTitle">
+        <div class="loop-event-head">
+          <h2 id="loopEventTitle">闭环事件列表</h2>
+          <button class="loop-event-close" type="button" id="loopEventClose" aria-label="关闭闭环事件列表">×</button>
+        </div>
+        <div class="loop-event-filters">
+          <div class="loop-filter-line loop-keyword-line">
+            <span class="loop-filter-name">关键字：</span>
+            <input id="loopKeyword" type="search" placeholder="请输入">
+            <span class="loop-filter-name">时间范围：</span>
+            <div class="loop-date-range">
+              <input id="loopStartDate" type="date" aria-label="开始日期">
+              <span>-</span>
+              <input id="loopEndDate" type="date" aria-label="结束日期">
+            </div>
+            <input id="loopDepartmentKeyword" type="search" placeholder="部门查询">
+            <div class="loop-actions">
+              <button class="loop-action primary" type="button" id="loopEventSearch">查询</button>
+              <button class="loop-action" type="button" id="loopEventReset">重置</button>
+            </div>
+          </div>
+          <div class="loop-filter-line">
+            <span class="loop-filter-name">事件来源：</span>
+            <div class="loop-pill-group" id="loopSourceFilters"></div>
+          </div>
+          <div class="loop-filter-line">
+            <span class="loop-filter-name">事件类型：</span>
+            <div class="loop-pill-group" id="loopTypeFilters"></div>
+          </div>
+          <div class="loop-filter-line">
+            <span class="loop-filter-name">风险等级：</span>
+            <div class="loop-pill-group" id="loopLevelFilters"></div>
+          </div>
+          <div class="loop-filter-line department-line">
+            <span class="loop-filter-name">部门：</span>
+            <div class="loop-pill-group" id="loopDepartmentFilters"></div>
+          </div>
+        </div>
+        <div class="loop-event-table">
+          <div class="loop-event-row head">
+            <span>序号</span>
+            <span>事件类型</span>
+            <span>内容</span>
+            <span>地址</span>
+            <span>事件来源</span>
+            <span>风险等级</span>
+            <span>发生时间</span>
+          </div>
+          <div id="loopEventRows"></div>
+        </div>
+        <div class="loop-event-footer">
+          <span id="loopEventTotal">共 0 条</span>
+          <span id="loopEventPage">1 / 1</span>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script>
@@ -1147,10 +2579,194 @@
     const mapEl = document.getElementById("map");
     const viewport = document.getElementById("gisViewport");
     const keyPanel = document.getElementById("keyPanel");
+    const bottomNav = document.querySelector(".bottom-nav");
+    const layerPanel = document.getElementById("layerPanel");
+    const layerPanelTitle = document.getElementById("layerPanelTitle");
+    const layerPanelList = document.getElementById("layerPanelList");
+    const layerSelectAll = document.getElementById("layerSelectAll");
+    const caseDetailPanel = document.getElementById("caseDetailPanel");
+    const caseFlowPanel = document.getElementById("caseFlowPanel");
     const styleImageView = document.getElementById("styleImageView");
     const styleToggleBtn = document.getElementById("styleToggleBtn");
     const styleToggleBackBtn = document.getElementById("styleToggleBackBtn");
+    const eventModal = document.getElementById("eventModal");
+    const eventCloseBtn = document.getElementById("eventCloseBtn");
+    const eventKeyword = document.getElementById("eventKeyword");
+    const eventTypeFilter = document.getElementById("eventTypeFilter");
+    const eventRealityFilter = document.getElementById("eventRealityFilter");
+    const eventSearchBtn = document.getElementById("eventSearchBtn");
+    const eventList = document.getElementById("eventList");
+    const videoPanel = document.getElementById("videoPanel");
+    const videoPanelClose = document.getElementById("videoPanelClose");
+    const videoSearchInput = document.getElementById("videoSearchInput");
+    const videoIncludeChildren = document.getElementById("videoIncludeChildren");
+    const videoTree = document.getElementById("videoTree");
+    const deviceStatusPanel = document.getElementById("deviceStatusPanel");
+    const deviceStatusTitle = document.getElementById("deviceStatusTitle");
+    const deviceStatusList = document.getElementById("deviceStatusList");
+    const deviceStatusClose = document.getElementById("deviceStatusClose");
+    const loopPanel = document.querySelector(".loop-panel");
+    const loopEventModal = document.getElementById("loopEventModal");
+    const loopEventClose = document.getElementById("loopEventClose");
+    const loopKeyword = document.getElementById("loopKeyword");
+    const loopStartDate = document.getElementById("loopStartDate");
+    const loopEndDate = document.getElementById("loopEndDate");
+    const loopDepartmentKeyword = document.getElementById("loopDepartmentKeyword");
+    const loopSourceFilters = document.getElementById("loopSourceFilters");
+    const loopTypeFilters = document.getElementById("loopTypeFilters");
+    const loopLevelFilters = document.getElementById("loopLevelFilters");
+    const loopDepartmentFilters = document.getElementById("loopDepartmentFilters");
+    const loopEventSearch = document.getElementById("loopEventSearch");
+    const loopEventReset = document.getElementById("loopEventReset");
+    const loopEventRows = document.getElementById("loopEventRows");
+    const loopEventTotal = document.getElementById("loopEventTotal");
+    const loopEventPage = document.getElementById("loopEventPage");
     const state = { zoom: 1, panX: 0, panY: 0, cursor: 0, timer: null, dragging: false, startX: 0, startY: 0 };
+    const layerCategories = [
+      { name: "道路", items: ["国道", "省道", "县道", "国家高速公路", "乡道", "铁路", "桥梁数据服务"] },
+      { name: "河流湖泊", items: ["湖泊", "水库", "河流"] },
+      { name: "交通场站", items: ["火车站", "花湖机场"] },
+      { name: "科研学校", items: ["科研机构", "科教文化场馆", "文化传媒", "幼儿园", "小学", "初中", "高中", "职业技术学校", "高等院校", "教育-面状"] },
+      { name: "公共场所", items: ["综合医院", "专科医院", "社区卫生服务中心", "卫生院", "诊所门诊", "急救中心", "停车场", "道路停车泊位", "综合体育馆", "专业体育场馆", "全民健身路径", "商业体育健身机构"] },
+      { name: "文旅景观", items: ["自然景观", "人文景观", "公园广场", "主题乐园", "博物馆", "观音阁", "江滩公园", "莲花山周边3（合并成莲花山）", "莲花山周边2（合并成莲花山）", "莲花山周边1（合并成莲花山）", "元明塔（合并成莲花山）"] },
+      { name: "地下设施", items: ["供水管线", "高压燃气管线", "中压燃气管线", "低压燃气管线", "燃气管线阀门", "排水管线", "排污水管线", "排雨水管线", "排水管点"] }
+    ];
+    const layerSelection = Object.fromEntries(layerCategories.map(category => [category.name, new Set()]));
+    let activeLayerCategory = "道路";
+    const deviceStatusData = {
+      gas: {
+        title: "燃气管道监测设备状态总览",
+        rows: [
+          { label: "总设备数", value: 890, percent: 100, color: "#1f72e8" },
+          { label: "在线", value: 548, percent: 61.6, color: "#19c59d" },
+          { label: "离线", value: 340, percent: 38.2, color: "#f59a23" },
+          { label: "故障", value: 2, percent: 0.2, color: "#f24b3f" }
+        ]
+      },
+      drainage: {
+        title: "排水管网监测设备状态总览",
+        rows: [
+          { label: "总设备数", value: 680, percent: 100, color: "#1f72e8" },
+          { label: "在线", value: 496, percent: 72.9, color: "#19c59d" },
+          { label: "离线", value: 176, percent: 25.9, color: "#f59a23" },
+          { label: "故障", value: 8, percent: 1.2, color: "#f24b3f" }
+        ]
+      },
+      water: {
+        title: "供水管网监测设备状态总览",
+        rows: [
+          { label: "总设备数", value: 312, percent: 100, color: "#1f72e8" },
+          { label: "在线", value: 286, percent: 91.7, color: "#19c59d" },
+          { label: "离线", value: 24, percent: 7.7, color: "#f59a23" },
+          { label: "故障", value: 2, percent: 0.6, color: "#f24b3f" }
+        ]
+      }
+    };
+    const videoTreeData = [
+      {
+        name: "鄂州市",
+        count: "6276/7440",
+        open: true,
+        children: [
+          { name: "雪亮工程", count: "1388/1618", children: [
+            { name: "主城区重点路口", count: "426/512" },
+            { name: "学校周边视频", count: "318/360" },
+            { name: "医院周边视频", count: "214/246" }
+          ] },
+          { name: "鄂州市商务局成品油平台", count: "171/300", children: [
+            { name: "加油站监控", count: "112/168" },
+            { name: "油库监控", count: "59/132" }
+          ] },
+          { name: "鄂州市教育局", count: "1244/1480", children: [
+            { name: "中小学周边", count: "802/916" },
+            { name: "幼儿园周边", count: "442/564" }
+          ] },
+          { name: "鄂州市应急管理局", count: "139/166", children: [
+            { name: "危化企业", count: "88/104" },
+            { name: "重点仓储", count: "51/62" }
+          ] },
+          { name: "鄂州市公安局", count: "3063/3340", children: [
+            { name: "治安卡口", count: "1020/1104" },
+            { name: "道路路口", count: "1506/1620" },
+            { name: "重点场所", count: "537/616" }
+          ] },
+          { name: "鄂州市燃气", count: "79/80" },
+          { name: "梁子湖防溺水", count: "144/317" },
+          { name: "中国铁塔", count: "48/49" }
+        ]
+      }
+    ];
+    let currentSenseSource = "active";
+    const senseEventSets = {
+      active: {
+        subtitle: "主动感知事件列表",
+        types: ["城管"],
+        events: [
+          { time: "08:32", name: "主干道占道经营巡查上报", type: "城管", reality: "是", status: "已受理" },
+          { time: "09:18", name: "商圈周边流动摊贩聚集", type: "城管", reality: "是", status: "处置中" },
+          { time: "10:05", name: "背街小巷垃圾堆放线索", type: "城管", reality: "否", status: "已核查" },
+          { time: "11:26", name: "工地围挡破损影响通行", type: "城管", reality: "是", status: "派单中" },
+          { time: "14:10", name: "沿街门店噪声扰民投诉", type: "城管", reality: "是", status: "处置中" },
+          { time: "15:42", name: "道路井盖松动疑似风险", type: "城管", reality: "否", status: "已核查" }
+        ]
+      },
+      passive: {
+        subtitle: "被动感知事件列表",
+        types: ["12345", "消防"],
+        events: [
+          { time: "08:46", name: "12345群众反映道路积水", type: "12345", reality: "是", status: "已派单" },
+          { time: "09:25", name: "12345投诉夜间施工扰民", type: "12345", reality: "是", status: "处置中" },
+          { time: "10:40", name: "12345反映商户占道经营", type: "12345", reality: "否", status: "已核查" },
+          { time: "11:12", name: "消防通道被临停车辆占用", type: "消防", reality: "是", status: "已联动" },
+          { time: "13:36", name: "沿街门店灭火器过期线索", type: "消防", reality: "否", status: "复核中" },
+          { time: "16:08", name: "小区楼道堆物存在消防隐患", type: "消防", reality: "是", status: "处置中" }
+        ]
+      },
+      auto: {
+        subtitle: "自动感知事件列表",
+        types: ["城管"],
+        events: [
+          { time: "08:52", name: "AI识别占道经营疑似事件", type: "城管", reality: "是", status: "已受理" },
+          { time: "10:18", name: "视频监控发现道路拥堵异常", type: "城管", reality: "否", status: "已核查" },
+          { time: "14:26", name: "物联设备上报井盖震动异常", type: "城管", reality: "是", status: "处置中" }
+        ]
+      },
+      ai: {
+        subtitle: "AI监测事件列表",
+        types: ["防溺水", "秸秆焚烧"],
+        events: [
+          { time: "08:20", name: "梁子湖岸线人员靠近水域预警", type: "防溺水", reality: "是", status: "已提醒" },
+          { time: "09:42", name: "校园周边水塘疑似逗留人员", type: "防溺水", reality: "否", status: "已核查" },
+          { time: "11:05", name: "重点湖泊亲水平台人员聚集", type: "防溺水", reality: "是", status: "处置中" },
+          { time: "13:28", name: "农田区域疑似秸秆焚烧烟点", type: "秸秆焚烧", reality: "是", status: "已派单" },
+          { time: "15:16", name: "村湾周边烟雾识别告警", type: "秸秆焚烧", reality: "否", status: "复核中" },
+          { time: "16:34", name: "高速沿线疑似露天焚烧", type: "秸秆焚烧", reality: "是", status: "处置中" }
+        ]
+      }
+    };
+    const loopFilterData = {
+      source: ["全部", "110非警情", "119警情", "120急救", "122交通", "12345热线", "交通拥堵", "城管执法", "宣传提醒", "无人机巡查", "智能发现"],
+      type: ["全部", "12345", "消防", "城管", "防溺水", "秸秆焚烧"],
+      level: ["全部", "红色预警", "橙色预警", "黄色预警", "蓝色预警"],
+      department: ["全部", "110", "中国电信鄂州分公司", "中国移动鄂州分公司", "中国联通鄂州分公司", "中国邮政集团有限公司鄂州市分公司", "临空经济区管委会", "人民银行鄂州市分行", "凤凰街办", "华容区", "古楼街办", "团市委", "国网鄂州供电公司", "工商银行", "市委宣传部", "市公共资源交易中心", "市公安局", "市消防救援支队", "市住建局", "市市场监管局", "市公积金中心", "市农业农村局", "市医保局", "市卫健委", "市发改委"]
+    };
+    const loopFilterState = { source: "全部", type: "全部", level: "全部", department: "全部" };
+    const loopEvents = [
+      { title: "报警或求助", content: "报警人同事驾驶货车发生事故，不清楚事故形态，人员处于半昏迷状态。", address: "经开区东风大道与吴楚大道交汇处", source: "122交通", type: "12345", level: "黄色预警", time: "2026-07-15 16:23:21", department: "市公安局" },
+      { title: "塔子湖站其他出动", content: "群众反映小区楼道烟雾明显，现场疑似电瓶车充电异常。", address: "江岸区后湖大道塔子湖体育中心", source: "119警情", type: "消防", level: "黄色预警", time: "2026-07-15 15:52:42", department: "市消防救援支队" },
+      { title: "汉口站周边发生拥堵", content: "青年路口晚高峰车辆排队较长，需联动疏导。", address: "临空经济区青年路", source: "交通拥堵", type: "城管", level: "橙色预警", time: "2026-07-15 15:19:00", department: "临空经济区管委会" },
+      { title: "报警或求助", content: "小车与电动车发生轻微交通事故，现场需协调处置。", address: "鄂城区文星大道与滨湖路交叉口", source: "122交通", type: "12345", level: "黄色预警", time: "2026-07-15 15:08:43", department: "市公安局" },
+      { title: "报警或求助", content: "群众反映河道亲水平台有未成年人长时间逗留。", address: "梁子湖区东沟镇湖边村", source: "无人机巡查", type: "防溺水", level: "橙色预警", time: "2026-07-15 14:49:54", department: "华容区" },
+      { title: "常福站地下空间报警", content: "地下设施巡检发现有限空间气体浓度异常，已通知属地核查。", address: "葛店开发区创业大道地下管廊", source: "智能发现", type: "城管", level: "红色预警", time: "2026-07-15 14:43:57", department: "市住建局" },
+      { title: "道路交通事故", content: "小车与电动车碰撞，电动车方摔倒，头部流血，已呼叫120。", address: "东湖西路王路鲁磨路口", source: "122交通", type: "12345", level: "黄色预警", time: "2026-07-15 14:40:14", department: "110" },
+      { title: "大桥站森林火情", content: "桥南景苑附近疑似烟火，现场需要核实是否秸秆焚烧。", address: "鄂城区桥南景苑4栋附近", source: "119警情", type: "秸秆焚烧", level: "红色预警", time: "2026-07-15 14:21:15", department: "市农业农村局" },
+      { title: "餐饮场所燃气告警", content: "餐饮门店燃气报警器触发，疑似阀门未关闭。", address: "古楼街办明塘市场周边", source: "智能发现", type: "消防", level: "橙色预警", time: "2026-07-15 13:42:06", department: "古楼街办" },
+      { title: "占道经营线索", content: "主次干道沿线流动摊点聚集，影响道路通行。", address: "凤凰街办南浦路商圈", source: "城管执法", type: "城管", level: "蓝色预警", time: "2026-07-15 12:36:18", department: "凤凰街办" },
+      { title: "热线诉求转办", content: "群众反映小区电梯故障停运，需协调维保单位处置。", address: "鄂城区滨湖社区", source: "12345热线", type: "12345", level: "蓝色预警", time: "2026-07-15 11:24:39", department: "市市场监管局" },
+      { title: "消防通道堵塞", content: "小区消防通道被车辆占用，影响应急通行。", address: "华容区楚藩大道居民小区", source: "119警情", type: "消防", level: "黄色预警", time: "2026-07-15 10:18:55", department: "华容区" },
+      { title: "水域安全提醒", content: "暑期重点水域巡查发现人员靠近危险水域。", address: "梁子湖区梁子岛码头周边", source: "宣传提醒", type: "防溺水", level: "黄色预警", time: "2026-07-14 18:03:27", department: "团市委" },
+      { title: "露天焚烧识别", content: "视频识别农田区域烟雾，疑似秸秆焚烧。", address: "华容区段店镇农田片区", source: "智能发现", type: "秸秆焚烧", level: "橙色预警", time: "2026-07-14 16:42:11", department: "市农业农村局" }
+    ];
     const sceneData = [
       {
         name: "城市生命线工程",
@@ -1173,6 +2789,18 @@
         risks: ["防溺水", "长江禁捕捞", "秸秆焚烧"]
       }
     ];
+
+    const riskJumpMap = {
+      "供排水管网泄漏风险": "risk-image.html?risk=water",
+      "大客流风险": "risk-image.html?risk=crowd",
+      "建筑火灾风险": "risk-image.html?risk=building-fire",
+      "危化品生产经营安全风险": "risk-image.html?risk=chemical",
+      "尾矿库溃坝风险": "risk-image.html?risk=tailings-dam",
+      "城市洪涝、内涝风险": "risk-image.html?risk=flood",
+      "森林火灾风险": "risk-image.html?risk=forest-fire",
+      "防溺水": "risk-image.html?risk=drowning",
+      "秸秆焚烧": "risk-image.html?risk=straw-burning"
+    };
 
     const mapData = {
       districts: [
@@ -1256,6 +2884,359 @@
       styleImageView.setAttribute("aria-hidden", showImageView ? "false" : "true");
     }
 
+    function renderEventList() {
+      const eventSet = senseEventSets[currentSenseSource] || senseEventSets.active;
+      const keyword = eventKeyword.value.trim();
+      const type = eventTypeFilter.value;
+      const reality = eventRealityFilter.value;
+      const rows = eventSet.events.filter(item => {
+        const matchKeyword = !keyword || `${item.time}${item.name}${item.type}${item.reality}${item.status}`.includes(keyword);
+        const matchType = !type || item.type === type;
+        const matchReality = !reality || item.reality === reality;
+        return matchKeyword && matchType && matchReality;
+      });
+      eventList.innerHTML = rows.length
+        ? rows.map((item, index) => `
+          <div class="event-row" data-event-case="${index}">
+            <span>${item.time}</span>
+            <span class="event-name">${item.name}</span>
+            <span><i class="event-tag">${item.type}</i></span>
+            <span><i class="event-status ${item.reality === "是" ? "true" : "false"}">${item.reality}</i></span>
+            <span>${item.status}</span>
+          </div>
+        `).join("")
+        : `<div class="event-empty">暂无匹配事件</div>`;
+    }
+
+    function openEventModal(source = "active") {
+      currentSenseSource = source;
+      const eventSet = senseEventSets[currentSenseSource] || senseEventSets.active;
+      document.querySelector("#eventDialogTitle span").textContent = eventSet.subtitle;
+      eventKeyword.value = "";
+      eventRealityFilter.value = "";
+      eventTypeFilter.innerHTML = eventSet.types.map(type => `<option value="${type}">${type}</option>`).join("");
+      renderEventList();
+      eventModal.classList.add("is-open");
+      eventModal.setAttribute("aria-hidden", "false");
+      eventKeyword.focus();
+    }
+
+    function closeEventModal() {
+      eventModal.classList.remove("is-open");
+      eventModal.setAttribute("aria-hidden", "true");
+    }
+
+    function showEventLocationMarker() {
+      const pointLayer = document.getElementById("pointLayer");
+      pointLayer.querySelector(".event-location-marker")?.remove();
+      const marker = document.createElement("div");
+      marker.className = "event-location-marker";
+      marker.style.setProperty("--x", "54%");
+      marker.style.setProperty("--y", "48%");
+      marker.innerHTML = `
+        <div class="event-location-pin"><span>!</span></div>
+        <em>西山庵东北72米</em>
+        <div class="event-location-card">
+          <h4>西山庵 东北72米发现设备感知类型<span>型</span></h4>
+          <div class="event-location-info">
+            <span>类型</span><span>城管</span>
+            <span>时间</span><span>2026-08-07 10:45:34</span>
+            <span>地点</span><span>西山庵东北72米</span>
+            <span>描述</span><span class="event-location-desc">在时间【2026-08-07 10:45:34】地址【西山庵东北72米】 设备巡查-气象环境监测站,西山风景区西山庵(落驾坪社区)-2026年8月7日）</span>
+          </div>
+        </div>
+      `;
+      pointLayer.appendChild(marker);
+    }
+
+    function openCasePanels() {
+      closeEventModal();
+      closeLoopEventModal();
+      keyPanel.style.display = "none";
+      layerPanel.classList.remove("is-open");
+      showEventLocationMarker();
+      caseDetailPanel.classList.add("is-open");
+      caseFlowPanel.classList.add("is-open");
+      caseDetailPanel.setAttribute("aria-hidden", "false");
+      caseFlowPanel.setAttribute("aria-hidden", "false");
+    }
+
+    function closeCasePanels() {
+      caseDetailPanel.classList.remove("is-open");
+      caseFlowPanel.classList.remove("is-open");
+      caseDetailPanel.setAttribute("aria-hidden", "true");
+      caseFlowPanel.setAttribute("aria-hidden", "true");
+      document.querySelector(".event-location-marker")?.remove();
+    }
+
+    function enableDrag(panel) {
+      const handle = panel.querySelector("[data-drag-handle]");
+      let dragging = false;
+      let offsetX = 0;
+      let offsetY = 0;
+      handle.addEventListener("pointerdown", event => {
+        if (event.target.closest("button")) return;
+        dragging = true;
+        const rect = panel.getBoundingClientRect();
+        offsetX = event.clientX - rect.left;
+        offsetY = event.clientY - rect.top;
+        panel.setPointerCapture?.(event.pointerId);
+      });
+      panel.addEventListener("pointermove", event => {
+        if (!dragging) return;
+        const maxX = window.innerWidth - panel.offsetWidth - 8;
+        const maxY = window.innerHeight - panel.offsetHeight - 8;
+        const nextX = Math.max(8, Math.min(maxX, event.clientX - offsetX));
+        const nextY = Math.max(8, Math.min(maxY, event.clientY - offsetY));
+        panel.style.left = `${nextX}px`;
+        panel.style.right = "auto";
+        panel.style.top = `${nextY}px`;
+      });
+      panel.addEventListener("pointerup", event => {
+        dragging = false;
+        panel.releasePointerCapture?.(event.pointerId);
+      });
+      panel.addEventListener("pointercancel", () => {
+        dragging = false;
+      });
+    }
+
+    function renderLoopFilterButtons(target, items, key) {
+      const keyword = key === "department" ? loopDepartmentKeyword.value.trim() : "";
+      const visibleItems = key === "department" && keyword
+        ? items.filter(item => item === "全部" || item.includes(keyword))
+        : items;
+      if (!visibleItems.includes(loopFilterState[key])) {
+        loopFilterState[key] = "全部";
+      }
+      target.innerHTML = visibleItems.map(item => {
+        const levelClass = key === "level"
+          ? item.includes("红") ? " level-red" : item.includes("橙") ? " level-orange" : item.includes("黄") ? " level-yellow" : item.includes("蓝") ? " level-blue" : ""
+          : "";
+        return `<button class="loop-pill${levelClass}${loopFilterState[key] === item ? " active" : ""}" type="button" data-key="${key}" data-value="${item}">${item}</button>`;
+      }).join("");
+    }
+
+    function renderLoopFilters() {
+      renderLoopFilterButtons(loopSourceFilters, loopFilterData.source, "source");
+      renderLoopFilterButtons(loopTypeFilters, loopFilterData.type, "type");
+      renderLoopFilterButtons(loopLevelFilters, loopFilterData.level, "level");
+      renderLoopFilterButtons(loopDepartmentFilters, loopFilterData.department, "department");
+    }
+
+    function getLoopLevelClass(level) {
+      if (level.includes("红")) return "red";
+      if (level.includes("橙")) return "orange";
+      if (level.includes("黄")) return "yellow";
+      if (level.includes("蓝")) return "blue";
+      return "";
+    }
+
+    function renderLoopEventRows() {
+      const keyword = loopKeyword.value.trim();
+      const departmentKeyword = loopDepartmentKeyword.value.trim();
+      const startDate = loopStartDate.value;
+      const endDate = loopEndDate.value;
+      const rows = loopEvents.filter(item => {
+        const haystack = `${item.title}${item.content}${item.address}${item.source}${item.type}${item.level}${item.time}${item.department}`;
+        const itemDate = item.time.slice(0, 10);
+        const matchKeyword = !keyword || haystack.includes(keyword);
+        const matchSource = loopFilterState.source === "全部" || item.source === loopFilterState.source;
+        const matchType = loopFilterState.type === "全部" || item.type === loopFilterState.type;
+        const matchLevel = loopFilterState.level === "全部" || item.level === loopFilterState.level;
+        const matchDepartment = loopFilterState.department === "全部" || item.department === loopFilterState.department;
+        const matchDepartmentKeyword = !departmentKeyword || item.department.includes(departmentKeyword);
+        const matchStart = !startDate || itemDate >= startDate;
+        const matchEnd = !endDate || itemDate <= endDate;
+        return matchKeyword && matchSource && matchType && matchLevel && matchDepartment && matchDepartmentKeyword && matchStart && matchEnd;
+      });
+
+      loopEventRows.innerHTML = rows.length
+        ? rows.map((item, index) => `
+          <div class="loop-event-row" data-loop-event-case="${index}">
+            <span>${index + 1}</span>
+            <span>${item.type}</span>
+            <span title="${item.content}">${item.content}</span>
+            <span title="${item.address}">${item.address}</span>
+            <span>${item.source}</span>
+            <span class="loop-level ${getLoopLevelClass(item.level)}">${item.level}</span>
+            <span>${item.time}</span>
+          </div>
+        `).join("")
+        : `<div class="loop-event-empty">暂无匹配事件</div>`;
+      loopEventTotal.textContent = `共 ${rows.length} 条`;
+      loopEventPage.textContent = rows.length ? "1 / 1" : "0 / 0";
+    }
+
+    function openLoopEventModal() {
+      renderLoopFilters();
+      renderLoopEventRows();
+      loopEventModal.classList.add("is-open");
+      loopEventModal.setAttribute("aria-hidden", "false");
+      loopKeyword.focus();
+    }
+
+    function closeLoopEventModal() {
+      loopEventModal.classList.remove("is-open");
+      loopEventModal.setAttribute("aria-hidden", "true");
+    }
+
+    function resetLoopEventFilters() {
+      loopFilterState.source = "全部";
+      loopFilterState.type = "全部";
+      loopFilterState.level = "全部";
+      loopFilterState.department = "全部";
+      loopKeyword.value = "";
+      loopDepartmentKeyword.value = "";
+      loopStartDate.value = "";
+      loopEndDate.value = "";
+      renderLoopFilters();
+      renderLoopEventRows();
+    }
+
+    function filterVideoNodes(nodes, keyword, includeChildren) {
+      if (!keyword) return nodes;
+      return nodes.reduce((result, node) => {
+        const childMatches = node.children ? filterVideoNodes(node.children, keyword, includeChildren) : [];
+        const selfMatches = node.name.includes(keyword) || node.count.includes(keyword);
+        if (selfMatches || childMatches.length) {
+          result.push({
+            ...node,
+            open: true,
+            children: selfMatches && includeChildren ? node.children : childMatches
+          });
+        }
+        return result;
+      }, []);
+    }
+
+    function renderVideoTree() {
+      const keyword = videoSearchInput.value.trim();
+      const data = filterVideoNodes(videoTreeData, keyword, videoIncludeChildren.checked);
+      const renderNode = (node, level = 0) => {
+        const hasChildren = Array.isArray(node.children) && node.children.length > 0;
+        const icon = hasChildren ? "▱" : "▣";
+        const iconClass = hasChildren ? "folder" : "camera";
+        if (!hasChildren) {
+          return `
+            <div class="video-node" style="--level:${level}">
+              <details>
+                <summary>
+                  <span></span><span class="${iconClass}">${icon}</span>
+                  <span class="name">${node.name}</span><span class="count">${node.count}</span>
+                </summary>
+              </details>
+            </div>
+          `;
+        }
+        return `
+          <div class="video-node" style="--level:${level}">
+            <details ${node.open ? "open" : ""}>
+              <summary>
+                <span class="arrow">▶</span><span class="${iconClass}">${icon}</span>
+                <span class="name">${node.name}</span><span class="count">${node.count}</span>
+              </summary>
+              <div class="video-children">${node.children.map(child => renderNode(child, level + 1)).join("")}</div>
+            </details>
+          </div>
+        `;
+      };
+      videoTree.innerHTML = data.length ? data.map(node => renderNode(node)).join("") : `<div class="video-empty">暂无匹配视频</div>`;
+    }
+
+    function openVideoPanel() {
+      renderVideoTree();
+      videoPanel.classList.add("is-open");
+      videoPanel.setAttribute("aria-hidden", "false");
+      keyPanel.style.display = "none";
+    }
+
+    function closeVideoPanel() {
+      videoPanel.classList.remove("is-open");
+      videoPanel.setAttribute("aria-hidden", "true");
+    }
+
+    function openDeviceStatusPanel(deviceKey) {
+      const data = deviceStatusData[deviceKey] || deviceStatusData.gas;
+      deviceStatusTitle.textContent = data.title;
+      const total = data.rows[0];
+      const statusRows = data.rows.slice(1);
+      const icons = { "在线": "≋", "离线": "≋", "故障": "!" };
+      deviceStatusList.innerHTML = `
+        <div class="device-total-card">
+          <b>${total.value}个</b>
+          <span>${data.title.replace("状态总览", "")}</span>
+          <i class="device-total-icon"></i>
+        </div>
+        <div class="device-status-divider"></div>
+        <div class="device-status-items">
+          ${statusRows.map(row => `
+            <div class="device-status-row">
+              <i class="device-status-icon">${icons[row.label] || "≋"}</i>
+              <span class="device-status-label">${row.label}</span>
+              <b class="device-status-value">${row.value}个</b>
+            </div>
+          `).join("")}
+        </div>
+      `;
+      deviceStatusPanel.classList.add("is-open");
+      deviceStatusPanel.setAttribute("aria-hidden", "false");
+      keyPanel.style.display = "none";
+    }
+
+    function closeDeviceStatusPanel() {
+      deviceStatusPanel.classList.remove("is-open");
+      deviceStatusPanel.setAttribute("aria-hidden", "true");
+    }
+
+    function setupLayerNav() {
+      bottomNav.innerHTML = layerCategories.map((category, index) => `
+        <button class="nav-item ${index === 0 ? "active" : ""}" data-layer-category="${category.name}">${category.name}</button>
+      `).join("");
+    }
+
+    function syncLayerSelectAll(category) {
+      const data = layerCategories.find(item => item.name === category);
+      const selected = layerSelection[category];
+      if (!data || !selected) return;
+      layerSelectAll.checked = data.items.length > 0 && selected.size === data.items.length;
+      layerSelectAll.indeterminate = selected.size > 0 && selected.size < data.items.length;
+    }
+
+    function renderLayerPanel(category) {
+      const data = layerCategories.find(item => item.name === category) || layerCategories[0];
+      activeLayerCategory = data.name;
+      layerPanelTitle.textContent = `${data.name}图层`;
+      layerPanelList.innerHTML = data.items.map(item => {
+        const checked = layerSelection[data.name].has(item) ? "checked" : "";
+        return `
+          <label class="layer-check layer-item">
+            <input type="checkbox" data-layer-item="${item}" ${checked}>
+            <span title="${item}">${item}</span>
+          </label>
+        `;
+      }).join("");
+      syncLayerSelectAll(data.name);
+      layerPanel.classList.add("is-open");
+      bottomNav.querySelectorAll(".nav-item").forEach(button => {
+        button.classList.toggle("active", button.dataset.layerCategory === data.name);
+      });
+    }
+
+    function toggleLayerItem(itemName, checked) {
+      const selected = layerSelection[activeLayerCategory];
+      if (checked) selected.add(itemName);
+      else selected.delete(itemName);
+      syncLayerSelectAll(activeLayerCategory);
+    }
+
+    function setLayerCategoryAll(checked) {
+      const data = layerCategories.find(item => item.name === activeLayerCategory);
+      if (!data) return;
+      layerSelection[activeLayerCategory] = checked ? new Set(data.items) : new Set();
+      renderLayerPanel(activeLayerCategory);
+    }
+
     function renderScene(index = 0) {
       const tabs = document.getElementById("sceneTabs");
       const list = document.getElementById("riskList");
@@ -1270,6 +3251,14 @@
       });
       list.querySelectorAll(".risk-item").forEach(button => {
         button.addEventListener("click", () => {
+          if (button.dataset.risk === "燃气管线泄漏爆炸风险") {
+            location.href = "gas-risk.html";
+            return;
+          }
+          if (riskJumpMap[button.dataset.risk]) {
+            location.href = riskJumpMap[button.dataset.risk];
+            return;
+          }
           list.querySelectorAll(".risk-item").forEach(item => item.classList.remove("active"));
           button.classList.add("active");
           keyPanel.style.display = "block";
@@ -1344,6 +3333,10 @@
       pointLayer.querySelectorAll(".gis-point").forEach(btn => {
         btn.addEventListener("click", event => {
           event.stopPropagation();
+          if (btn.dataset.type === "videos") {
+            openVideoPanel();
+            return;
+          }
           const typeName = btn.dataset.type === "events" ? "事件报警" : btn.dataset.type === "videos" ? "视频监控" : "物联网设备";
           keyPanel.style.display = "block";
           keyPanel.innerHTML = `<h3>${btn.dataset.name}</h3><p>${typeName} · ${btn.dataset.level}</p><p>该点位来自前端 GIS 数据层，后续可映射真实坐标和业务 ID。</p>`;
@@ -1382,18 +3375,104 @@
     function bindControls() {
       styleToggleBtn?.addEventListener("click", () => toggleStyleView(true));
       styleToggleBackBtn?.addEventListener("click", () => toggleStyleView(false));
-      document.querySelectorAll(".nav-item").forEach(btn => {
-        btn.addEventListener("click", () => {
-          document.querySelectorAll(".nav-item").forEach(item => item.classList.remove("active"));
-          btn.classList.add("active");
-          const name = btn.textContent.trim();
-          keyPanel.style.display = "block";
-          keyPanel.innerHTML = `<h3>${name}</h3><p>已切换到“${name}”风险场景分类，地图业务图层保持当前状态。</p>`;
+      document.querySelectorAll(".sense-panel .sense-card, .sense-panel .device-row").forEach(item => {
+        item.addEventListener("click", event => {
+          event.stopPropagation();
+          if (item.dataset.action === "video-list") {
+            openVideoPanel();
+            return;
+          }
+          if (item.dataset.device) {
+            openDeviceStatusPanel(item.dataset.device);
+            return;
+          }
+          openEventModal(item.dataset.senseSource || item.closest(".sense-block")?.dataset.senseSource || "active");
         });
       });
+      document.querySelectorAll(".periods span").forEach(item => {
+        item.addEventListener("click", event => {
+          event.stopPropagation();
+          const group = item.closest(".periods");
+          group.querySelectorAll("span").forEach(period => period.classList.remove("active"));
+          item.classList.add("active");
+        });
+      });
+      eventKeyword.addEventListener("input", renderEventList);
+      eventTypeFilter.addEventListener("change", renderEventList);
+      eventRealityFilter.addEventListener("change", renderEventList);
+      eventSearchBtn.addEventListener("click", renderEventList);
+      eventCloseBtn.addEventListener("click", closeEventModal);
+      eventList.addEventListener("click", event => {
+        if (!event.target.closest("[data-event-case]")) return;
+        openCasePanels();
+      });
+      document.querySelectorAll("[data-case-close]").forEach(button => {
+        button.addEventListener("click", closeCasePanels);
+      });
+      enableDrag(caseDetailPanel);
+      enableDrag(caseFlowPanel);
+      loopPanel.addEventListener("click", () => openLoopEventModal());
+      loopPanel.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openLoopEventModal();
+        }
+      });
+      [loopKeyword, loopStartDate, loopEndDate].forEach(input => input.addEventListener("input", renderLoopEventRows));
+      loopDepartmentKeyword.addEventListener("input", () => {
+        renderLoopFilterButtons(loopDepartmentFilters, loopFilterData.department, "department");
+        renderLoopEventRows();
+      });
+      [loopSourceFilters, loopTypeFilters, loopLevelFilters, loopDepartmentFilters].forEach(group => {
+        group.addEventListener("click", event => {
+          const button = event.target.closest(".loop-pill");
+          if (!button) return;
+          loopFilterState[button.dataset.key] = button.dataset.value;
+          renderLoopFilters();
+          renderLoopEventRows();
+        });
+      });
+      loopEventSearch.addEventListener("click", renderLoopEventRows);
+      loopEventReset.addEventListener("click", resetLoopEventFilters);
+      loopEventClose.addEventListener("click", closeLoopEventModal);
+      loopEventRows.addEventListener("click", event => {
+        if (!event.target.closest("[data-loop-event-case]")) return;
+        openCasePanels();
+      });
+      videoSearchInput.addEventListener("input", renderVideoTree);
+      videoIncludeChildren.addEventListener("change", renderVideoTree);
+      videoPanelClose.addEventListener("click", closeVideoPanel);
+      deviceStatusClose.addEventListener("click", closeDeviceStatusPanel);
+      eventModal.addEventListener("click", event => {
+        if (event.target === eventModal) closeEventModal();
+      });
+      loopEventModal.addEventListener("click", event => {
+        if (event.target === loopEventModal) closeLoopEventModal();
+      });
+      window.addEventListener("keydown", event => {
+        if (event.key === "Escape" && eventModal.classList.contains("is-open")) closeEventModal();
+        if (event.key === "Escape" && loopEventModal.classList.contains("is-open")) closeLoopEventModal();
+      });
+      bottomNav.addEventListener("click", event => {
+        const button = event.target.closest(".nav-item");
+        if (!button) return;
+        event.stopPropagation();
+        renderLayerPanel(button.dataset.layerCategory);
+        keyPanel.style.display = "none";
+      });
+      layerPanel.addEventListener("click", event => {
+        event.stopPropagation();
+      });
+      layerPanelList.addEventListener("change", event => {
+        const input = event.target.closest("[data-layer-item]");
+        if (!input) return;
+        toggleLayerItem(input.dataset.layerItem, input.checked);
+      });
+      layerSelectAll.addEventListener("change", () => setLayerCategoryAll(layerSelectAll.checked));
       mapEl.addEventListener("click", () => {
-        keyPanel.style.display = "block";
-        keyPanel.innerHTML = `<h3>GIS 电子地图</h3><p>当前为仿 GIS 电子地图底图。数据结构集中在 mapData 中，后续可直接接入真实 GIS 服务。</p>`;
+        layerPanel.classList.remove("is-open");
+        keyPanel.style.display = "none";
+        keyPanel.innerHTML = "";
       });
       mapEl.addEventListener("pointerdown", event => {
         state.dragging = true;
@@ -1418,6 +3497,7 @@
       }, { passive: false });
     }
 
+    setupLayerNav();
     renderMapLayers();
     renderScene();
     animateTrack();

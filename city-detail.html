@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>鄂州市数字监管系统</title>
+  <title>鄂州市城市安全风险监测预警平台</title>
   <style>
     :root {
       --bg: #08192b;
@@ -166,6 +166,61 @@
       background: linear-gradient(180deg, #ffe269, #12e9ff);
       box-shadow: 0 0 14px rgba(18, 233, 255, 0.42);
       transform: skewX(-12deg);
+    }
+
+    [data-tooltip] {
+      position: relative;
+      cursor: pointer;
+    }
+
+    [data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 50%;
+      top: calc(100% + 10px);
+      z-index: 40;
+      min-width: max-content;
+      max-width: 260px;
+      padding: 8px 12px;
+      transform: translate(-50%, -4px);
+      color: #eafcff;
+      font-size: 13px;
+      line-height: 1.35;
+      font-weight: 900;
+      text-align: center;
+      white-space: nowrap;
+      background: linear-gradient(180deg, rgba(17, 92, 145, 0.96), rgba(7, 35, 65, 0.96));
+      border: 1px solid rgba(90, 224, 255, 0.46);
+      box-shadow: 0 0 18px rgba(0, 198, 255, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
+    }
+
+    [data-tooltip]::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: calc(100% + 4px);
+      z-index: 41;
+      width: 10px;
+      height: 10px;
+      transform: translate(-50%, -4px) rotate(45deg);
+      background: rgba(17, 92, 145, 0.96);
+      border-left: 1px solid rgba(90, 224, 255, 0.38);
+      border-top: 1px solid rgba(90, 224, 255, 0.38);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
+    }
+
+    [data-tooltip]:hover::after,
+    [data-tooltip]:hover::before {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, 0);
     }
 
     .base-profile {
@@ -435,16 +490,16 @@
 
     .traffic-board {
       height: calc(100% - var(--panel-title-h));
-      padding: 14px 30px 16px;
+      padding: 8px 22px 14px;
       display: grid;
-      grid-template-rows: 1fr 2fr;
-      gap: 10px;
+      grid-template-rows: 58px minmax(0, 1fr);
+      gap: 8px;
     }
 
     .traffic-top {
       display: grid;
-      grid-template-columns: 250px 1fr 190px;
-      gap: 14px;
+      grid-template-columns: 210px 1fr 170px;
+      gap: 10px;
       min-height: 0;
     }
 
@@ -456,7 +511,7 @@
     }
 
     .traffic-total {
-      padding: 10px 16px;
+      padding: 7px 12px;
       display: grid;
       align-content: center;
       border-left: 4px solid #18e0ff;
@@ -467,14 +522,14 @@
     .ratio-row span,
     .traffic-chart-title {
       color: #8fc2d8;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 900;
     }
 
     .traffic-total b {
-      margin-top: 4px;
+      margin-top: 2px;
       color: #f2fdff;
-      font-size: 34px;
+      font-size: 28px;
       line-height: 1;
       font-weight: 900;
       font-variant-numeric: tabular-nums;
@@ -484,8 +539,8 @@
     .traffic-ratio {
       display: grid;
       align-content: center;
-      gap: 8px;
-      padding: 8px 12px;
+      gap: 5px;
+      padding: 5px 10px;
       background: rgba(8, 40, 72, 0.44);
       border-bottom: 1px solid rgba(73, 203, 255, 0.28);
     }
@@ -494,7 +549,7 @@
       display: grid;
       grid-template-columns: 86px 1fr 54px;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       font-variant-numeric: tabular-nums;
     }
 
@@ -517,11 +572,11 @@
     .traffic-mini-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 8px;
     }
 
     .traffic-mini {
-      padding: 9px 8px;
+      padding: 5px 8px;
       display: grid;
       align-content: center;
       justify-items: center;
@@ -530,7 +585,7 @@
 
     .traffic-mini b {
       color: #f2fdff;
-      font-size: 24px;
+      font-size: 21px;
       line-height: 1;
       font-weight: 900;
       margin-bottom: 5px;
@@ -540,15 +595,15 @@
       min-height: 0;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
+      gap: 18px;
     }
 
     .traffic-chart {
       min-width: 0;
       display: grid;
-      grid-template-rows: 20px 1fr;
-      gap: 4px;
-      padding: 8px 12px 8px;
+      grid-template-rows: 28px minmax(0, 1fr);
+      gap: 8px;
+      padding: 10px 14px 12px;
       background: linear-gradient(180deg, rgba(9, 50, 86, 0.48), rgba(6, 30, 56, 0.35));
       border: 1px solid rgba(65, 185, 245, 0.24);
       overflow: hidden;
@@ -559,8 +614,8 @@
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       align-items: end;
-      gap: 10px;
-      padding: 8px 8px 0;
+      gap: 16px;
+      padding: 16px 12px 0;
       border-left: 1px solid rgba(98, 164, 194, 0.22);
       border-bottom: 1px solid rgba(98, 164, 194, 0.22);
       background:
@@ -588,9 +643,9 @@
       display: grid;
       align-content: end;
       justify-items: center;
-      gap: 5px;
+      gap: 10px;
       color: #9fcadf;
-      font-size: 10px;
+      font-size: 17px;
       font-weight: 900;
       text-align: center;
       min-width: 0;
@@ -599,10 +654,10 @@
 
     .traffic-bar i {
       position: relative;
-      width: 26px;
+      width: 72px;
       height: var(--h);
-      min-height: 8px;
-      border-radius: 3px 3px 0 0;
+      min-height: 36px;
+      border-radius: 5px 5px 0 0;
       background:
         linear-gradient(90deg, rgba(255, 255, 255, 0.26), transparent 32%),
         linear-gradient(180deg, #70f4ff 0%, #2fbfff 38%, #177dff 100%);
@@ -616,34 +671,34 @@
     .traffic-bar i::before {
       content: "";
       position: absolute;
-      left: 4px;
-      right: 4px;
-      top: 4px;
-      height: 2px;
+      left: 8px;
+      right: 8px;
+      top: 8px;
+      height: 3px;
       background: rgba(255, 255, 255, 0.42);
     }
 
     .traffic-bar i::after {
       content: "";
       position: absolute;
-      left: -3px;
-      right: -3px;
-      bottom: -5px;
-      height: 5px;
+      left: -8px;
+      right: -8px;
+      bottom: -8px;
+      height: 8px;
       border-radius: 50%;
       background: radial-gradient(ellipse at center, rgba(35, 201, 255, 0.45), transparent 72%);
     }
 
     .traffic-bar b {
       color: #e8fbff;
-      font-size: 11px;
+      font-size: 20px;
       line-height: 1;
       text-shadow: 0 0 8px rgba(21, 210, 255, 0.22);
     }
 
     .traffic-bar span {
       display: block;
-      line-height: 1.08;
+      line-height: 1.12;
     }
 
     .metric-board {
@@ -716,6 +771,594 @@
         radial-gradient(circle at 100% 0, rgba(31, 168, 255, 0.12), transparent 34%);
     }
 
+    .elderly-panel {
+      position: absolute;
+      right: 1130px;
+      top: 136px;
+      z-index: 15;
+      width: 390px;
+      max-height: 780px;
+      display: none;
+      grid-template-rows: 54px 44px minmax(0, 1fr);
+      overflow: hidden;
+      color: #dff6ff;
+      background:
+        linear-gradient(180deg, rgba(9, 35, 61, 0.98), rgba(5, 20, 36, 0.96)),
+        radial-gradient(220px 150px at 8% 0, rgba(22, 222, 255, 0.16), transparent 70%);
+      border: 1px solid rgba(78, 211, 255, 0.34);
+      box-shadow: 0 0 34px rgba(0, 184, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    .elderly-panel.is-open { display: grid; }
+
+    .elderly-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px 0 18px;
+      background: linear-gradient(90deg, rgba(0, 169, 236, 0.54), rgba(9, 35, 61, 0.22));
+      border-bottom: 1px solid rgba(57, 217, 255, 0.34);
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .elderly-close {
+      width: 30px;
+      height: 30px;
+      border: 1px solid rgba(120, 232, 255, 0.28);
+      background: rgba(8, 32, 58, 0.66);
+      color: #dff6ff;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .elderly-search {
+      display: grid;
+      grid-template-columns: 1fr 70px;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(57, 217, 255, 0.18);
+    }
+
+    .elderly-search input {
+      min-width: 0;
+      height: 30px;
+      padding: 0 10px;
+      color: #e8fbff;
+      background: rgba(6, 24, 43, 0.82);
+      border: 1px solid rgba(95, 203, 255, 0.32);
+      font-size: 13px;
+      font-weight: 800;
+      outline: none;
+    }
+
+    .elderly-search input::placeholder { color: rgba(191, 224, 238, 0.68); }
+
+    .elderly-search button {
+      height: 30px;
+      border: 1px solid rgba(150, 230, 255, 0.52);
+      color: #f1fcff;
+      background: linear-gradient(135deg, #176ac8, #0bc9ff);
+      box-shadow: 0 0 14px rgba(11, 201, 255, 0.28);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .elderly-list {
+      min-height: 0;
+      overflow-y: auto;
+      padding: 12px;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      scrollbar-color: rgba(22, 222, 255, 0.54) rgba(8, 30, 52, 0.8);
+    }
+
+    .elderly-card {
+      min-height: 104px;
+      display: grid;
+      grid-template-columns: 86px 1fr;
+      gap: 12px;
+      padding: 12px;
+      background:
+        linear-gradient(90deg, rgba(14, 62, 101, 0.78), rgba(7, 28, 50, 0.72)),
+        radial-gradient(120px 70px at 0 0, rgba(38, 199, 255, 0.18), transparent 72%);
+      border: 1px solid rgba(60, 136, 180, 0.24);
+      box-shadow: inset 0 0 18px rgba(17, 120, 190, 0.12);
+    }
+
+    .elderly-card.is-active {
+      background:
+        linear-gradient(90deg, rgba(0, 143, 214, 0.8), rgba(118, 86, 16, 0.6)),
+        radial-gradient(150px 90px at 0 0, rgba(255, 226, 105, 0.28), transparent 72%);
+      border-color: rgba(255, 226, 105, 0.48);
+    }
+
+    .elderly-thumb {
+      height: 80px;
+      display: grid;
+      place-items: center;
+      color: #e8fbff;
+      font-size: 24px;
+      font-weight: 900;
+      background:
+        linear-gradient(135deg, rgba(17, 95, 150, 0.94), rgba(6, 29, 52, 0.94)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.08) 0 2px, transparent 2px 12px);
+      border: 1px solid rgba(120, 232, 255, 0.3);
+      box-shadow: inset 0 0 20px rgba(18, 233, 255, 0.12);
+    }
+
+    .elderly-copy {
+      min-width: 0;
+      display: grid;
+      align-content: center;
+      gap: 5px;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .elderly-copy h3 {
+      margin: 0 0 2px;
+      color: #f2fdff;
+      font-size: 15px;
+      font-weight: 900;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .elderly-copy p {
+      margin: 0;
+      color: #c6e6f5;
+    }
+
+    .elderly-copy span { color: #7dd9ff; }
+
+    .elderly-empty {
+      padding: 28px 0;
+      text-align: center;
+      color: #89bcd1;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .safety-event-trigger {
+      cursor: pointer;
+      transition: color 0.16s ease, text-shadow 0.16s ease;
+    }
+
+    .safety-event-trigger:hover {
+      color: #ffffff;
+      text-shadow: 0 0 14px rgba(22, 222, 255, 0.42);
+    }
+
+    .event-disposal-panel {
+      position: absolute;
+      left: 50%;
+      top: 118px;
+      z-index: 16;
+      width: 1560px;
+      height: 760px;
+      transform: translateX(-50%);
+      display: none;
+      grid-template-rows: 54px auto minmax(0, 1fr) 38px;
+      overflow: hidden;
+      color: #dff6ff;
+      background:
+        linear-gradient(180deg, rgba(9, 35, 61, 0.98), rgba(5, 20, 36, 0.96)),
+        radial-gradient(520px 220px at 16% 0, rgba(22, 222, 255, 0.16), transparent 72%),
+        radial-gradient(520px 220px at 100% 0, rgba(26, 134, 255, 0.14), transparent 72%);
+      border: 1px solid rgba(78, 211, 255, 0.34);
+      box-shadow: 0 0 38px rgba(0, 184, 255, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    .event-disposal-panel.is-open { display: grid; }
+
+    .event-disposal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px 0 20px;
+      background: linear-gradient(90deg, rgba(0, 169, 236, 0.58), rgba(9, 35, 61, 0.24));
+      border-bottom: 1px solid rgba(57, 217, 255, 0.34);
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .event-disposal-close {
+      width: 30px;
+      height: 30px;
+      border: 1px solid rgba(120, 232, 255, 0.28);
+      background: rgba(8, 32, 58, 0.66);
+      color: #dff6ff;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .event-disposal-filters {
+      display: grid;
+      gap: 10px;
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(57, 217, 255, 0.18);
+      background: linear-gradient(180deg, rgba(13, 54, 88, 0.5), rgba(6, 24, 43, 0.22));
+    }
+
+    .event-filter-line {
+      display: grid;
+      grid-template-columns: 84px 1fr;
+      align-items: start;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .event-filter-line.top {
+      grid-template-columns: 84px 260px 84px 270px 1fr auto;
+      align-items: center;
+    }
+
+    .event-filter-name {
+      color: #89bcd1;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 28px;
+      white-space: nowrap;
+    }
+
+    .event-disposal-filters input {
+      min-width: 0;
+      height: 30px;
+      padding: 0 10px;
+      color: #e8fbff;
+      background: rgba(6, 24, 43, 0.82);
+      border: 1px solid rgba(95, 203, 255, 0.32);
+      font-size: 13px;
+      font-weight: 800;
+      outline: none;
+    }
+
+    .event-date-range {
+      display: grid;
+      grid-template-columns: 1fr 18px 1fr;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .event-date-range span {
+      text-align: center;
+      color: #89bcd1;
+      font-weight: 900;
+    }
+
+    .event-pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .event-pill {
+      min-width: 78px;
+      height: 26px;
+      padding: 0 13px;
+      border: 1px solid rgba(64, 189, 255, 0.46);
+      border-radius: 999px;
+      color: #c8f7ff;
+      background: rgba(10, 50, 84, 0.68);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .event-pill.active {
+      color: #061423;
+      border-color: rgba(150, 230, 255, 0.72);
+      background: linear-gradient(135deg, #22e7ff, #2bff73);
+      box-shadow: 0 0 16px rgba(22, 222, 255, 0.28);
+    }
+
+    .event-pill.level-red { color: #ff837b; border-color: rgba(255, 103, 95, 0.62); background: rgba(93, 28, 31, 0.6); }
+    .event-pill.level-orange { color: #ffc16a; border-color: rgba(255, 174, 62, 0.62); background: rgba(89, 55, 18, 0.6); }
+    .event-pill.level-yellow { color: #ffe269; border-color: rgba(255, 226, 105, 0.62); background: rgba(84, 72, 18, 0.6); }
+    .event-pill.level-blue { color: #7dd9ff; border-color: rgba(55, 178, 255, 0.62); background: rgba(16, 60, 98, 0.6); }
+    .event-pill.level-red.active { color: #fff; background: linear-gradient(135deg, #ff5a56, #d92f2f); }
+    .event-pill.level-orange.active { color: #1b1204; background: linear-gradient(135deg, #ffb13c, #ed811b); }
+    .event-pill.level-yellow.active { color: #2a2100; background: linear-gradient(135deg, #ffe269, #e6b900); }
+    .event-pill.level-blue.active { color: #fff; background: linear-gradient(135deg, #4fc4ff, #1a86ff); }
+
+    .event-filter-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .event-filter-actions button {
+      width: 76px;
+      height: 30px;
+      border: 1px solid rgba(150, 230, 255, 0.52);
+      color: #f1fcff;
+      background: rgba(8, 32, 58, 0.66);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .event-filter-actions .primary {
+      background: linear-gradient(135deg, #176ac8, #0bc9ff);
+      box-shadow: 0 0 14px rgba(11, 201, 255, 0.28);
+    }
+
+    .event-disposal-table {
+      margin: 14px 18px 0;
+      overflow: hidden;
+      border: 1px solid rgba(78, 211, 255, 0.18);
+      background: rgba(5, 20, 36, 0.55);
+    }
+
+    .event-disposal-row {
+      display: grid;
+      grid-template-columns: 54px 100px minmax(380px, 1.6fr) minmax(230px, .9fr) 120px 100px 166px;
+      align-items: center;
+      gap: 12px;
+      min-height: 40px;
+      padding: 0 12px;
+      border-bottom: 1px solid rgba(57, 217, 255, 0.1);
+      color: #d8f4ff;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .event-disposal-row.head {
+      min-height: 36px;
+      color: #89bcd1;
+      background: rgba(13, 54, 88, 0.86);
+      font-weight: 900;
+    }
+
+    .event-disposal-row:not(.head):nth-child(odd) { background: rgba(11, 43, 70, 0.48); }
+    .event-disposal-row:not(.head):nth-child(even) { background: rgba(6, 24, 43, 0.38); }
+    .event-disposal-row span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .event-level.red { color: #ff837b; }
+    .event-level.orange { color: #ffc16a; }
+    .event-level.yellow { color: #ffe269; }
+    .event-level.blue { color: #7dd9ff; }
+
+    .event-disposal-empty {
+      padding: 42px 0;
+      text-align: center;
+      color: #89bcd1;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .event-disposal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      color: #89bcd1;
+      background: rgba(11, 43, 70, 0.72);
+      border-top: 1px solid rgba(57, 217, 255, 0.12);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .economy-panel {
+      position: absolute;
+      left: 50%;
+      top: 92px;
+      z-index: 17;
+      width: 1780px;
+      height: 860px;
+      transform: translateX(-50%);
+      display: none;
+      grid-template-rows: 58px 130px 1fr;
+      gap: 12px;
+      overflow: hidden;
+      padding-bottom: 12px;
+      color: #dff6ff;
+      background:
+        linear-gradient(180deg, rgba(8, 28, 50, 0.99), rgba(5, 18, 32, 0.98)),
+        radial-gradient(560px 220px at 12% 0, rgba(22, 222, 255, 0.14), transparent 72%);
+      border: 1px solid rgba(78, 211, 255, 0.34);
+      box-shadow: 0 0 40px rgba(0, 184, 255, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    .economy-panel.is-open { display: grid; }
+
+    .economy-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px 0 20px;
+      background: linear-gradient(90deg, rgba(0, 169, 236, 0.52), rgba(9, 35, 61, 0.24));
+      border-bottom: 1px solid rgba(57, 217, 255, 0.34);
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .economy-close {
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(120, 232, 255, 0.28);
+      background: rgba(8, 32, 58, 0.66);
+      color: #dff6ff;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .economy-kpis {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      padding: 0 12px;
+    }
+
+    .economy-kpi {
+      min-width: 0;
+      padding: 14px 18px;
+      display: grid;
+      align-content: center;
+      text-align: center;
+      background:
+        linear-gradient(180deg, rgba(23, 72, 121, 0.86), rgba(12, 47, 84, 0.82)),
+        radial-gradient(170px 80px at 50% 0, rgba(31, 168, 255, 0.15), transparent 72%);
+      border: 1px solid rgba(70, 209, 255, 0.28);
+      box-shadow: inset 0 0 20px rgba(18, 168, 255, 0.12);
+    }
+
+    .economy-kpi-title {
+      color: #f0fdff;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .economy-ranks {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      color: #a4d1e5;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .economy-kpi-main {
+      margin-top: 8px;
+      color: #f2fdff;
+      font-size: 30px;
+      line-height: 1;
+      font-weight: 900;
+      text-shadow: 0 0 14px rgba(24, 217, 255, 0.32);
+    }
+
+    .economy-kpi-main.cyan,
+    .economy-rank-num {
+      color: #0da7ff;
+      font-size: 30px;
+      font-weight: 900;
+    }
+
+    .economy-note {
+      margin-top: 12px;
+      color: #ffd91e;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .economy-subgrid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      border-top: 1px solid rgba(78, 211, 255, 0.14);
+      padding-top: 8px;
+    }
+
+    .economy-subgrid span {
+      color: #a4d1e5;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .economy-subgrid b {
+      display: block;
+      color: #f2fdff;
+      font-size: 16px;
+    }
+
+    .economy-subgrid em,
+    .economy-grow {
+      display: block;
+      color: #ff4b5c;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 900;
+    }
+
+    .economy-charts {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      padding: 0 12px;
+    }
+
+    .economy-chart {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 42px 1fr;
+      background: rgba(6, 24, 43, 0.62);
+      border: 1px solid rgba(78, 211, 255, 0.22);
+      box-shadow: inset 0 0 20px rgba(18, 168, 255, 0.08);
+    }
+
+    .economy-chart-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      color: #f0fdff;
+      font-size: 15px;
+      font-weight: 900;
+      border-bottom: 1px solid rgba(57, 217, 255, 0.18);
+    }
+
+    .economy-chart-title span {
+      color: #a4d1e5;
+      font-size: 12px;
+    }
+
+    .economy-chart svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .economy-chart text {
+      fill: #b7d8ea;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .economy-chart .grid-line {
+      stroke: rgba(141, 214, 242, 0.28);
+      stroke-width: 1;
+    }
+
+    .economy-chart .bar {
+      fill: #159dff;
+      filter: drop-shadow(0 0 8px rgba(21, 157, 255, 0.28));
+    }
+
+    .economy-chart .bar-alt { fill: #ff6b5b; }
+    .economy-chart .bar-third { fill: #29baff; }
+    .economy-chart .line-red {
+      fill: none;
+      stroke: #ff4b5c;
+      stroke-width: 3;
+      filter: drop-shadow(0 0 6px rgba(255, 75, 92, 0.45));
+    }
+    .economy-chart .line-yellow {
+      fill: none;
+      stroke: #ffb72a;
+      stroke-width: 3;
+      filter: drop-shadow(0 0 6px rgba(255, 183, 42, 0.45));
+    }
+    .economy-chart .dot-red { fill: #ff4b5c; stroke: #fff; stroke-width: 2; }
+    .economy-chart .dot-yellow { fill: #ffb72a; stroke: #fff; stroke-width: 2; }
+
     .safety-col {
       min-width: 0;
       padding: 12px 12px 10px;
@@ -733,6 +1376,17 @@
       font-weight: 900;
       padding-bottom: 8px;
       border-bottom: 1px solid rgba(66, 150, 194, 0.16);
+    }
+
+    .safety-video-trigger {
+      cursor: pointer;
+      transition: color 0.18s ease, text-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .safety-video-trigger:hover {
+      color: #7eeaff;
+      border-color: rgba(126, 234, 255, 0.46);
+      text-shadow: 0 0 14px rgba(22, 222, 255, 0.38);
     }
 
     .safety-rate {
@@ -1111,6 +1765,17 @@
       border: 1px solid rgba(60, 132, 176, 0.16);
     }
 
+    .security-item[data-action] {
+      cursor: pointer;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+    }
+
+    .security-item[data-action]:hover {
+      border-color: rgba(95, 229, 255, 0.56);
+      box-shadow: 0 0 18px rgba(0, 198, 255, 0.22), inset 0 0 22px rgba(12, 156, 255, 0.18);
+      transform: translateY(-1px);
+    }
+
     .security-icon {
       position: relative;
       width: 34px;
@@ -1196,6 +1861,210 @@
       grid-column: 1 / -1;
     }
 
+    .detail-video-panel {
+      position: absolute;
+      left: 1130px;
+      top: 136px;
+      z-index: 16;
+      width: 430px;
+      max-height: 820px;
+      display: none;
+      grid-template-rows: 56px auto auto minmax(0, 1fr);
+      overflow: hidden;
+      color: #dff6ff;
+      background:
+        linear-gradient(180deg, rgba(8, 33, 58, 0.98), rgba(4, 17, 31, 0.97)),
+        radial-gradient(260px 170px at 0 0, rgba(22, 222, 255, 0.18), transparent 72%);
+      border: 1px solid rgba(78, 211, 255, 0.36);
+      box-shadow: 0 0 38px rgba(0, 184, 255, 0.24), inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+
+    .detail-video-panel.is-open { display: grid; }
+
+    .detail-video-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px 0 18px;
+      background: linear-gradient(90deg, rgba(0, 169, 236, 0.58), rgba(9, 35, 61, 0.24));
+      border-bottom: 1px solid rgba(57, 217, 255, 0.34);
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .detail-video-close {
+      width: 30px;
+      height: 30px;
+      border: 1px solid rgba(120, 232, 255, 0.28);
+      background: rgba(8, 32, 58, 0.66);
+      color: #dff6ff;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .detail-video-summary {
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      border-bottom: 1px solid rgba(57, 217, 255, 0.16);
+      background: rgba(5, 23, 41, 0.42);
+    }
+
+    .detail-video-total {
+      height: 46px;
+      display: grid;
+      grid-template-columns: 44px 1fr auto;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px;
+      background:
+        linear-gradient(90deg, rgba(12, 80, 130, 0.62), rgba(6, 24, 43, 0.36)),
+        radial-gradient(90px 44px at 8% 50%, rgba(22, 222, 255, 0.2), transparent 72%);
+      border: 1px solid rgba(78, 211, 255, 0.24);
+    }
+
+    .detail-video-total i {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      color: #dffcff;
+      font-style: normal;
+      background: linear-gradient(135deg, #176ac8, #0bc9ff);
+      box-shadow: 0 0 16px rgba(11, 201, 255, 0.32);
+    }
+
+    .detail-video-total span {
+      color: #8fc0d6;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .detail-video-total b {
+      color: #effcff;
+      font-size: 22px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .detail-video-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .detail-video-stat {
+      height: 48px;
+      display: grid;
+      place-items: center;
+      gap: 3px;
+      background: linear-gradient(180deg, rgba(13, 58, 94, 0.58), rgba(7, 25, 43, 0.36));
+      border: 1px solid rgba(60, 132, 176, 0.18);
+      color: #9bc9dc;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .detail-video-stat b {
+      color: #eafcff;
+      font-size: 17px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .detail-video-search {
+      display: grid;
+      grid-template-columns: 1fr 92px;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(57, 217, 255, 0.16);
+    }
+
+    .detail-video-search input {
+      min-width: 0;
+      height: 32px;
+      padding: 0 10px;
+      color: #e8fbff;
+      background: rgba(6, 24, 43, 0.84);
+      border: 1px solid rgba(95, 203, 255, 0.32);
+      outline: none;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .detail-video-search input::placeholder { color: rgba(191, 224, 238, 0.66); }
+
+    .detail-video-check {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #9bc9dc;
+      font-size: 12px;
+      font-weight: 900;
+      user-select: none;
+    }
+
+    .detail-video-check input {
+      width: 14px;
+      height: 14px;
+      accent-color: #16deff;
+    }
+
+    .detail-video-tree {
+      min-height: 0;
+      overflow-y: auto;
+      padding: 10px 12px 14px;
+      scrollbar-color: rgba(22, 222, 255, 0.54) rgba(8, 30, 52, 0.8);
+    }
+
+    .detail-video-node {
+      color: #dff6ff;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .detail-video-node details { margin: 2px 0; }
+    .detail-video-node summary {
+      min-height: 28px;
+      display: grid;
+      grid-template-columns: 14px 16px 1fr auto;
+      align-items: center;
+      gap: 6px;
+      padding-left: calc(var(--level) * 14px);
+      list-style: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .detail-video-node summary:hover {
+      background: rgba(19, 88, 137, 0.42);
+    }
+
+    .detail-video-node summary::-webkit-details-marker { display: none; }
+    .detail-video-node .arrow { color: #48c9ff; font-size: 10px; }
+    .detail-video-node details[open] > summary .arrow { transform: rotate(90deg); }
+    .detail-video-node .folder { color: #ffd45e; }
+    .detail-video-node .camera { color: #48c9ff; }
+    .detail-video-node .name {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .detail-video-node .count {
+      color: #cdefff;
+      font-variant-numeric: tabular-nums;
+    }
+    .detail-video-empty {
+      padding: 28px 0;
+      text-align: center;
+      color: #89bcd1;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
     .map-area {
       position: absolute;
       left: 1100px;
@@ -1250,7 +2119,7 @@
   <div class="viewport">
     <main class="stage" id="stage">
       <div class="top-line"></div>
-      <div class="system-title">鄂州市数字监管系统</div>
+      <div class="system-title">鄂州市城市安全风险监测预警平台</div>
       <div class="meta">2021-08-03　星期二　22:48:53　中雨　25-29°C</div>
       <a class="back" href="index.html">返回主页</a>
       <div class="selected-note" id="selectedNote">当前板块：城市基础</div>
@@ -1307,14 +2176,14 @@
           <div class="panel-title">城市交通</div>
           <div class="traffic-board">
             <div class="traffic-top">
-              <div class="traffic-total"><span>城市道路总数</span><b>5554</b></div>
+              <div class="traffic-total" data-tooltip="点击展示全市道路" title="点击展示全市道路"><span>城市道路总数</span><b>5554</b></div>
               <div class="traffic-ratio">
                 <div class="ratio-row"><span>城际公路</span><div class="ratio-track"><i style="--w:93.3%"></i></div><b>5183</b></div>
-                <div class="ratio-row"><span>城市道路</span><div class="ratio-track"><i style="--w:6.7%"></i></div><b>371</b></div>
+                <div class="ratio-row" title="点击展示全市道路"><span data-tooltip="点击展示全市道路" title="点击展示全市道路">城市道路</span><div class="ratio-track"><i style="--w:6.7%"></i></div><b>371</b></div>
               </div>
               <div class="traffic-mini-grid">
-                <div class="traffic-mini"><b>45条</b><span>高速路</span></div>
-                <div class="traffic-mini"><b>6条</b><span>铁路</span></div>
+                <div class="traffic-mini" data-tooltip="点击展示高速路" title="点击展示高速路"><b>45条</b><span>高速路</span></div>
+                <div class="traffic-mini" data-tooltip="点击展示铁路" title="点击展示铁路"><b>6条</b><span>铁路</span></div>
               </div>
             </div>
             <div class="traffic-charts">
@@ -1354,12 +2223,12 @@
 
       <section class="side right">
         <section class="panel">
-          <div class="panel-title">城市保障</div>
+          <div class="panel-title" data-tooltip="地图撒点分布" title="地图撒点分布">城市保障</div>
           <div class="security-board">
             <div class="security-group">
               <div class="security-group-title">民生保障</div>
               <div class="security-grid">
-                <div class="security-item"><i class="security-icon">养</i><div class="security-copy"><b>34 所</b><span>养老服务机构</span></div></div>
+                <div class="security-item" data-action="elderly-panel"><i class="security-icon">养</i><div class="security-copy"><b>34 所</b><span>养老服务机构</span></div></div>
                 <div class="security-item"><i class="security-icon">餐</i><div class="security-copy"><b>86 所</b><span>幸福食堂</span></div></div>
                 <div class="security-item"><i class="security-icon">服</i><div class="security-copy"><b>300 所</b><span>养老服务设施</span></div></div>
                 <div class="security-item"><i class="security-icon">床</i><div class="security-copy"><b>6,365 张</b><span>床位数</span></div></div>
@@ -1389,7 +2258,7 @@
           <div class="panel-title">城市安全</div>
           <div class="safety-board">
             <div class="safety-col">
-              <div class="safety-col-title">汇聚视频总数7440个</div>
+              <div class="safety-col-title safety-video-trigger" id="safetyVideoTrigger" data-tooltip="展示全部视频" title="展示全部视频">汇聚视频总数7440个</div>
               <div class="safety-rate">
                 <div class="safety-rate-main"><span>在线率</span><b>84.35%</b></div>
                 <div class="safety-progress"><i></i></div>
@@ -1402,7 +2271,7 @@
               </div>
             </div>
             <div class="safety-col">
-              <div class="safety-col-title">事件处置数量</div>
+              <div class="safety-col-title safety-event-trigger" id="safetyEventTrigger" data-tooltip="展示全部事件" title="展示全部事件">事件处置数量</div>
               <div class="safety-event-head"><span>类型</span><span>事件量</span><span>处置时长</span></div>
               <div class="safety-event-list">
                 <div class="safety-event-row"><span>应急</span><b>4860件</b><em>avg31min</em></div>
@@ -1456,7 +2325,7 @@
           <div class="vitality-board">
             <div class="vitality-grid">
               <div class="vitality-card">
-                <div class="vitality-card-title">经济实力</div>
+                <div class="vitality-card-title" id="economyTrigger" data-tooltip="展示经济详情" title="展示经济详情">经济实力</div>
                 <div class="vitality-item"><span>GDP</span>1416.02亿 <b class="vitality-up">↑6.7%</b></div>
                 <div class="vitality-item"><span>人均</span>13.20万 <b class="vitality-rank">(全省第3)</b></div>
               </div>
@@ -1484,12 +2353,469 @@
           </div>
         </section>
       </section>
+
+      <aside class="elderly-panel" id="elderlyPanel" aria-hidden="true">
+        <div class="elderly-head">
+          <span>养老服务机构</span>
+          <button class="elderly-close" type="button" id="elderlyClose" aria-label="关闭养老服务机构弹窗">×</button>
+        </div>
+        <div class="elderly-search">
+          <input id="elderlySearch" type="search" placeholder="请输入名称">
+          <button type="button" id="elderlySearchBtn">查询</button>
+        </div>
+        <div class="elderly-list" id="elderlyList"></div>
+      </aside>
+
+      <aside class="event-disposal-panel" id="eventDisposalPanel" aria-hidden="true">
+        <div class="event-disposal-head">
+          <span>事件处置列表</span>
+          <button class="event-disposal-close" type="button" id="eventDisposalClose" aria-label="关闭事件处置列表">×</button>
+        </div>
+        <div class="event-disposal-filters">
+          <div class="event-filter-line top">
+            <span class="event-filter-name">关键字：</span>
+            <input id="eventDisposalKeyword" type="search" placeholder="请输入">
+            <span class="event-filter-name">时间范围：</span>
+            <div class="event-date-range">
+              <input id="eventDisposalStart" type="date" aria-label="开始日期">
+              <span>-</span>
+              <input id="eventDisposalEnd" type="date" aria-label="结束日期">
+            </div>
+            <input id="eventDisposalDepartmentKeyword" type="search" placeholder="部门查询">
+            <div class="event-filter-actions">
+              <button class="primary" type="button" id="eventDisposalSearch">查询</button>
+              <button type="button" id="eventDisposalReset">重置</button>
+            </div>
+          </div>
+          <div class="event-filter-line">
+            <span class="event-filter-name">事件来源：</span>
+            <div class="event-pill-group" id="eventDisposalSourceFilters"></div>
+          </div>
+          <div class="event-filter-line">
+            <span class="event-filter-name">事件类型：</span>
+            <div class="event-pill-group" id="eventDisposalTypeFilters"></div>
+          </div>
+          <div class="event-filter-line">
+            <span class="event-filter-name">风险等级：</span>
+            <div class="event-pill-group" id="eventDisposalLevelFilters"></div>
+          </div>
+          <div class="event-filter-line">
+            <span class="event-filter-name">部门：</span>
+            <div class="event-pill-group" id="eventDisposalDepartmentFilters"></div>
+          </div>
+        </div>
+        <div class="event-disposal-table">
+          <div class="event-disposal-row head">
+            <span>序号</span>
+            <span>事件类型</span>
+            <span>内容</span>
+            <span>地址</span>
+            <span>事件来源</span>
+            <span>风险等级</span>
+            <span>发生时间</span>
+          </div>
+          <div id="eventDisposalRows"></div>
+        </div>
+        <div class="event-disposal-footer">
+          <span id="eventDisposalTotal">共 0 条</span>
+          <span id="eventDisposalPage">1 / 1</span>
+        </div>
+      </aside>
+
+      <aside class="economy-panel" id="economyPanel" aria-hidden="true">
+        <div class="economy-head">
+          <span>鄂州经济</span>
+          <button class="economy-close" type="button" id="economyClose" aria-label="关闭鄂州经济弹窗">×</button>
+        </div>
+        <div class="economy-kpis">
+          <div class="economy-kpi">
+            <div class="economy-kpi-title">GDP</div>
+            <div class="economy-ranks"><span>全省排名</span><span>全市排名</span><b class="economy-rank-num">252</b><b class="economy-rank-num">12</b></div>
+            <div class="economy-note">第三产业领先</div>
+          </div>
+          <div class="economy-kpi">
+            <div class="economy-kpi-title">人均GDP</div>
+            <div class="economy-ranks"><span>全省排名</span><span>全市排名</span><b class="economy-rank-num">45</b><b class="economy-rank-num">3</b></div>
+            <div class="economy-note">人均GDP13.20万元</div>
+          </div>
+          <div class="economy-kpi">
+            <div class="economy-kpi-title">地区生产总值</div>
+            <div class="economy-kpi-main">1416.02亿</div>
+            <div class="economy-grow">同比增长6.7%</div>
+          </div>
+          <div class="economy-kpi">
+            <div class="economy-kpi-title">进出口总额</div>
+            <div class="economy-kpi-main">406.59亿</div>
+            <div class="economy-subgrid">
+              <span>出口<b>363.00亿</b><em>同比增长642%</em></span>
+              <span>进口<b>43.59亿</b><em>同比增长46%</em></span>
+            </div>
+          </div>
+          <div class="economy-kpi">
+            <div class="economy-kpi-title">高新企业数</div>
+            <div class="economy-kpi-main">512</div>
+            <div class="economy-grow">同比增长26.11%</div>
+          </div>
+        </div>
+        <div class="economy-charts">
+          <div class="economy-chart">
+            <div class="economy-chart-title">地区生产总值 <span>统计周期：2019 至 2025</span></div>
+            <svg viewBox="0 0 760 250" preserveAspectRatio="none">
+              <path class="grid-line" d="M66 36H724 M66 72H724 M66 108H724 M66 144H724 M66 180H724"></path>
+              <text x="24" y="184">0</text><text x="18" y="148">300</text><text x="18" y="112">600</text><text x="18" y="76">900</text><text x="12" y="40">1,500</text>
+              <rect class="bar" x="90" y="88" width="54" height="92"></rect><rect class="bar" x="184" y="100" width="54" height="80"></rect><rect class="bar" x="278" y="84" width="54" height="96"></rect><rect class="bar" x="372" y="72" width="54" height="108"></rect><rect class="bar" x="466" y="70" width="54" height="110"></rect><rect class="bar" x="560" y="64" width="54" height="116"></rect><rect class="bar" x="654" y="56" width="54" height="124"></rect>
+              <path class="line-red" d="M117 78 L211 100 L305 78 L399 130 L493 122 L587 116 L681 114"></path>
+              <circle class="dot-red" cx="117" cy="78" r="4"></circle><circle class="dot-red" cx="211" cy="100" r="4"></circle><circle class="dot-red" cx="305" cy="78" r="4"></circle><circle class="dot-red" cx="399" cy="130" r="4"></circle><circle class="dot-red" cx="493" cy="122" r="4"></circle><circle class="dot-red" cx="587" cy="116" r="4"></circle><circle class="dot-red" cx="681" cy="114" r="4"></circle>
+              <text x="96" y="205">2019</text><text x="190" y="205">2020</text><text x="284" y="205">2021</text><text x="378" y="205">2022</text><text x="472" y="205">2023</text><text x="566" y="205">2024</text><text x="660" y="205">2025</text>
+            </svg>
+          </div>
+          <div class="economy-chart">
+            <div class="economy-chart-title">人均地区生产总值（GDP） <span>市人均GDP / 全省排名</span></div>
+            <svg viewBox="0 0 760 250" preserveAspectRatio="none">
+              <path class="grid-line" d="M66 36H724 M66 72H724 M66 108H724 M66 144H724 M66 180H724"></path>
+              <rect class="bar" x="92" y="92" width="54" height="88"></rect><rect class="bar" x="186" y="106" width="54" height="74"></rect><rect class="bar" x="280" y="90" width="54" height="90"></rect><rect class="bar" x="374" y="82" width="54" height="98"></rect><rect class="bar" x="468" y="88" width="54" height="92"></rect><rect class="bar" x="562" y="78" width="54" height="102"></rect><rect class="bar" x="656" y="70" width="54" height="110"></rect>
+              <path class="line-red" d="M119 80 L213 66 L307 82 L401 84 L495 90 L589 86 L683 88"></path>
+              <circle class="dot-red" cx="119" cy="80" r="4"></circle><circle class="dot-red" cx="213" cy="66" r="4"></circle><circle class="dot-red" cx="307" cy="82" r="4"></circle><circle class="dot-red" cx="401" cy="84" r="4"></circle><circle class="dot-red" cx="495" cy="90" r="4"></circle><circle class="dot-red" cx="589" cy="86" r="4"></circle><circle class="dot-red" cx="683" cy="88" r="4"></circle>
+              <text x="98" y="205">2019</text><text x="192" y="205">2020</text><text x="286" y="205">2021</text><text x="380" y="205">2022</text><text x="474" y="205">2023</text><text x="568" y="205">2024</text><text x="662" y="205">2025</text>
+            </svg>
+          </div>
+          <div class="economy-chart">
+            <div class="economy-chart-title">产业结构分析 <span>三次产业总值 / 占比</span></div>
+            <svg viewBox="0 0 760 250" preserveAspectRatio="none">
+              <path class="grid-line" d="M66 36H724 M66 72H724 M66 108H724 M66 144H724 M66 180H724"></path>
+              <g>
+                <rect class="bar" x="90" y="154" width="24" height="26"></rect><rect class="bar-alt" x="118" y="86" width="24" height="94"></rect><rect class="bar-third" x="146" y="98" width="24" height="82"></rect>
+                <rect class="bar" x="190" y="150" width="24" height="30"></rect><rect class="bar-alt" x="218" y="104" width="24" height="76"></rect><rect class="bar-third" x="246" y="98" width="24" height="82"></rect>
+                <rect class="bar" x="290" y="142" width="24" height="38"></rect><rect class="bar-alt" x="318" y="96" width="24" height="84"></rect><rect class="bar-third" x="346" y="82" width="24" height="98"></rect>
+                <rect class="bar" x="390" y="140" width="24" height="40"></rect><rect class="bar-alt" x="418" y="80" width="24" height="100"></rect><rect class="bar-third" x="446" y="80" width="24" height="100"></rect>
+                <rect class="bar" x="490" y="142" width="24" height="38"></rect><rect class="bar-alt" x="518" y="88" width="24" height="92"></rect><rect class="bar-third" x="546" y="68" width="24" height="112"></rect>
+                <rect class="bar" x="590" y="148" width="24" height="32"></rect><rect class="bar-alt" x="618" y="88" width="24" height="92"></rect><rect class="bar-third" x="646" y="46" width="24" height="134"></rect>
+              </g>
+              <path class="line-yellow" d="M130 112 L230 114 L330 112 L430 110 L530 108 L630 104"></path>
+              <text x="104" y="205">2019</text><text x="204" y="205">2020</text><text x="304" y="205">2021</text><text x="404" y="205">2022</text><text x="504" y="205">2023</text><text x="604" y="205">2024</text>
+            </svg>
+          </div>
+          <div class="economy-chart">
+            <div class="economy-chart-title">高新技术企业发展规模 <span>发展规模 / 增速</span></div>
+            <svg viewBox="0 0 760 250" preserveAspectRatio="none">
+              <path class="grid-line" d="M66 36H724 M66 72H724 M66 108H724 M66 144H724 M66 180H724"></path>
+              <rect class="bar" x="92" y="146" width="54" height="34"></rect><rect class="bar" x="186" y="140" width="54" height="40"></rect><rect class="bar" x="280" y="132" width="54" height="48"></rect><rect class="bar" x="374" y="96" width="54" height="84"></rect><rect class="bar" x="468" y="88" width="54" height="92"></rect><rect class="bar" x="562" y="68" width="54" height="112"></rect><rect class="bar" x="656" y="48" width="54" height="132"></rect>
+              <path class="line-yellow" d="M119 132 L213 130 L307 128 L401 54 L495 132 L589 112 L683 118"></path>
+              <circle class="dot-yellow" cx="119" cy="132" r="4"></circle><circle class="dot-yellow" cx="213" cy="130" r="4"></circle><circle class="dot-yellow" cx="307" cy="128" r="4"></circle><circle class="dot-yellow" cx="401" cy="54" r="4"></circle><circle class="dot-yellow" cx="495" cy="132" r="4"></circle><circle class="dot-yellow" cx="589" cy="112" r="4"></circle><circle class="dot-yellow" cx="683" cy="118" r="4"></circle>
+              <text x="98" y="205">2019</text><text x="192" y="205">2020</text><text x="286" y="205">2021</text><text x="380" y="205">2022</text><text x="474" y="205">2023</text><text x="568" y="205">2024</text><text x="662" y="205">2025</text>
+            </svg>
+          </div>
+        </div>
+      </aside>
+
+      <aside class="detail-video-panel" id="detailVideoPanel" aria-hidden="true">
+        <div class="detail-video-head">
+          <span>视频监控清单</span>
+          <button class="detail-video-close" type="button" id="detailVideoClose" aria-label="关闭视频监控清单">×</button>
+        </div>
+        <div class="detail-video-summary">
+          <div class="detail-video-total"><i>视</i><span>汇聚视频总数</span><b>7440个</b></div>
+          <div class="detail-video-stats">
+            <div class="detail-video-stat"><b>84.35%</b><span>在线率</span></div>
+            <div class="detail-video-stat"><b>6190</b><span>枪机</span></div>
+            <div class="detail-video-stat"><b>845</b><span>球机</span></div>
+            <div class="detail-video-stat"><b>405</b><span>其他</span></div>
+          </div>
+        </div>
+        <div class="detail-video-search">
+          <input id="detailVideoSearch" type="search" placeholder="请输入名称">
+          <label class="detail-video-check"><input id="detailVideoInclude" type="checkbox" checked>包含下级</label>
+        </div>
+        <div class="detail-video-tree" id="detailVideoTree"></div>
+      </aside>
     </main>
   </div>
 
   <script>
     const selected = new URLSearchParams(location.search).get("section") || "城市基础";
     document.getElementById("selectedNote").textContent = `当前板块：${selected}`;
+    const elderlyPanel = document.getElementById("elderlyPanel");
+    const elderlyClose = document.getElementById("elderlyClose");
+    const elderlySearch = document.getElementById("elderlySearch");
+    const elderlySearchBtn = document.getElementById("elderlySearchBtn");
+    const elderlyList = document.getElementById("elderlyList");
+    const safetyVideoTrigger = document.getElementById("safetyVideoTrigger");
+    const detailVideoPanel = document.getElementById("detailVideoPanel");
+    const detailVideoClose = document.getElementById("detailVideoClose");
+    const detailVideoSearch = document.getElementById("detailVideoSearch");
+    const detailVideoInclude = document.getElementById("detailVideoInclude");
+    const detailVideoTree = document.getElementById("detailVideoTree");
+    const safetyEventTrigger = document.getElementById("safetyEventTrigger");
+    const eventDisposalPanel = document.getElementById("eventDisposalPanel");
+    const eventDisposalClose = document.getElementById("eventDisposalClose");
+    const eventDisposalKeyword = document.getElementById("eventDisposalKeyword");
+    const eventDisposalStart = document.getElementById("eventDisposalStart");
+    const eventDisposalEnd = document.getElementById("eventDisposalEnd");
+    const eventDisposalDepartmentKeyword = document.getElementById("eventDisposalDepartmentKeyword");
+    const eventDisposalSourceFilters = document.getElementById("eventDisposalSourceFilters");
+    const eventDisposalTypeFilters = document.getElementById("eventDisposalTypeFilters");
+    const eventDisposalLevelFilters = document.getElementById("eventDisposalLevelFilters");
+    const eventDisposalDepartmentFilters = document.getElementById("eventDisposalDepartmentFilters");
+    const eventDisposalSearch = document.getElementById("eventDisposalSearch");
+    const eventDisposalReset = document.getElementById("eventDisposalReset");
+    const eventDisposalRows = document.getElementById("eventDisposalRows");
+    const eventDisposalTotal = document.getElementById("eventDisposalTotal");
+    const eventDisposalPage = document.getElementById("eventDisposalPage");
+    const economyTrigger = document.getElementById("economyTrigger");
+    const economyPanel = document.getElementById("economyPanel");
+    const economyClose = document.getElementById("economyClose");
+    const elderlyInstitutions = [
+      { name: "鄂州市颐和养老服务有限公司", category: "养老服务机构", address: "武昌大道219-1号" },
+      { name: "鄂州市鄂城区长港福利院", category: "养老服务机构", address: "鄂城区长港镇峒山社区", active: true },
+      { name: "鄂州市鄂城区花湖镇福利院", category: "养老服务机构", address: "花湖卫生院旁" },
+      { name: "鄂州市鄂城区泽林镇福利院", category: "养老服务机构", address: "泽林镇兴桥村" },
+      { name: "鄂州市恒星敬老院", category: "养老服务机构", address: "西山街办七里界村委会旁" },
+      { name: "鄂州市福寿养老服务有限公司", category: "养老服务机构", address: "鄂城区凤凰街道寿昌大道附近" }
+    ];
+    const detailVideoTreeData = [
+      {
+        name: "鄂州市", count: "6276/7440", open: true, children: [
+          { name: "吾奎工程", count: "1388/1618", children: [
+            { name: "施工出入口", count: "502/586" },
+            { name: "塔吊周边", count: "420/488" },
+            { name: "材料堆场", count: "466/544" }
+          ] },
+          { name: "鄂州市商务局成品油平台", count: "171/300", children: [
+            { name: "加油站监控", count: "112/168" },
+            { name: "油库监控", count: "59/132" }
+          ] },
+          { name: "鄂州市教育局", count: "1244/1480", children: [
+            { name: "中小学周边", count: "802/916" },
+            { name: "幼儿园周边", count: "442/564" }
+          ] },
+          { name: "鄂州市应急管理局", count: "139/166", children: [
+            { name: "危化企业", count: "88/104" },
+            { name: "重点仓储", count: "51/62" }
+          ] },
+          { name: "鄂州市公安局", count: "3063/3340", children: [
+            { name: "治安卡口", count: "1020/1104" },
+            { name: "道路路口", count: "1506/1620" },
+            { name: "重点场所", count: "537/616" }
+          ] },
+          { name: "鄂州市燃气", count: "79/80" },
+          { name: "梁子湖防溺水", count: "144/317" },
+          { name: "中国铁塔", count: "48/49" }
+        ]
+      }
+    ];
+    const eventDisposalFilterData = {
+      source: ["全部", "110非警情", "119警情", "120急救", "122交通", "12345热线", "交通拥堵", "城管执法", "宣传提醒", "无人机巡查", "智能发现"],
+      type: ["全部", "12345", "消防", "城管", "防溺水", "秸秆焚烧"],
+      level: ["全部", "红色预警", "橙色预警", "黄色预警", "蓝色预警"],
+      department: ["全部", "110", "临空经济区管委会", "凤凰街办", "华容区", "古楼街办", "团市委", "市公安局", "市消防救援支队", "市住建局", "市市场监管局", "市农业农村局", "市卫健委", "市发改委"]
+    };
+    const eventDisposalState = { source: "全部", type: "全部", level: "全部", department: "全部" };
+    const eventDisposalData = [
+      { content: "报警人同事驾驶货车发生事故，不清楚事故形态，人员处于半昏迷状态。", address: "经开区东风大道与吴楚大道交汇处", source: "122交通", type: "12345", level: "黄色预警", time: "2026-07-15 16:23:21", department: "市公安局" },
+      { content: "群众反映小区楼道烟雾明显，现场疑似电瓶车充电异常。", address: "江岸区后湖大道塔子湖体育中心", source: "119警情", type: "消防", level: "黄色预警", time: "2026-07-15 15:52:42", department: "市消防救援支队" },
+      { content: "青年路口晚高峰车辆排队较长，需联动疏导。", address: "临空经济区青年路", source: "交通拥堵", type: "城管", level: "橙色预警", time: "2026-07-15 15:19:00", department: "临空经济区管委会" },
+      { content: "小车与电动车发生轻微交通事故，现场需协调处置。", address: "鄂城区文星大道与滨湖路交叉口", source: "122交通", type: "12345", level: "黄色预警", time: "2026-07-15 15:08:43", department: "市公安局" },
+      { content: "群众反映河道亲水平台有未成年人长时间逗留。", address: "梁子湖区东沟镇湖边村", source: "无人机巡查", type: "防溺水", level: "橙色预警", time: "2026-07-15 14:49:54", department: "华容区" },
+      { content: "地下设施巡检发现有限空间气体浓度异常，已通知属地核查。", address: "葛店开发区创业大道地下管廊", source: "智能发现", type: "城管", level: "红色预警", time: "2026-07-15 14:43:57", department: "市住建局" },
+      { content: "小车与电动车碰撞，电动车方摔倒，头部流血，已呼叫120。", address: "东湖西路王路鲁磨路口", source: "122交通", type: "12345", level: "黄色预警", time: "2026-07-15 14:40:14", department: "110" },
+      { content: "桥南景苑附近疑似烟火，现场需要核实是否秸秆焚烧。", address: "鄂城区桥南景苑4栋附近", source: "119警情", type: "秸秆焚烧", level: "红色预警", time: "2026-07-15 14:21:15", department: "市农业农村局" },
+      { content: "餐饮门店燃气报警器触发，疑似阀门未关闭。", address: "古楼街办明塘市场周边", source: "智能发现", type: "消防", level: "橙色预警", time: "2026-07-15 13:42:06", department: "古楼街办" },
+      { content: "主次干道沿线流动摊点聚集，影响道路通行。", address: "凤凰街办南浦路商圈", source: "城管执法", type: "城管", level: "蓝色预警", time: "2026-07-15 12:36:18", department: "凤凰街办" },
+      { content: "群众反映小区电梯故障停运，需协调维保单位处置。", address: "鄂城区滨湖社区", source: "12345热线", type: "12345", level: "蓝色预警", time: "2026-07-15 11:24:39", department: "市市场监管局" },
+      { content: "小区消防通道被车辆占用，影响应急通行。", address: "华容区楚藩大道居民小区", source: "119警情", type: "消防", level: "黄色预警", time: "2026-07-15 10:18:55", department: "华容区" }
+    ];
+
+    function renderElderlyList() {
+      const keyword = elderlySearch.value.trim();
+      const rows = elderlyInstitutions.filter(item => !keyword || item.name.includes(keyword) || item.address.includes(keyword));
+      elderlyList.innerHTML = rows.length
+        ? rows.map((item, index) => `
+          <div class="elderly-card${item.active ? " is-active" : ""}">
+            <div class="elderly-thumb">${String(index + 1).padStart(2, "0")}</div>
+            <div class="elderly-copy">
+              <h3>${item.name}</h3>
+              <p><span>类别：</span>${item.category}</p>
+              <p><span>地址：</span>${item.address}</p>
+            </div>
+          </div>
+        `).join("")
+        : `<div class="elderly-empty">暂无匹配机构</div>`;
+    }
+
+    function openElderlyPanel() {
+      renderElderlyList();
+      elderlyPanel.classList.add("is-open");
+      elderlyPanel.setAttribute("aria-hidden", "false");
+      elderlySearch.focus();
+    }
+
+    function closeElderlyPanel() {
+      elderlyPanel.classList.remove("is-open");
+      elderlyPanel.setAttribute("aria-hidden", "true");
+    }
+
+    function renderEventDisposalFilterButtons(target, items, key) {
+      const keyword = key === "department" ? eventDisposalDepartmentKeyword.value.trim() : "";
+      const visibleItems = key === "department" && keyword
+        ? items.filter(item => item === "全部" || item.includes(keyword))
+        : items;
+      if (!visibleItems.includes(eventDisposalState[key])) eventDisposalState[key] = "全部";
+      target.innerHTML = visibleItems.map(item => {
+        const levelClass = key === "level"
+          ? item.includes("红") ? " level-red" : item.includes("橙") ? " level-orange" : item.includes("黄") ? " level-yellow" : item.includes("蓝") ? " level-blue" : ""
+          : "";
+        return `<button class="event-pill${levelClass}${eventDisposalState[key] === item ? " active" : ""}" type="button" data-key="${key}" data-value="${item}">${item}</button>`;
+      }).join("");
+    }
+
+    function renderEventDisposalFilters() {
+      renderEventDisposalFilterButtons(eventDisposalSourceFilters, eventDisposalFilterData.source, "source");
+      renderEventDisposalFilterButtons(eventDisposalTypeFilters, eventDisposalFilterData.type, "type");
+      renderEventDisposalFilterButtons(eventDisposalLevelFilters, eventDisposalFilterData.level, "level");
+      renderEventDisposalFilterButtons(eventDisposalDepartmentFilters, eventDisposalFilterData.department, "department");
+    }
+
+    function getEventLevelClass(level) {
+      if (level.includes("红")) return "red";
+      if (level.includes("橙")) return "orange";
+      if (level.includes("黄")) return "yellow";
+      if (level.includes("蓝")) return "blue";
+      return "";
+    }
+
+    function renderEventDisposalRows() {
+      const keyword = eventDisposalKeyword.value.trim();
+      const departmentKeyword = eventDisposalDepartmentKeyword.value.trim();
+      const startDate = eventDisposalStart.value;
+      const endDate = eventDisposalEnd.value;
+      const rows = eventDisposalData.filter(item => {
+        const itemDate = item.time.slice(0, 10);
+        const haystack = `${item.content}${item.address}${item.source}${item.type}${item.level}${item.time}${item.department}`;
+        const matchKeyword = !keyword || haystack.includes(keyword);
+        const matchSource = eventDisposalState.source === "全部" || item.source === eventDisposalState.source;
+        const matchType = eventDisposalState.type === "全部" || item.type === eventDisposalState.type;
+        const matchLevel = eventDisposalState.level === "全部" || item.level === eventDisposalState.level;
+        const matchDepartment = eventDisposalState.department === "全部" || item.department === eventDisposalState.department;
+        const matchDepartmentKeyword = !departmentKeyword || item.department.includes(departmentKeyword);
+        const matchStart = !startDate || itemDate >= startDate;
+        const matchEnd = !endDate || itemDate <= endDate;
+        return matchKeyword && matchSource && matchType && matchLevel && matchDepartment && matchDepartmentKeyword && matchStart && matchEnd;
+      });
+
+      eventDisposalRows.innerHTML = rows.length
+        ? rows.map((item, index) => `
+          <div class="event-disposal-row">
+            <span>${index + 1}</span>
+            <span>${item.type}</span>
+            <span title="${item.content}">${item.content}</span>
+            <span title="${item.address}">${item.address}</span>
+            <span>${item.source}</span>
+            <span class="event-level ${getEventLevelClass(item.level)}">${item.level}</span>
+            <span>${item.time}</span>
+          </div>
+        `).join("")
+        : `<div class="event-disposal-empty">暂无匹配事件</div>`;
+      eventDisposalTotal.textContent = `共 ${rows.length} 条`;
+      eventDisposalPage.textContent = rows.length ? "1 / 1" : "0 / 0";
+    }
+
+    function openEventDisposalPanel() {
+      renderEventDisposalFilters();
+      renderEventDisposalRows();
+      eventDisposalPanel.classList.add("is-open");
+      eventDisposalPanel.setAttribute("aria-hidden", "false");
+      eventDisposalKeyword.focus();
+    }
+
+    function closeEventDisposalPanel() {
+      eventDisposalPanel.classList.remove("is-open");
+      eventDisposalPanel.setAttribute("aria-hidden", "true");
+    }
+
+    function openEconomyPanel() {
+      economyPanel.classList.add("is-open");
+      economyPanel.setAttribute("aria-hidden", "false");
+    }
+
+    function closeEconomyPanel() {
+      economyPanel.classList.remove("is-open");
+      economyPanel.setAttribute("aria-hidden", "true");
+    }
+
+    function resetEventDisposalFilters() {
+      eventDisposalState.source = "全部";
+      eventDisposalState.type = "全部";
+      eventDisposalState.level = "全部";
+      eventDisposalState.department = "全部";
+      eventDisposalKeyword.value = "";
+      eventDisposalStart.value = "";
+      eventDisposalEnd.value = "";
+      eventDisposalDepartmentKeyword.value = "";
+      renderEventDisposalFilters();
+      renderEventDisposalRows();
+    }
+
+    function filterDetailVideoNodes(nodes, keyword, includeChildren) {
+      if (!keyword) return nodes;
+      return nodes.map(node => {
+        const childMatches = node.children ? filterDetailVideoNodes(node.children, keyword, includeChildren) : [];
+        const selfMatches = node.name.includes(keyword) || node.count.includes(keyword);
+        if (selfMatches || childMatches.length) {
+          return {
+            ...node,
+            open: true,
+            children: selfMatches && includeChildren ? node.children : childMatches
+          };
+        }
+        return null;
+      }).filter(Boolean);
+    }
+
+    function renderDetailVideoTree() {
+      const keyword = detailVideoSearch.value.trim();
+      const data = filterDetailVideoNodes(detailVideoTreeData, keyword, detailVideoInclude.checked);
+      const renderNode = (node, level = 0) => {
+        const hasChildren = Array.isArray(node.children) && node.children.length > 0;
+        const icon = hasChildren ? "▱" : "▣";
+        const iconClass = hasChildren ? "folder" : "camera";
+        if (!hasChildren) {
+          return `
+            <div class="detail-video-node" style="--level:${level}">
+              <details>
+                <summary>
+                  <span></span><span class="${iconClass}">${icon}</span>
+                  <span class="name">${node.name}</span><span class="count">${node.count}</span>
+                </summary>
+              </details>
+            </div>
+          `;
+        }
+        return `
+          <div class="detail-video-node" style="--level:${level}">
+            <details ${node.open ? "open" : ""}>
+              <summary>
+                <span class="arrow">▶</span><span class="${iconClass}">${icon}</span>
+                <span class="name">${node.name}</span><span class="count">${node.count}</span>
+              </summary>
+              <div>${node.children.map(child => renderNode(child, level + 1)).join("")}</div>
+            </details>
+          </div>
+        `;
+      };
+      detailVideoTree.innerHTML = data.length ? data.map(node => renderNode(node)).join("") : `<div class="detail-video-empty">暂无匹配视频</div>`;
+    }
+
+    function openDetailVideoPanel() {
+      renderDetailVideoTree();
+      detailVideoPanel.classList.add("is-open");
+      detailVideoPanel.setAttribute("aria-hidden", "false");
+      detailVideoSearch.focus();
+    }
+
+    function closeDetailVideoPanel() {
+      detailVideoPanel.classList.remove("is-open");
+      detailVideoPanel.setAttribute("aria-hidden", "true");
+    }
 
     function fillCityDots() {
       const group = document.getElementById("randomDots");
@@ -1507,6 +2833,42 @@
     }
 
     fillCityDots();
+    document.querySelector("[data-action='elderly-panel']")?.addEventListener("click", openElderlyPanel);
+    safetyVideoTrigger?.addEventListener("click", openDetailVideoPanel);
+    safetyEventTrigger?.addEventListener("click", openEventDisposalPanel);
+    economyTrigger?.addEventListener("click", openEconomyPanel);
+    economyClose.addEventListener("click", closeEconomyPanel);
+    detailVideoClose.addEventListener("click", closeDetailVideoPanel);
+    detailVideoSearch.addEventListener("input", renderDetailVideoTree);
+    detailVideoInclude.addEventListener("change", renderDetailVideoTree);
+    eventDisposalClose.addEventListener("click", closeEventDisposalPanel);
+    eventDisposalSearch.addEventListener("click", renderEventDisposalRows);
+    eventDisposalReset.addEventListener("click", resetEventDisposalFilters);
+    [eventDisposalKeyword, eventDisposalStart, eventDisposalEnd].forEach(input => input.addEventListener("input", renderEventDisposalRows));
+    eventDisposalDepartmentKeyword.addEventListener("input", () => {
+      renderEventDisposalFilterButtons(eventDisposalDepartmentFilters, eventDisposalFilterData.department, "department");
+      renderEventDisposalRows();
+    });
+    [eventDisposalSourceFilters, eventDisposalTypeFilters, eventDisposalLevelFilters, eventDisposalDepartmentFilters].forEach(group => {
+      group.addEventListener("click", event => {
+        const button = event.target.closest(".event-pill");
+        if (!button) return;
+        eventDisposalState[button.dataset.key] = button.dataset.value;
+        renderEventDisposalFilters();
+        renderEventDisposalRows();
+      });
+    });
+    elderlyClose.addEventListener("click", closeElderlyPanel);
+    elderlySearchBtn.addEventListener("click", renderElderlyList);
+    elderlySearch.addEventListener("keydown", event => {
+      if (event.key === "Enter") renderElderlyList();
+    });
+    window.addEventListener("keydown", event => {
+      if (event.key === "Escape" && elderlyPanel.classList.contains("is-open")) closeElderlyPanel();
+      if (event.key === "Escape" && detailVideoPanel.classList.contains("is-open")) closeDetailVideoPanel();
+      if (event.key === "Escape" && eventDisposalPanel.classList.contains("is-open")) closeEventDisposalPanel();
+      if (event.key === "Escape" && economyPanel.classList.contains("is-open")) closeEconomyPanel();
+    });
   </script>
 </body>
 </html>
