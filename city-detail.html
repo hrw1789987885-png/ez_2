@@ -1359,6 +1359,122 @@
     .economy-chart .dot-red { fill: #ff4b5c; stroke: #fff; stroke-width: 2; }
     .economy-chart .dot-yellow { fill: #ffb72a; stroke: #fff; stroke-width: 2; }
 
+    .security-group[data-action] {
+      cursor: pointer;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .security-group[data-action]:hover {
+      border-color: rgba(95, 229, 255, 0.48);
+      box-shadow: inset 0 0 22px rgba(18, 168, 255, 0.14), 0 0 18px rgba(0, 198, 255, 0.16);
+    }
+
+    .social-panel {
+      position: absolute;
+      left: 50%;
+      top: 150px;
+      z-index: 18;
+      width: 1480px;
+      height: 500px;
+      transform: translateX(-50%);
+      display: none;
+      grid-template-rows: 58px 1fr;
+      overflow: hidden;
+      color: #dff6ff;
+      background:
+        linear-gradient(180deg, rgba(8, 28, 50, 0.99), rgba(5, 18, 32, 0.98)),
+        radial-gradient(460px 200px at 12% 0, rgba(22, 222, 255, 0.14), transparent 72%);
+      border: 1px solid rgba(78, 211, 255, 0.34);
+      box-shadow: 0 0 38px rgba(0, 184, 255, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    .social-panel.is-open { display: grid; }
+
+    .social-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px 0 20px;
+      background: linear-gradient(90deg, rgba(0, 169, 236, 0.52), rgba(9, 35, 61, 0.24));
+      border-bottom: 1px solid rgba(57, 217, 255, 0.34);
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .social-close {
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(120, 232, 255, 0.28);
+      background: rgba(8, 32, 58, 0.66);
+      color: #dff6ff;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .social-charts {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      padding: 18px 14px;
+    }
+
+    .social-chart {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 46px 1fr;
+      background: rgba(20, 53, 88, 0.82);
+      border: 1px solid rgba(78, 211, 255, 0.18);
+      box-shadow: inset 0 0 20px rgba(18, 168, 255, 0.08);
+    }
+
+    .social-chart-title {
+      display: grid;
+      place-items: center;
+      color: #f0fdff;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .social-chart svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .social-chart text {
+      fill: #b7d8ea;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .social-grid-line {
+      stroke: rgba(141, 214, 242, 0.22);
+      stroke-width: 1;
+    }
+
+    .social-area {
+      fill: rgba(84, 231, 216, 0.18);
+    }
+
+    .social-line-blue,
+    .social-line-cyan,
+    .social-line-red {
+      fill: none;
+      stroke-width: 3;
+      filter: drop-shadow(0 0 6px currentColor);
+    }
+
+    .social-line-blue { stroke: #1aa0ff; color: #1aa0ff; }
+    .social-line-cyan { stroke: #62f0e2; color: #62f0e2; }
+    .social-line-red { stroke: #ff4b5c; color: #ff4b5c; }
+    .social-dot-blue { fill: #1aa0ff; stroke: #fff; stroke-width: 2; }
+    .social-dot-cyan { fill: #62f0e2; stroke: #fff; stroke-width: 2; }
+    .social-bar-blue { fill: #159dff; filter: drop-shadow(0 0 8px rgba(21, 157, 255, 0.28)); }
+    .social-bar-cyan { fill: #5ce4d6; filter: drop-shadow(0 0 8px rgba(92, 228, 214, 0.26)); }
+
     .safety-col {
       min-width: 0;
       padding: 12px 12px 10px;
@@ -2234,7 +2350,7 @@
                 <div class="security-item"><i class="security-icon">床</i><div class="security-copy"><b>6,365 张</b><span>床位数</span></div></div>
               </div>
             </div>
-            <div class="security-group">
+            <div class="security-group" data-action="social-security">
               <div class="security-group-title">社会保障</div>
               <div class="security-grid">
                 <div class="security-item"><i class="security-icon">职</i><div class="security-copy"><b>372,598 人</b><span>城镇职工参保</span></div></div>
@@ -2508,6 +2624,59 @@
         </div>
       </aside>
 
+      <aside class="social-panel" id="socialPanel" aria-hidden="true">
+        <div class="social-head">
+          <span>社会保障参保趋势</span>
+          <button class="social-close" type="button" id="socialClose" aria-label="关闭社会保障参保趋势">×</button>
+        </div>
+        <div class="social-charts">
+          <div class="social-chart">
+            <div class="social-chart-title">养老参保人数趋势对比</div>
+            <svg viewBox="0 0 460 330" preserveAspectRatio="none">
+              <path class="social-grid-line" d="M74 44H420 M74 88H420 M74 132H420 M74 176H420 M74 220H420 M74 264H420"></path>
+              <path class="social-area" d="M102 164 L176 158 L250 146 L324 136 L398 124 L398 264 L102 264Z"></path>
+              <path class="social-line-blue" d="M102 220 L176 198 L250 176 L324 152 L398 130"></path>
+              <path class="social-line-cyan" d="M102 164 L176 158 L250 146 L324 136 L398 124"></path>
+              <circle class="social-dot-blue" cx="102" cy="220" r="5"></circle><circle class="social-dot-blue" cx="176" cy="198" r="5"></circle><circle class="social-dot-blue" cx="250" cy="176" r="5"></circle><circle class="social-dot-blue" cx="324" cy="152" r="5"></circle><circle class="social-dot-blue" cx="398" cy="130" r="5"></circle>
+              <circle class="social-dot-cyan" cx="102" cy="164" r="5"></circle><circle class="social-dot-cyan" cx="176" cy="158" r="5"></circle><circle class="social-dot-cyan" cx="250" cy="146" r="5"></circle><circle class="social-dot-cyan" cx="324" cy="136" r="5"></circle><circle class="social-dot-cyan" cx="398" cy="124" r="5"></circle>
+              <text x="32" y="48">45.0万</text><text x="32" y="92">40.0万</text><text x="32" y="136">35.0万</text><text x="32" y="180">30.0万</text><text x="32" y="224">25.0万</text><text x="34" y="268">20.0万</text>
+              <text x="88" y="294">2021年</text><text x="162" y="294">2022年</text><text x="236" y="294">2023年</text><text x="310" y="294">2024年</text><text x="384" y="294">2025年</text>
+              <circle class="social-dot-blue" cx="122" cy="24" r="5"></circle><text x="136" y="28">职工养老</text><circle class="social-dot-cyan" cx="232" cy="24" r="5"></circle><text x="246" y="28">居民养老</text>
+            </svg>
+          </div>
+          <div class="social-chart">
+            <div class="social-chart-title">工伤、失业保险统计</div>
+            <svg viewBox="0 0 460 330" preserveAspectRatio="none">
+              <path class="social-grid-line" d="M74 44H420 M74 88H420 M74 132H420 M74 176H420 M74 220H420 M74 264H420"></path>
+              <rect class="social-bar-blue" x="104" y="104" width="22" height="160"></rect><rect class="social-bar-cyan" x="134" y="154" width="22" height="110"></rect>
+              <rect class="social-bar-blue" x="176" y="88" width="22" height="176"></rect><rect class="social-bar-cyan" x="206" y="144" width="22" height="120"></rect>
+              <rect class="social-bar-blue" x="248" y="112" width="22" height="152"></rect><rect class="social-bar-cyan" x="278" y="138" width="22" height="126"></rect>
+              <rect class="social-bar-blue" x="320" y="134" width="22" height="130"></rect><rect class="social-bar-cyan" x="350" y="132" width="22" height="132"></rect>
+              <rect class="social-bar-blue" x="392" y="138" width="22" height="126"></rect><rect class="social-bar-cyan" x="422" y="128" width="22" height="136"></rect>
+              <text x="96" y="98">13.47</text><text x="168" y="82">14.17</text><text x="240" y="106">13.34</text><text x="312" y="128">11.97</text><text x="384" y="132">11.9</text>
+              <text x="130" y="148">8.75</text><text x="202" y="138">9.11</text><text x="274" y="132">9.25</text><text x="346" y="126">9.54</text><text x="418" y="122">9.79</text>
+              <text x="100" y="294">2021</text><text x="172" y="294">2022</text><text x="244" y="294">2023</text><text x="316" y="294">2024</text><text x="388" y="294">2025</text>
+              <rect class="social-bar-blue" x="150" y="20" width="22" height="12"></rect><text x="178" y="31">工伤保险</text><rect class="social-bar-cyan" x="258" y="20" width="22" height="12"></rect><text x="286" y="31">失业保险</text>
+            </svg>
+          </div>
+          <div class="social-chart">
+            <div class="social-chart-title">职工养老保险统计情况</div>
+            <svg viewBox="0 0 460 330" preserveAspectRatio="none">
+              <path class="social-grid-line" d="M74 44H420 M74 88H420 M74 132H420 M74 176H420 M74 220H420 M74 264H420"></path>
+              <rect class="social-bar-blue" x="104" y="112" width="22" height="152"></rect><rect class="social-bar-cyan" x="134" y="196" width="22" height="68"></rect>
+              <rect class="social-bar-blue" x="176" y="96" width="22" height="168"></rect><rect class="social-bar-cyan" x="206" y="174" width="22" height="90"></rect>
+              <rect class="social-bar-blue" x="248" y="170" width="22" height="94"></rect><rect class="social-bar-cyan" x="278" y="168" width="22" height="96"></rect>
+              <rect class="social-bar-blue" x="320" y="102" width="22" height="162"></rect><rect class="social-bar-cyan" x="350" y="166" width="22" height="98"></rect>
+              <rect class="social-bar-blue" x="392" y="82" width="22" height="182"></rect><rect class="social-bar-cyan" x="422" y="160" width="22" height="104"></rect>
+              <text x="94" y="106">23.08</text><text x="166" y="90">24.19</text><text x="238" y="164">13.34</text><text x="310" y="96">23.72</text><text x="382" y="76">25.55</text>
+              <text x="130" y="190">8.43</text><text x="202" y="168">10.14</text><text x="274" y="162">10.58</text><text x="346" y="160">11.08</text><text x="418" y="154">11.71</text>
+              <text x="100" y="294">2021</text><text x="172" y="294">2022</text><text x="244" y="294">2023</text><text x="316" y="294">2024</text><text x="388" y="294">2025</text>
+              <rect class="social-bar-blue" x="150" y="20" width="22" height="12"></rect><text x="178" y="31">在职职工</text><rect class="social-bar-cyan" x="258" y="20" width="22" height="12"></rect><text x="286" y="31">离退休人员</text>
+            </svg>
+          </div>
+        </div>
+      </aside>
+
       <aside class="detail-video-panel" id="detailVideoPanel" aria-hidden="true">
         <div class="detail-video-head">
           <span>视频监控清单</span>
@@ -2564,6 +2733,8 @@
     const economyTrigger = document.getElementById("economyTrigger");
     const economyPanel = document.getElementById("economyPanel");
     const economyClose = document.getElementById("economyClose");
+    const socialPanel = document.getElementById("socialPanel");
+    const socialClose = document.getElementById("socialClose");
     const elderlyInstitutions = [
       { name: "鄂州市颐和养老服务有限公司", category: "养老服务机构", address: "武昌大道219-1号" },
       { name: "鄂州市鄂城区长港福利院", category: "养老服务机构", address: "鄂城区长港镇峒山社区", active: true },
@@ -2742,6 +2913,16 @@
       economyPanel.setAttribute("aria-hidden", "true");
     }
 
+    function openSocialPanel() {
+      socialPanel.classList.add("is-open");
+      socialPanel.setAttribute("aria-hidden", "false");
+    }
+
+    function closeSocialPanel() {
+      socialPanel.classList.remove("is-open");
+      socialPanel.setAttribute("aria-hidden", "true");
+    }
+
     function resetEventDisposalFilters() {
       eventDisposalState.source = "全部";
       eventDisposalState.type = "全部";
@@ -2834,6 +3015,8 @@
 
     fillCityDots();
     document.querySelector("[data-action='elderly-panel']")?.addEventListener("click", openElderlyPanel);
+    document.querySelector("[data-action='social-security']")?.addEventListener("click", openSocialPanel);
+    socialClose.addEventListener("click", closeSocialPanel);
     safetyVideoTrigger?.addEventListener("click", openDetailVideoPanel);
     safetyEventTrigger?.addEventListener("click", openEventDisposalPanel);
     economyTrigger?.addEventListener("click", openEconomyPanel);
@@ -2868,6 +3051,7 @@
       if (event.key === "Escape" && detailVideoPanel.classList.contains("is-open")) closeDetailVideoPanel();
       if (event.key === "Escape" && eventDisposalPanel.classList.contains("is-open")) closeEventDisposalPanel();
       if (event.key === "Escape" && economyPanel.classList.contains("is-open")) closeEconomyPanel();
+      if (event.key === "Escape" && socialPanel.classList.contains("is-open")) closeSocialPanel();
     });
   </script>
 </body>
