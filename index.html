@@ -3709,8 +3709,8 @@
     }
     .gas-bottle-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 5px;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 4px;
     }
     .gas-bottle-item {
       min-height: 0;
@@ -3718,7 +3718,7 @@
       place-items: center;
       align-content: center;
       gap: 1px;
-      padding: 4px 3px;
+      padding: 3px 1px;
       border-radius: 9px;
       border: 1px solid var(--ext-border);
       background: rgba(255, 255, 255, .48);
@@ -3726,14 +3726,14 @@
     }
     .gas-bottle-item b {
       color: var(--ext-accent);
-      font-size: 16px;
+      font-size: 14px;
       line-height: 1.15;
       font-variant-numeric: tabular-nums;
     }
     .gas-bottle-item span {
       color: var(--ext-muted);
-      font-size: 10px;
-      line-height: 1.25;
+      font-size: 9px;
+      line-height: 1.2;
       font-weight: 800;
     }
     .gas-warn-rows {
@@ -3870,6 +3870,62 @@
       color: var(--ext-accent);
       border-color: rgba(29, 99, 186, .4);
       background: var(--ext-accent-soft);
+    }
+    .gas-video-map-btn {
+      position: relative;
+      height: 26px;
+      padding: 0 10px;
+      border-radius: 7px;
+      border: 1px solid var(--ext-border);
+      background: var(--ext-accent-soft);
+      color: var(--ext-accent);
+      font-size: 11px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: border-color .16s ease, background .16s ease, color .16s ease;
+    }
+    .gas-video-map-btn:hover {
+      border-color: rgba(29, 99, 186, .4);
+      background: rgba(226, 242, 255, .9);
+    }
+    .gas-video-map-btn.is-active {
+      color: #fff;
+      background: linear-gradient(135deg, #1f72e8, #18bad0);
+      border-color: transparent;
+    }
+    .gas-video-map-btn::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 7px);
+      right: 0;
+      z-index: 50;
+      width: max-content;
+      max-width: 230px;
+      padding: 5px 9px;
+      border-radius: 7px;
+      color: #fff;
+      background: rgba(13, 45, 86, .95);
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1.4;
+      white-space: normal;
+      display: none;
+      box-shadow: 0 12px 24px -12px rgba(16, 70, 130, .5);
+    }
+    .gas-video-map-btn:hover::after { display: block; }
+    .gas-video-dot {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      z-index: 6;
+      width: 14px;
+      height: 14px;
+      padding: 0;
+      border: 2px solid rgba(255, 255, 255, .95);
+      border-radius: 50%;
+      background: #18bad0;
+      box-shadow: 0 0 0 4px rgba(24, 186, 208, .18), 0 0 10px rgba(24, 186, 208, .55);
+      cursor: pointer;
     }
     .gas-video-grid {
       height: calc(100% - 38px - 40px - 34px);
@@ -4028,6 +4084,244 @@
       text-align: center;
       font-size: 11px;
       font-weight: 800;
+    }
+    .gas-all-alarm-btn {
+      height: 26px;
+      padding: 0 10px;
+      border-radius: 7px;
+      border: 1px solid var(--ext-border);
+      background: var(--ext-accent-soft);
+      color: var(--ext-accent);
+      font-size: 11px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: border-color .16s ease, background .16s ease, color .16s ease;
+    }
+    .gas-all-alarm-btn:hover {
+      border-color: rgba(29, 99, 186, .4);
+      background: rgba(226, 242, 255, .9);
+    }
+    .gas-all-alarm-modal {
+      --ext-surface: rgba(250, 253, 255, .99);
+      --ext-surface-soft: rgba(240, 248, 255, .98);
+      --ext-border: rgba(28, 79, 133, .14);
+      --ext-ink: #163553;
+      --ext-muted: #69839c;
+      --ext-accent: #1d63ba;
+      --ext-accent-soft: rgba(29, 99, 186, .11);
+      position: fixed;
+      inset: 0;
+      z-index: 55;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(7, 20, 38, .55);
+      backdrop-filter: blur(5px);
+      pointer-events: auto;
+    }
+    .gas-all-alarm-modal.is-open { display: flex; }
+    .gas-all-alarm-box {
+      width: min(920px, 92vw);
+      max-height: min(720px, 88vh);
+      display: flex;
+      flex-direction: column;
+      border-radius: 14px;
+      border: 1px solid rgba(35, 113, 207, .26);
+      background: linear-gradient(180deg, var(--ext-surface), var(--ext-surface-soft));
+      box-shadow: 0 30px 80px -30px rgba(8, 30, 60, .7);
+      overflow: hidden;
+      font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
+    }
+    .gas-all-alarm-head {
+      flex: 0 0 auto;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px 0 16px;
+      color: var(--ext-ink);
+      font-size: 16px;
+      font-weight: 900;
+      border-bottom: 1px solid var(--ext-border);
+      background: linear-gradient(90deg, rgba(226, 242, 255, .72), rgba(255, 255, 255, .26));
+    }
+    .gas-all-alarm-head button {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      border: 1px solid rgba(42, 119, 205, .2);
+      color: var(--ext-accent);
+      background: rgba(255, 255, 255, .65);
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .gas-all-alarm-head button:hover {
+      background: var(--ext-accent-soft);
+    }
+    .gas-all-alarm-filter {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--ext-border);
+      background: rgba(244, 249, 255, .7);
+    }
+    .gas-all-filter-item {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--ext-muted);
+      font-size: 11px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .gas-all-filter-item select,
+    .gas-all-filter-item input {
+      height: 28px;
+      padding: 0 8px;
+      border: 1px solid rgba(42, 119, 205, .18);
+      border-radius: 7px;
+      color: var(--ext-ink);
+      background: rgba(255, 255, 255, .82);
+      font: inherit;
+      font-size: 11px;
+      font-weight: 800;
+      outline: 0;
+      cursor: pointer;
+    }
+    .gas-all-filter-item input[type="date"] { width: 122px; }
+    .gas-all-filter-item .gas-all-time em {
+      color: var(--ext-muted);
+      font-style: normal;
+      font-size: 10px;
+      font-weight: 800;
+    }
+    .gas-all-keyword { flex: 1; min-width: 170px; }
+    .gas-all-keyword input { width: 100%; }
+    .gas-all-reset {
+      height: 28px;
+      padding: 0 12px;
+      border-radius: 7px;
+      border: 1px solid rgba(42, 119, 205, .2);
+      color: var(--ext-accent);
+      background: rgba(255, 255, 255, .7);
+      font-size: 11px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .gas-all-reset:hover {
+      background: var(--ext-accent-soft);
+    }
+    .gas-all-alarm-table {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .gas-all-alarm-head-row,
+    .gas-all-alarm-row {
+      display: grid;
+      grid-template-columns: 70px minmax(200px, 1.4fr) minmax(180px, 1fr) 140px 74px;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 14px;
+    }
+    .gas-all-alarm-head-row {
+      flex: 0 0 auto;
+      color: var(--ext-muted);
+      font-size: 11px;
+      font-weight: 900;
+      border-bottom: 1px solid var(--ext-border);
+      background: rgba(232, 242, 250, .5);
+    }
+    .gas-all-alarm-list {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      scrollbar-color: rgba(29, 99, 186, .35) transparent;
+      scrollbar-width: thin;
+    }
+    .gas-all-alarm-row {
+      border-bottom: 1px solid rgba(28, 79, 133, .07);
+      background: rgba(255, 255, 255, .4);
+    }
+    .gas-all-alarm-row:hover {
+      background: var(--ext-accent-soft);
+    }
+    .gas-all-alarm-row > b {
+      color: var(--ext-ink);
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1.35;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .gas-all-alarm-row > .gas-all-loc {
+      color: var(--ext-muted);
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.35;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .gas-all-alarm-row > time {
+      color: var(--ext-muted);
+      font-size: 11px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+    .gas-all-alarm-row > em {
+      color: var(--ext-accent);
+      font-size: 11px;
+      font-style: normal;
+      font-weight: 900;
+      text-align: center;
+      background: var(--ext-accent-soft);
+      border: 1px solid rgba(29, 99, 186, .2);
+      border-radius: 999px;
+      padding: 2px 6px;
+    }
+    .gas-all-level {
+      width: max-content;
+      color: var(--gas-c, #f5b21a);
+      font-size: 11px;
+      font-weight: 900;
+      background: color-mix(in srgb, var(--gas-c, #f5b21a) 12%, transparent);
+      border: 1px solid color-mix(in srgb, var(--gas-c, #f5b21a) 28%, transparent);
+      border-radius: 999px;
+      padding: 2px 8px;
+    }
+    .gas-all-level.red { --gas-c: #f24b3f; }
+    .gas-all-level.amber { --gas-c: #f59a23; }
+    .gas-all-level.yellow { --gas-c: #e8b22e; }
+    .gas-all-level.blue { --gas-c: #1f72e8; }
+    .gas-all-empty {
+      padding: 26px 12px;
+      color: var(--ext-muted);
+      text-align: center;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .gas-all-alarm-footer {
+      flex: 0 0 auto;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 14px;
+      color: var(--ext-muted);
+      font-size: 11px;
+      font-weight: 800;
+      border-top: 1px solid var(--ext-border);
+      background: rgba(244, 249, 255, .7);
     }
     .gas-alarm-item {
       display: grid;
@@ -8114,6 +8408,7 @@
         </svg>
         <div class="gis-points" id="pointLayer"></div>
         <div class="gis-points" id="gasSiteLayer"></div>
+        <div class="gis-points" id="gasVideoLayer"></div>
       </div>
       <div class="map-scale">约 2 km</div>
       <div class="map-compass">N</div>
@@ -9199,7 +9494,7 @@
         </div>
       </div>
       <div class="extreme-panel extreme-history-panel">
-        <div class="extreme-panel-title">历史预警<span>近年台账</span></div>
+        <div class="extreme-panel-title">预警列表<span>近年台账</span></div>
         <div class="extreme-history-filters">
           <label class="extreme-history-filter"><span>时间</span>
             <select id="extremeHistoryTime" aria-label="历史预警时间筛选">
@@ -9314,6 +9609,9 @@
             <div class="gas-bottle-item"><b>4</b><span>储备站（个）</span></div>
             <div class="gas-bottle-item"><b>39</b><span>气瓶门店（个）</span></div>
             <div class="gas-bottle-item"><b>14万</b><span>气瓶配送记录（条）</span></div>
+            <div class="gas-bottle-item"><b>136</b><span>配送车辆（辆）</span></div>
+            <div class="gas-bottle-item"><b>224</b><span>操作工（人）</span></div>
+            <div class="gas-bottle-item"><b>1</b><span>燃气场站（个）</span></div>
           </div>
           <div class="gas-section-title">排查信息<span>排查 vs 巡查</span></div>
           <div class="gas-inspect-row">
@@ -9333,7 +9631,10 @@
         </div>
       </div>
       <div class="extreme-panel gas-video-panel">
-        <div class="extreme-panel-title">视频监控</div>
+        <div class="extreme-panel-title">
+          视频监控
+          <button class="gas-video-map-btn" id="gasVideoMapBtn" type="button" data-tooltip="在全图展示视频点位" aria-label="在全图展示视频点位">图上展示</button>
+        </div>
         <div class="gas-video-tabs">
           <button class="gas-video-tab is-active" type="button" data-gas-video-tab="place">场所布防</button>
           <button class="gas-video-tab" type="button" data-gas-video-tab="kitchen">明厨亮灶</button>
@@ -9346,7 +9647,10 @@
         </div>
       </div>
       <div class="extreme-panel gas-alarm-panel">
-        <div class="extreme-panel-title">警情列表</div>
+        <div class="extreme-panel-title">
+          警情列表
+          <button class="gas-all-alarm-btn" id="gasAllAlarmBtn" type="button">查看全部警情</button>
+        </div>
         <div class="gas-alarm-tabs">
           <button class="gas-alarm-tab is-active" type="button" data-gas-alarm-tab="监测">监测</button>
           <button class="gas-alarm-tab" type="button" data-gas-alarm-tab="研判">研判</button>
@@ -9355,6 +9659,51 @@
           <button class="gas-alarm-tab" type="button" data-gas-alarm-tab="评估">评估</button>
         </div>
         <div class="gas-alarm-list" id="gasAlarmList"></div>
+      </div>
+      <div class="gas-all-alarm-modal" id="gasAllAlarmModal" aria-hidden="true">
+        <div class="gas-all-alarm-box">
+          <div class="gas-all-alarm-head">
+            <span>全部警情</span>
+            <button type="button" id="gasAllAlarmClose" aria-label="关闭">×</button>
+          </div>
+          <div class="gas-all-alarm-filter">
+            <label class="gas-all-filter-item"><span>设备类型</span>
+              <select id="gasAllDeviceType" aria-label="设备类型筛选">
+                <option value="all">全部类型</option>
+                <option value="燃气泄漏检测设备">燃气泄漏检测设备</option>
+                <option value="烟感设备">烟感设备</option>
+                <option value="视频巡查">视频巡查</option>
+                <option value="评估终端">评估终端</option>
+              </select>
+            </label>
+            <label class="gas-all-filter-item gas-all-time"><span>发生时间</span>
+              <input type="date" id="gasAllTimeStart" aria-label="开始日期">
+              <em>至</em>
+              <input type="date" id="gasAllTimeEnd" aria-label="结束日期">
+            </label>
+            <label class="gas-all-filter-item"><span>事件状态</span>
+              <select id="gasAllStatus" aria-label="事件状态筛选">
+                <option value="all">全部状态</option>
+                <option value="处置中">处置中</option>
+                <option value="待处置">待处置</option>
+                <option value="已闭环">已闭环</option>
+                <option value="已核查">已核查</option>
+                <option value="已派单">已派单</option>
+              </select>
+            </label>
+            <label class="gas-all-filter-item gas-all-keyword"><span>关键字</span>
+              <input type="search" id="gasAllKeyword" placeholder="搜索事件 / 地点 / 设备">
+            </label>
+            <button class="gas-all-reset" id="gasAllReset" type="button">重置</button>
+          </div>
+          <div class="gas-all-alarm-table">
+            <div class="gas-all-alarm-head-row">
+              <span>级别</span><span>事件</span><span>地点 / 设备</span><span>发生时间</span><span>状态</span>
+            </div>
+            <div class="gas-all-alarm-list" id="gasAllAlarmList"></div>
+          </div>
+          <div class="gas-all-alarm-footer"><span id="gasAllAlarmTotal">共 0 条</span></div>
+        </div>
       </div>
       <div class="gas-event-tip" id="gasEventTip" aria-hidden="true">
         <div class="gas-event-tip-head">
@@ -9762,14 +10111,33 @@
     const gasVideoTabs = document.querySelector(".gas-video-tabs");
     const gasVideoGrid = document.getElementById("gasVideoGrid");
     const gasAlarmList = document.getElementById("gasAlarmList");
+    const gasVideoLayer = document.getElementById("gasVideoLayer");
+    const gasVideoMapBtn = document.getElementById("gasVideoMapBtn");
     const gasAlarmTabs = document.querySelector(".gas-alarm-tabs");
     const gasEventTip = document.getElementById("gasEventTip");
     const gasEventTabs = document.querySelector(".gas-event-tabs");
     const gasEventTipBody = document.getElementById("gasEventTipBody");
     const gasEventTipClose = document.getElementById("gasEventTipClose");
+    const gasAllAlarmBtn = document.getElementById("gasAllAlarmBtn");
+    const gasAllAlarmModal = document.getElementById("gasAllAlarmModal");
+    const gasAllAlarmClose = document.getElementById("gasAllAlarmClose");
+    const gasAllDeviceType = document.getElementById("gasAllDeviceType");
+    const gasAllTimeStart = document.getElementById("gasAllTimeStart");
+    const gasAllTimeEnd = document.getElementById("gasAllTimeEnd");
+    const gasAllStatus = document.getElementById("gasAllStatus");
+    const gasAllKeyword = document.getElementById("gasAllKeyword");
+    const gasAllReset = document.getElementById("gasAllReset");
+    const gasAllAlarmList = document.getElementById("gasAllAlarmList");
+    const gasAllAlarmTotal = document.getElementById("gasAllAlarmTotal");
     let activeGasAlarmTab = "监测";
     let activeGasEvent = null;
     let gasEventTab = "detail";
+    let gasVideoPointsVisible = false;
+    let allAlarmDeviceType = "all";
+    let allAlarmStatus = "all";
+    let allAlarmTimeStart = "";
+    let allAlarmTimeEnd = "";
+    let allAlarmKeyword = "";
     const gasTotalCard = document.getElementById("gasTotalCard");
     const gasSiteLayer = document.getElementById("gasSiteLayer");
     const gasSiteDetail = document.getElementById("gasSiteDetail");
@@ -10627,6 +10995,66 @@
       });
     }
 
+    function gasDeviceType(item) {
+      const meta = item.meta || "";
+      if (meta.includes("燃气泄漏检测设备")) return "燃气泄漏检测设备";
+      if (meta.includes("烟感设备")) return "烟感设备";
+      if (meta.includes("视频巡查")) return "视频巡查";
+      return "评估终端";
+    }
+
+    function renderAllAlarms() {
+      const levelClass = { "红色": "red", "橙色": "amber", "黄色": "yellow", "蓝色": "blue" };
+      const rows = gasAlarms.filter(item => {
+        if (allAlarmDeviceType !== "all" && gasDeviceType(item) !== allAlarmDeviceType) return false;
+        if (allAlarmStatus !== "all" && item.status !== allAlarmStatus) return false;
+        const day = item.time.slice(0, 10);
+        if (allAlarmTimeStart && day < allAlarmTimeStart) return false;
+        if (allAlarmTimeEnd && day > allAlarmTimeEnd) return false;
+        if (allAlarmKeyword) {
+          const keyword = allAlarmKeyword.trim();
+          const haystack = `${item.title}${item.loc || ""}${item.device || ""}${item.meta || ""}`;
+          if (!haystack.includes(keyword)) return false;
+        }
+        return true;
+      });
+      gasAllAlarmList.innerHTML = rows.length ? rows.map(item => `
+        <div class="gas-all-alarm-row">
+          <span class="gas-all-level ${levelClass[item.level] || "amber"}">${item.level}</span>
+          <b>${item.title}</b>
+          <span class="gas-all-loc">${item.loc || "—"} · ${item.device || ""}</span>
+          <time>${item.time}</time>
+          <em>${item.status}</em>
+        </div>
+      `).join("") : `<div class="gas-all-empty">当前筛选条件下暂无事件</div>`;
+      gasAllAlarmTotal.textContent = `共 ${rows.length} 条`;
+    }
+
+    function openAllAlarms() {
+      gasAllAlarmModal.classList.add("is-open");
+      gasAllAlarmModal.setAttribute("aria-hidden", "false");
+      renderAllAlarms();
+    }
+
+    function closeAllAlarms() {
+      gasAllAlarmModal.classList.remove("is-open");
+      gasAllAlarmModal.setAttribute("aria-hidden", "true");
+    }
+
+    function resetAllAlarmFilters() {
+      allAlarmDeviceType = "all";
+      allAlarmStatus = "all";
+      allAlarmTimeStart = "";
+      allAlarmTimeEnd = "";
+      allAlarmKeyword = "";
+      gasAllDeviceType.value = "all";
+      gasAllStatus.value = "all";
+      gasAllTimeStart.value = "";
+      gasAllTimeEnd.value = "";
+      gasAllKeyword.value = "";
+      renderAllAlarms();
+    }
+
     function showGasEventTip(item) {
       if (!item) return;
       activeGasEvent = item;
@@ -10756,6 +11184,37 @@
       gasTotalCard.classList.remove("is-active");
       gasSiteLayer.innerHTML = "";
       closeGasSiteDetail();
+    }
+
+    const gasVideoPoints = [
+      { name: "南浦路商圈监控", x: 40, y: 38 },
+      { name: "明塘市场监控", x: 42, y: 45 },
+      { name: "滨湖路监控", x: 46, y: 40 },
+      { name: "凤凰街办监控", x: 52, y: 48 },
+      { name: "花湖机场食堂监控", x: 68, y: 42 },
+      { name: "临空经济区监控", x: 65, y: 30 },
+      { name: "葛店开发区监控", x: 28, y: 18 },
+      { name: "华容区监控", x: 34, y: 26 },
+      { name: "梁子湖区监控", x: 30, y: 70 },
+      { name: "沼山镇监控", x: 38, y: 76 },
+      { name: "洋澜湖综合体监控", x: 50, y: 68 },
+      { name: "泽林镇夜市监控", x: 44, y: 62 },
+      { name: "鄂州大道监控", x: 58, y: 54 },
+      { name: "沿江大道监控", x: 54, y: 42 }
+    ];
+
+    function renderGasVideoPoints() {
+      gasVideoLayer.innerHTML = gasVideoPoints.map(point => `
+        <button class="gas-video-dot" type="button" title="${point.name}" aria-label="${point.name}" style="--x:${point.x}%; --y:${point.y}%"></button>
+      `).join("");
+    }
+
+    function toggleGasVideoPoints() {
+      gasVideoPointsVisible = !gasVideoPointsVisible;
+      gasVideoMapBtn.classList.toggle("is-active", gasVideoPointsVisible);
+      closeGasEventTip();
+      if (gasVideoPointsVisible) renderGasVideoPoints();
+      else gasVideoLayer.innerHTML = "";
     }
 
     function toggleGasSitePoints() {
@@ -10907,6 +11366,9 @@
 
     function closeGasScreen() {
       closeGasEventTip();
+      gasVideoPointsVisible = false;
+      gasVideoMapBtn.classList.remove("is-active");
+      gasVideoLayer.innerHTML = "";
       clearGasSitePoints();
       screenEl.classList.remove("gas-active");
       gasScreen.setAttribute("aria-hidden", "true");
@@ -11623,6 +12085,7 @@
       weatherCloseBtn.addEventListener("click", closeWeatherModal);
       extremeBackBtn.addEventListener("click", closeExtremeScreen);
       gasBackBtn.addEventListener("click", closeGasScreen);
+      document.getElementById("ff-forestOverlayBack").addEventListener("click", closeForestScreen);
       gasVideoTabs.addEventListener("click", event => {
         const tab = event.target.closest("[data-gas-video-tab]");
         if (!tab) return;
@@ -11647,7 +12110,31 @@
         renderGasEventTip();
       });
       gasEventTipClose.addEventListener("click", closeGasEventTip);
+      gasAllAlarmBtn.addEventListener("click", openAllAlarms);
+      gasAllAlarmClose.addEventListener("click", closeAllAlarms);
+      gasAllDeviceType.addEventListener("change", () => {
+        allAlarmDeviceType = gasAllDeviceType.value;
+        renderAllAlarms();
+      });
+      gasAllStatus.addEventListener("change", () => {
+        allAlarmStatus = gasAllStatus.value;
+        renderAllAlarms();
+      });
+      gasAllTimeStart.addEventListener("change", () => {
+        allAlarmTimeStart = gasAllTimeStart.value;
+        renderAllAlarms();
+      });
+      gasAllTimeEnd.addEventListener("change", () => {
+        allAlarmTimeEnd = gasAllTimeEnd.value;
+        renderAllAlarms();
+      });
+      gasAllKeyword.addEventListener("input", () => {
+        allAlarmKeyword = gasAllKeyword.value;
+        renderAllAlarms();
+      });
+      gasAllReset.addEventListener("click", resetAllAlarmFilters);
       gasTotalCard.addEventListener("click", toggleGasSitePoints);
+      gasVideoMapBtn.addEventListener("click", toggleGasVideoPoints);
       gasSiteLayer.addEventListener("click", event => {
         const dot = event.target.closest("[data-gas-site-index]");
         if (!dot) return;
@@ -11712,6 +12199,7 @@
         if (event.key === "Escape" && gasPhotoView.classList.contains("is-open")) closeGasPhotoView();
         if (event.key === "Escape" && gasSiteDetail.classList.contains("is-open")) closeGasSiteDetail();
         if (event.key === "Escape" && gasEventTip.classList.contains("is-show")) closeGasEventTip();
+        if (event.key === "Escape" && gasAllAlarmModal.classList.contains("is-open")) closeAllAlarms();
         if (event.key === "Escape" && screenEl.classList.contains("gas-active")) closeGasScreen();
         if (event.key === "Escape" && screenEl.classList.contains("forest-active")) closeForestScreen();
         if (event.key === "Escape" && screenEl.classList.contains("city-active")) closeCityDetail();
