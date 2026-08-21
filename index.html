@@ -3664,7 +3664,7 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
     .gas-equip-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
     .gas-source-item,
     .gas-metric-item,
@@ -3706,6 +3706,18 @@
     }
     .gas-equip-card {
       min-height: 44px;
+    }
+    .gas-sense-card {
+      position: relative;
+      border-color: rgba(29, 99, 186, .42);
+      background:
+        linear-gradient(150deg, rgba(31, 114, 232, .18), rgba(24, 186, 208, .12)),
+        rgba(255, 255, 255, .48);
+      box-shadow: inset 0 0 0 1px rgba(29, 99, 186, .12), 0 10px 22px -16px rgba(29, 99, 186, .6);
+    }
+    .gas-sense-card b {
+      color: #0c4da7;
+      font-size: 22px;
     }
     .gas-bottle-grid {
       display: grid;
@@ -4379,15 +4391,16 @@
       justify-items: end;
       gap: 3px;
     }
-    .gas-event-tip {
+    .gas-event-tip,
+    .gas-disposal-tip {
       position: absolute;
-      left: 50%;
-      top: 42%;
-      transform: translate(-50%, -50%);
-      width: 380px;
+      top: 96px;
+      width: 500px;
+      max-height: calc(100vh - 190px);
       z-index: 40;
       pointer-events: auto;
       display: none;
+      flex-direction: column;
       border-radius: 12px;
       border: 1px solid rgba(35, 113, 207, .26);
       background: linear-gradient(180deg, rgba(253, 254, 255, .98), rgba(240, 248, 255, .97));
@@ -4395,7 +4408,10 @@
       backdrop-filter: blur(16px);
       overflow: hidden;
     }
-    .gas-event-tip.is-show { display: block; }
+    .gas-event-tip { left: 22px; }
+    .gas-disposal-tip { right: 22px; }
+    .gas-event-tip.is-show,
+    .gas-disposal-tip.is-show { display: flex; }
     .gas-event-tip-head {
       height: 40px;
       display: flex;
@@ -4407,6 +4423,8 @@
       font-weight: 900;
       border-bottom: 1px solid var(--ext-border);
       background: linear-gradient(90deg, rgba(226, 242, 255, .72), rgba(255, 255, 255, .26));
+      cursor: move;
+      user-select: none;
     }
     .gas-event-tip-head button {
       width: 26px;
@@ -4422,6 +4440,15 @@
       cursor: pointer;
     }
     .gas-event-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 5px;
+      padding: 8px 10px 0;
+    }
+    .gas-event-tip .gas-event-tabs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .gas-disposal-tabs {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 5px;
@@ -4447,9 +4474,89 @@
       background: var(--ext-accent-soft);
     }
     .gas-event-tip-body {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
       display: grid;
       gap: 5px;
       padding: 9px 14px 13px;
+    }
+    .gas-event-disp {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      padding: 12px 14px 14px;
+    }
+    .gas-disp-item {
+      position: relative;
+      padding: 0 0 16px 20px;
+    }
+    .gas-disp-item::before {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 13px;
+      bottom: -2px;
+      width: 2px;
+      background: rgba(29, 99, 186, .16);
+    }
+    .gas-disp-item:last-child::before { display: none; }
+    .gas-disp-dot {
+      position: absolute;
+      left: 0;
+      top: 3px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      background: #8aa3bf;
+      box-shadow: 0 0 0 3px rgba(138, 163, 191, .18);
+    }
+    .gas-disp-dot.done {
+      background: #19c59d;
+      box-shadow: 0 0 0 3px rgba(25, 197, 157, .18);
+    }
+    .gas-disp-dot.active {
+      background: #f59a23;
+      animation: gas-disp-pulse 1.6s ease-out infinite;
+    }
+    @keyframes gas-disp-pulse {
+      0% { box-shadow: 0 0 0 3px rgba(245, 154, 35, .25); }
+      100% { box-shadow: 0 0 0 9px rgba(245, 154, 35, 0); }
+    }
+    .gas-disp-body b {
+      display: block;
+      color: #123864;
+      font-size: 12px;
+      line-height: 1.4;
+      font-weight: 900;
+    }
+    .gas-disp-body span {
+      display: block;
+      margin-top: 2px;
+      color: #6e8fb3;
+      font-size: 10px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+    .gas-disp-body em {
+      display: inline-flex;
+      margin-top: 4px;
+      padding: 1px 7px;
+      border-radius: 999px;
+      font-style: normal;
+      font-size: 10px;
+      font-weight: 900;
+      color: #0c9e7f;
+      background: rgba(25, 197, 157, .14);
+    }
+    .gas-disp-body em.pending {
+      color: #a96509;
+      background: rgba(245, 154, 35, .15);
+    }
+    .gas-disp-body em.closed {
+      color: #0f5bbd;
+      background: rgba(33, 125, 255, .12);
     }
     .gas-event-tip-row {
       display: grid;
@@ -4572,6 +4679,32 @@
     .gas-his-level.yellow { color: #8c6b08; background: rgba(227, 183, 32, .16); }
     .gas-his-level.blue { color: #0f5bbd; background: rgba(33, 125, 255, .13); }
     .gas-event-tip .gas-inspect-img { cursor: default; }
+    .gas-share-note {
+      margin-bottom: 8px;
+      padding: 6px 9px;
+      border-radius: 8px;
+      color: #5d7f9f;
+      background: rgba(241, 247, 255, .7);
+      border: 1px solid rgba(42, 119, 205, .12);
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .gas-share-item {
+      padding: 7px 9px;
+      border-radius: 8px;
+      border: 1px solid var(--ext-border);
+      background: rgba(244, 250, 255, .72);
+      margin-bottom: 5px;
+    }
+    .gas-share-type {
+      flex: 0 0 auto;
+      padding: 1px 7px;
+      border-radius: 999px;
+      color: #0f5bbd;
+      background: rgba(33, 125, 255, .12);
+      font-size: 10px;
+      font-weight: 900;
+    }
     .gas-alarm-side em {
       color: var(--gas-c);
       font-size: 10px;
@@ -9582,27 +9715,6 @@
               <div class="gas-nine-item warn"><b>96</b><span>隐患数</span></div>
             </div>
           </div>
-          <div class="gas-section-title">管网与运行<span>建议补充指标</span></div>
-          <div class="gas-metric-grid">
-            <div class="gas-metric-item"><b>486.5</b><span>燃气管线（公里）</span></div>
-            <div class="gas-metric-item"><b>96.8%</b><span>报警器在线率</span></div>
-            <div class="gas-metric-item"><b>86</b><span>重点场所（家）</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="extreme-panel gas-equip-panel">
-        <div class="extreme-panel-title">设备信息</div>
-        <div class="gas-equip-body">
-          <div class="gas-equip-grid">
-            <div class="gas-equip-card"><b>1486</b><span>烟感设备（台）</span></div>
-            <div class="gas-equip-card"><b>926</b><span>燃气泄漏检测设备（台）</span></div>
-            <div class="gas-equip-card"><b>7755</b><span>监控设备（路）</span></div>
-          </div>
-          <div class="gas-section-title">预警点位<span>总 1032 个</span></div>
-          <div class="gas-warn-rows">
-            <div class="gas-warn-row"><i class="red"></i><span>告警点位</span><b>32</b></div>
-            <div class="gas-warn-row"><i class="offline"></i><span>离线点位</span><b>28</b></div>
-          </div>
           <div class="gas-section-title">瓶装气数据概览<span>供气体系</span></div>
           <div class="gas-bottle-grid">
             <div class="gas-bottle-item"><b>2</b><span>燃气企业（家）</span></div>
@@ -9612,6 +9724,30 @@
             <div class="gas-bottle-item"><b>136</b><span>配送车辆（辆）</span></div>
             <div class="gas-bottle-item"><b>224</b><span>操作工（人）</span></div>
             <div class="gas-bottle-item"><b>1</b><span>燃气场站（个）</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="extreme-panel gas-equip-panel">
+        <div class="extreme-panel-title">感知设备</div>
+        <div class="gas-equip-body">
+          <div class="gas-equip-grid">
+            <div class="gas-equip-card gas-sense-card">
+              <b>10167</b><span>感知设备（台）</span>
+            </div>
+            <div class="gas-equip-card"><b>1486</b><span>烟感设备（台）</span></div>
+            <div class="gas-equip-card"><b>926</b><span>燃气泄漏检测设备（台）</span></div>
+            <div class="gas-equip-card"><b>7755</b><span>监控设备（路）</span></div>
+          </div>
+          <div class="gas-section-title">预警点位<span>总 1032 个</span></div>
+          <div class="gas-warn-rows">
+            <div class="gas-warn-row"><i class="red"></i><span>告警点位</span><b>32</b></div>
+            <div class="gas-warn-row"><i class="offline"></i><span>离线点位</span><b>28</b></div>
+          </div>
+          <div class="gas-section-title">管网与运行<span>建议补充指标</span></div>
+          <div class="gas-metric-grid">
+            <div class="gas-metric-item"><b>486.5</b><span>燃气管线（公里）</span></div>
+            <div class="gas-metric-item"><b>96.8%</b><span>报警器在线率</span></div>
+            <div class="gas-metric-item"><b>86</b><span>重点场所（家）</span></div>
           </div>
           <div class="gas-section-title">排查信息<span>排查 vs 巡查</span></div>
           <div class="gas-inspect-row">
@@ -9712,10 +9848,18 @@
         </div>
         <div class="gas-event-tabs">
           <button class="gas-event-tab is-active" type="button" data-gas-event-tab="detail">详情</button>
-          <button class="gas-event-tab" type="button" data-gas-event-tab="history">历史预警信息</button>
-          <button class="gas-event-tab" type="button" data-gas-event-tab="inspect">历史排查</button>
+          <button class="gas-event-tab" type="button" data-gas-event-tab="share">数据共享清单</button>
         </div>
         <div class="gas-event-tip-body" id="gasEventTipBody"></div>
+      </div>
+      <div class="gas-disposal-tip" id="gasDisposalTip" aria-hidden="true">
+        <div class="gas-event-tip-head"><span>处置与历史</span></div>
+        <div class="gas-disposal-tabs">
+          <button class="gas-event-tab is-active" type="button" data-gas-disposal-tab="disposal">处置记录</button>
+          <button class="gas-event-tab" type="button" data-gas-disposal-tab="history">历史预警信息</button>
+          <button class="gas-event-tab" type="button" data-gas-disposal-tab="inspect">历史排查</button>
+        </div>
+        <div class="gas-event-disp" id="gasEventDisp"></div>
       </div>
     </section>
 
@@ -10117,6 +10261,9 @@
     const gasEventTip = document.getElementById("gasEventTip");
     const gasEventTabs = document.querySelector(".gas-event-tabs");
     const gasEventTipBody = document.getElementById("gasEventTipBody");
+    const gasEventDisp = document.getElementById("gasEventDisp");
+    const gasDisposalTip = document.getElementById("gasDisposalTip");
+    const gasDisposalTabs = document.querySelector(".gas-disposal-tabs");
     const gasEventTipClose = document.getElementById("gasEventTipClose");
     const gasAllAlarmBtn = document.getElementById("gasAllAlarmBtn");
     const gasAllAlarmModal = document.getElementById("gasAllAlarmModal");
@@ -10132,6 +10279,7 @@
     let activeGasAlarmTab = "监测";
     let activeGasEvent = null;
     let gasEventTab = "detail";
+    let gasDisposalTab = "disposal";
     let gasVideoPointsVisible = false;
     let allAlarmDeviceType = "all";
     let allAlarmStatus = "all";
@@ -11059,24 +11207,39 @@
       if (!item) return;
       activeGasEvent = item;
       gasEventTab = "detail";
+      gasDisposalTab = "disposal";
       gasEventTabs.querySelectorAll(".gas-event-tab").forEach(el => el.classList.remove("is-active"));
       gasEventTabs.querySelector('[data-gas-event-tab="detail"]').classList.add("is-active");
+      gasDisposalTabs.querySelectorAll(".gas-event-tab").forEach(el => el.classList.remove("is-active"));
+      gasDisposalTabs.querySelector('[data-gas-disposal-tab="disposal"]').classList.add("is-active");
       renderGasEventTip();
+      renderGasDisposal();
       gasEventTip.classList.add("is-show");
       gasEventTip.setAttribute("aria-hidden", "false");
+      gasDisposalTip.classList.add("is-show");
+      gasDisposalTip.setAttribute("aria-hidden", "false");
     }
 
     function renderGasEventTip() {
       if (!activeGasEvent) return;
-      if (gasEventTab === "history") {
-        gasEventTipBody.innerHTML = gasHistoryHtml(activeGasEvent);
-        return;
-      }
-      if (gasEventTab === "inspect") {
-        gasEventTipBody.innerHTML = gasInspectHtml(activeGasEvent);
+      if (gasEventTab === "share") {
+        gasEventTipBody.innerHTML = gasShareHtml(activeGasEvent);
         return;
       }
       gasEventTipBody.innerHTML = gasDetailHtml(activeGasEvent);
+    }
+
+    function renderGasDisposal() {
+      if (!activeGasEvent) return;
+      if (gasDisposalTab === "history") {
+        gasEventDisp.innerHTML = gasHistoryHtml(activeGasEvent);
+        return;
+      }
+      if (gasDisposalTab === "inspect") {
+        gasEventDisp.innerHTML = gasInspectHtml(activeGasEvent);
+        return;
+      }
+      gasEventDisp.innerHTML = gasDisposalsHtml(activeGasEvent);
     }
 
     function gasDetailHtml(item) {
@@ -11145,6 +11308,66 @@
       `).join("") : `<div class="gas-alarm-empty">暂无排查记录</div>`;
     }
 
+    function gasShareHtml(item) {
+      const shares = [
+        { unit: "市应急管理局", type: "预警信息", method: "平台推送", time: item.time },
+        { unit: "市住建局", type: "监测数据", method: "接口共享", time: item.time },
+        { unit: "市消防救援支队", type: "事件详情", method: "联动同步", time: item.time },
+        { unit: "属地街道办", type: "处置记录", method: "工单推送", time: item.time },
+        { unit: "燃气公司", type: "设备信息", method: "平台共享", time: item.time }
+      ];
+      return `
+        <div class="gas-share-note">事件相关数据按权限共享至以下单位</div>
+        ${shares.map(share => `
+          <div class="gas-share-item">
+            <div class="gas-event-list-top">
+              <b>${share.unit}</b>
+              <span class="gas-share-type">${share.type}</span>
+            </div>
+            <div class="gas-event-list-meta">共享方式：${share.method} · ${share.time}</div>
+          </div>
+        `).join("")}
+      `;
+    }
+
+    function shiftTime(time, minutes) {
+      const d = new Date(time.replace(" ", "T"));
+      d.setMinutes(d.getMinutes() + minutes);
+      const p = n => String(n).padStart(2, "0");
+      return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+    }
+
+    function gasDisposalsHtml(item) {
+      const rows = [];
+      const t0 = item.time;
+      rows.push({ time: t0, action: "事件受理，系统自动建档", person: "监测平台", state: "已受理" });
+      if (item.cat === "评估") {
+        rows.push({ time: shiftTime(t0, 15), action: "调取监测数据开展现场评估", person: "王建国", state: "评估中" });
+      } else if (item.status === "已闭环") {
+        rows.push({ time: shiftTime(t0, 12), action: "自动派单并现场核查", person: "指挥中心", state: "已派单" });
+        rows.push({ time: shiftTime(t0, 45), action: "现场处置与隐患整改", person: "责任网格员", state: "已处置" });
+        rows.push({ time: shiftTime(t0, 130), action: "整改复查合格，事件闭环", person: "复核人员", state: "已闭环" });
+      } else if (item.status === "处置中" || item.status === "已派单" || item.status === "待处置") {
+        rows.push({ time: shiftTime(t0, 12), action: "自动派单并现场核查", person: "指挥中心", state: "已派单" });
+        rows.push({ time: shiftTime(t0, 45), action: "现场处置推进中", person: "责任网格员", state: "处置中" });
+      } else if (item.cat === "研判") {
+        rows.push({ time: shiftTime(t0, 15), action: "调用视频与监测数据人工研判", person: "研判专班", state: "已研判" });
+        rows.push({ time: shiftTime(t0, 50), action: "形成处置建议并推送", person: "研判专班", state: "已推送" });
+      } else {
+        rows.push({ time: shiftTime(t0, 10), action: "数据复核，确认为正常状态", person: "监测平台", state: "已核实" });
+      }
+      return rows.map(row => `
+        <div class="gas-disp-item">
+          <i class="gas-disp-dot ${row.state === "已闭环" ? "done" : (row.state === "处置中" ? "active" : "")}"></i>
+          <div class="gas-disp-body">
+            <b>${row.action}</b>
+            <span>${row.time} · ${row.person}</span>
+            <em class="${row.state === "已闭环" ? "closed" : (row.state === "处置中" ? "pending" : "")}">${row.state}</em>
+          </div>
+        </div>
+      `).join("");
+    }
+
     function trendSvg(trend) {
       if (!trend || trend.length < 2) return "";
       const w = 300, h = 56, pad = 6;
@@ -11171,6 +11394,37 @@
     function closeGasEventTip() {
       gasEventTip.classList.remove("is-show");
       gasEventTip.setAttribute("aria-hidden", "true");
+      gasDisposalTip.classList.remove("is-show");
+      gasDisposalTip.setAttribute("aria-hidden", "true");
+    }
+
+    function makeGasTipDraggable(el) {
+      const handle = el.querySelector(".gas-event-tip-head");
+      if (!handle) return;
+      let dragging = false, startX = 0, startY = 0, origLeft = 0, origTop = 0;
+      handle.addEventListener("pointerdown", event => {
+        if (event.target.closest("button")) return;
+        dragging = true;
+        startX = event.clientX;
+        startY = event.clientY;
+        const rect = el.getBoundingClientRect();
+        origLeft = rect.left;
+        origTop = rect.top;
+        handle.setPointerCapture(event.pointerId);
+        event.preventDefault();
+      });
+      handle.addEventListener("pointermove", event => {
+        if (!dragging) return;
+        const parent = el.parentElement.getBoundingClientRect();
+        const left = Math.min(Math.max(8, origLeft - parent.left + (event.clientX - startX)), parent.width - el.offsetWidth - 8);
+        const top = Math.min(Math.max(8, origTop - parent.top + (event.clientY - startY)), parent.height - el.offsetHeight - 8);
+        el.style.left = left + "px";
+        el.style.top = top + "px";
+        el.style.right = "auto";
+      });
+      const endDrag = () => { dragging = false; };
+      handle.addEventListener("pointerup", endDrag);
+      handle.addEventListener("pointercancel", endDrag);
     }
 
     function renderGasSitePoints() {
@@ -11359,7 +11613,7 @@
       clearGasSitePoints();
       renderGasVideoGrid();
       renderGasAlarmList();
-      mainTitle.textContent = "餐饮场所燃气泄漏风险监测";
+      mainTitle.textContent = "餐饮场所燃气泄漏爆炸风险监测";
       screenEl.classList.add("gas-active");
       gasScreen.setAttribute("aria-hidden", "false");
     }
@@ -12109,7 +12363,17 @@
         gasEventTab = tab.dataset.gasEventTab;
         renderGasEventTip();
       });
+      gasDisposalTabs.addEventListener("click", event => {
+        const tab = event.target.closest("[data-gas-disposal-tab]");
+        if (!tab) return;
+        gasDisposalTabs.querySelectorAll(".gas-event-tab").forEach(el => el.classList.remove("is-active"));
+        tab.classList.add("is-active");
+        gasDisposalTab = tab.dataset.gasDisposalTab;
+        renderGasDisposal();
+      });
       gasEventTipClose.addEventListener("click", closeGasEventTip);
+      makeGasTipDraggable(gasEventTip);
+      makeGasTipDraggable(gasDisposalTip);
       gasAllAlarmBtn.addEventListener("click", openAllAlarms);
       gasAllAlarmClose.addEventListener("click", closeAllAlarms);
       gasAllDeviceType.addEventListener("change", () => {
