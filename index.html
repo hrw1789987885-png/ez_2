@@ -3321,6 +3321,38 @@
       gap: 6px;
       margin-top: 6px;
     }
+    .extreme-measure-list {
+      display: grid;
+      gap: 5px;
+      margin: 6px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .extreme-measure-list li {
+      display: grid;
+      grid-template-columns: 20px minmax(0, 1fr);
+      gap: 7px;
+      align-items: start;
+      padding: 6px 7px;
+      border-bottom: 1px solid rgba(42, 119, 205, .12);
+      color: #173960;
+      font-size: 11px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+    .extreme-measure-list li:last-child { border-bottom: 0; }
+    .extreme-measure-index {
+      width: 20px;
+      height: 20px;
+      display: grid;
+      place-items: center;
+      border-radius: 6px;
+      color: #0c4da7;
+      background: rgba(226, 242, 255, .86);
+      font-size: 10px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
     .extreme-duty-row {
       display: grid;
       grid-template-columns: 92px minmax(0, 1fr);
@@ -3337,12 +3369,58 @@
       line-height: 1.35;
       font-weight: 900;
     }
+    .extreme-duty-row b.has-index {
+      display: flex;
+      align-items: flex-start;
+      gap: 5px;
+    }
+    .extreme-duty-index {
+      flex: 0 0 18px;
+      height: 18px;
+      display: grid;
+      place-items: center;
+      border-radius: 5px;
+      color: #0c4da7;
+      background: rgba(226, 242, 255, .86);
+      font-size: 9px;
+      font-variant-numeric: tabular-nums;
+    }
     .extreme-duty-row span {
       color: #173960;
       font-size: 12px;
       line-height: 1.45;
       font-weight: 700;
     }
+    .extreme-command-card {
+      margin-top: 6px;
+      padding: 8px;
+      border: 1px solid rgba(42, 119, 205, .14);
+      border-radius: 8px;
+      background: rgba(241, 247, 255, .68);
+    }
+    .extreme-command-row {
+      display: grid;
+      grid-template-columns: 58px minmax(0, 1fr);
+      gap: 7px;
+      padding: 3px 0;
+      color: #173960;
+      font-size: 11px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+    .extreme-command-row b { color: #0c4da7; }
+    .extreme-command-details {
+      margin-top: 7px;
+      border-top: 1px solid rgba(42, 119, 205, .12);
+    }
+    .extreme-command-details summary {
+      padding: 8px 1px 2px;
+      color: #0c4da7;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 900;
+    }
+    .extreme-command-details .extreme-duty-list { margin-top: 6px; }
 
     /* Extreme-weather screen: a restrained, high-density monitoring surface. */
     .extreme-screen {
@@ -3387,6 +3465,113 @@
     .extreme-history-item span,
     .extreme-type-item span {
       color: var(--ext-muted);
+    }
+    .extreme-type-title-actions {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .extreme-standard-btn {
+      height: 24px;
+      padding: 0 8px;
+      border: 1px solid rgba(29, 99, 186, .24);
+      border-radius: 6px;
+      color: var(--ext-accent);
+      background: rgba(255, 255, 255, .72);
+      font-size: 10px;
+      font-weight: 900;
+      white-space: nowrap;
+      transition: border-color .16s ease, background .16s ease, transform .16s ease;
+    }
+    .extreme-standard-btn:hover {
+      border-color: rgba(29, 99, 186, .42);
+      background: var(--ext-accent-soft);
+      transform: translateY(-1px);
+    }
+    .extreme-standard-modal {
+      position: absolute;
+      inset: 0;
+      z-index: 42;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: rgba(5, 31, 61, .34);
+      pointer-events: auto;
+    }
+    .extreme-standard-modal.is-open { display: grid; }
+    .extreme-standard-dialog {
+      width: min(900px, calc(100vw - 80px));
+      max-height: calc(100dvh - 128px);
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(29, 99, 186, .24);
+      border-radius: 12px;
+      background: var(--ext-surface);
+      box-shadow: 0 24px 58px -28px rgba(4, 39, 78, .72);
+      overflow: hidden;
+    }
+    .extreme-standard-head {
+      min-height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--ext-border);
+      background: rgba(232, 242, 250, .7);
+    }
+    .extreme-standard-head strong {
+      color: var(--ext-ink);
+      font-size: 16px;
+      font-weight: 900;
+    }
+    .extreme-standard-head button {
+      width: 28px;
+      height: 28px;
+      flex: 0 0 auto;
+      border: 1px solid var(--ext-border);
+      border-radius: 6px;
+      color: var(--ext-accent);
+      background: rgba(255, 255, 255, .76);
+      font-size: 20px;
+      line-height: 1;
+    }
+    .extreme-standard-body {
+      overflow: auto;
+      padding: 14px 16px 18px;
+      scrollbar-color: rgba(29, 99, 186, .35) transparent;
+      scrollbar-width: thin;
+    }
+    .extreme-standard-category {
+      margin: 0 0 10px;
+      color: var(--ext-muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .extreme-standard-level {
+      padding: 12px 14px;
+      border: 1px solid var(--ext-border);
+      border-radius: 9px;
+      background: rgba(255, 255, 255, .52);
+    }
+    .extreme-standard-level + .extreme-standard-level { margin-top: 10px; }
+    .extreme-standard-level h3 {
+      margin: 0 0 8px;
+      color: var(--ext-accent);
+      font-size: 15px;
+      font-weight: 900;
+    }
+    .extreme-standard-level p {
+      margin: 5px 0 0;
+      color: var(--ext-ink);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .extreme-standard-level p:first-of-type { margin-top: 0; }
+    .extreme-standard-btn:focus-visible,
+    .extreme-standard-head button:focus-visible {
+      outline: 3px solid rgba(29, 99, 186, .28);
+      outline-offset: 2px;
     }
     .extreme-back-btn {
       border-color: var(--ext-border);
@@ -4679,31 +4864,85 @@
     .gas-his-level.yellow { color: #8c6b08; background: rgba(227, 183, 32, .16); }
     .gas-his-level.blue { color: #0f5bbd; background: rgba(33, 125, 255, .13); }
     .gas-event-tip .gas-inspect-img { cursor: default; }
-    .gas-share-note {
-      margin-bottom: 8px;
-      padding: 6px 9px;
-      border-radius: 8px;
-      color: #5d7f9f;
-      background: rgba(241, 247, 255, .7);
-      border: 1px solid rgba(42, 119, 205, .12);
-      font-size: 11px;
-      font-weight: 800;
+    .gas-zone-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 8px 0 6px;
+      color: #0c4da7;
+      font-size: 12px;
+      font-weight: 900;
     }
-    .gas-share-item {
-      padding: 7px 9px;
+    .gas-zone-title::before {
+      content: "";
+      width: 3px;
+      height: 12px;
+      border-radius: 2px;
+      background: linear-gradient(180deg, #1f72e8, #18bad0);
+    }
+    .gas-zone-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+    .gas-zone-item {
+      min-width: 0;
+      padding: 6px 4px 5px;
       border-radius: 8px;
       border: 1px solid var(--ext-border);
       background: rgba(244, 250, 255, .72);
-      margin-bottom: 5px;
+      text-align: center;
     }
-    .gas-share-type {
-      flex: 0 0 auto;
-      padding: 1px 7px;
-      border-radius: 999px;
-      color: #0f5bbd;
-      background: rgba(33, 125, 255, .12);
+    .gas-zone-item b {
+      display: block;
+      color: #0c4da7;
+      font-size: 16px;
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+    .gas-zone-item span {
+      display: block;
+      margin-top: 2px;
+      color: #607f9f;
       font-size: 10px;
+      font-weight: 800;
+    }
+    .gas-zone-group {
+      padding: 7px 9px;
+      margin-bottom: 6px;
+      border-radius: 9px;
+      border: 1px solid var(--ext-border);
+      background: rgba(244, 250, 255, .72);
+    }
+    .gas-zone-group-title {
+      margin-bottom: 5px;
+      color: #123864;
+      font-size: 11px;
       font-weight: 900;
+    }
+    .gas-zone-group-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .gas-zone-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .9);
+      border: 1px solid rgba(42, 119, 205, .14);
+      color: #173960;
+      font-size: 10px;
+      font-weight: 800;
+    }
+    .gas-zone-chip b {
+      color: #0c4da7;
+      font-variant-numeric: tabular-nums;
+    }
+    .gas-zone-chip span {
+      color: #607f9f;
     }
     .gas-alarm-side em {
       color: var(--gas-c);
@@ -9615,7 +9854,7 @@
     <section class="extreme-screen" id="extremeScreen" aria-hidden="true">
       <button class="extreme-back-btn" type="button" id="extremeBackBtn" aria-label="返回主界面">← 返回主界面</button>
       <div class="extreme-panel extreme-forecast-panel">
-        <div class="extreme-panel-title">天气预报<span>鄂州</span></div>
+        <div class="extreme-panel-title">天气预报</div>
         <div class="extreme-forecast-list">
           <div class="extreme-forecast-day"><b>今日</b><i aria-label="晴">☀</i><span>晴热</span><em>29/38℃</em></div>
           <div class="extreme-forecast-day"><b>周五</b><i aria-label="多云">☁</i><span>多云</span><em>28/36℃</em></div>
@@ -9627,7 +9866,7 @@
         </div>
       </div>
       <div class="extreme-panel extreme-history-panel">
-        <div class="extreme-panel-title">预警列表<span>近年台账</span></div>
+        <div class="extreme-panel-title">预警列表</div>
         <div class="extreme-history-filters">
           <label class="extreme-history-filter"><span>时间</span>
             <select id="extremeHistoryTime" aria-label="历史预警时间筛选">
@@ -9653,7 +9892,7 @@
         <div class="extreme-history-list" id="extremeHistoryList"></div>
       </div>
       <div class="extreme-panel extreme-warning-panel">
-        <div class="extreme-panel-title">预警详情<span>当前选中</span></div>
+        <div class="extreme-panel-title">预警详情</div>
         <div class="extreme-warning-body">
           <div class="extreme-warning-head">
             <div class="extreme-warning-icon" id="extremeWarningIcon">⚠</div>
@@ -9677,13 +9916,62 @@
         </div>
       </div>
       <div class="extreme-panel extreme-type-panel">
-        <div class="extreme-panel-title">极端天气类型<span>七类专项</span></div>
+        <div class="extreme-panel-title">
+          <b>极端天气类型</b>
+          <div class="extreme-type-title-actions">
+            <button class="extreme-standard-btn" id="extremeStandardBtn" type="button">气象灾害应急分级标准</button>
+          </div>
+        </div>
         <div class="extreme-type-list" id="extremeTypeList"></div>
       </div>
       <div class="extreme-panel extreme-plan-panel">
-        <div class="extreme-panel-title">应急预案<span>按类型联动</span></div>
+        <div class="extreme-panel-title">应急预案</div>
         <div class="extreme-plan-body" id="extremePlanDetail"></div>
       </div>
+      <section class="extreme-standard-modal" id="extremeStandardModal" aria-hidden="true">
+        <div class="extreme-standard-dialog" role="dialog" aria-modal="true" aria-labelledby="extremeStandardTitle">
+          <div class="extreme-standard-head">
+            <strong id="extremeStandardTitle">气象灾害应急分级标准</strong>
+            <button type="button" id="extremeStandardClose" aria-label="关闭气象灾害应急分级标准">×</button>
+          </div>
+          <div class="extreme-standard-body">
+            <p class="extreme-standard-category">一、自然灾害类</p>
+            <section class="extreme-standard-level">
+              <h3>Ⅰ级响应</h3>
+              <p>（1）暴雨：过去48小时全市80%以上的观测站出现250毫米以上降水，预计未来24小时内，我市仍有100毫米以上的连续性降水天气。</p>
+              <p>（2）暴雪：过去24小时国家气象站降雪量达到25毫米以上，积雪深度达20厘米，且预计强降雪将继续维持。</p>
+              <p>（3）各种灾害性天气已对群众生产生活造成特别重大损失和影响，超出本区处置能力，需要由市政府组织处置的，以及上述灾害已经启动Ⅱ级响应但仍可能持续发展或影响其他地区的。</p>
+            </section>
+            <section class="extreme-standard-level">
+              <h3>Ⅱ级响应</h3>
+              <p>（1）暴雨：过去48小时全市80%以上的观测站出现200毫米以上降水，且有30%以上观测站出现250毫米以上降水，预计未来24小时内，我市仍有100毫米以上的连续性降水天气。</p>
+              <p>（2）暴雪：过去24小时国家气象站降雪量达到20毫米以上，积雪深度达15厘米，且预计强降雪将继续维持。</p>
+              <p>（3）寒潮：预计48小时最低气温下降14℃并伴有5级以上大风，最低气温降至2℃以下。</p>
+              <p>（4）高温：国家气象站连续10天日最高气温达37℃以上，且有1日最高气温达40℃，预计未来3天高温天气仍将持续。</p>
+              <p>（5）各种灾害性天气已对群众生产生活造成特别重大损失和影响，超出本区处置能力，需要由市政府组织处置的，以及上述灾害已经启动Ⅲ级响应但仍可能持续发展或影响其他地区的。</p>
+            </section>
+            <section class="extreme-standard-level">
+              <h3>Ⅲ级响应</h3>
+              <p>（1）暴雨：过去24小时全市出现100毫米以上降水，且有30%以上的观测站出现200毫米以上降水，预计未来24小时内，我市仍有100毫米以上的连续性降水天气。</p>
+              <p>（2）暴雪：过去24小时国家气象站降雪量达到15毫米以上，积雪深度达10厘米，且预计强降雪将继续维持。</p>
+              <p>（3）寒潮：预计24小时最低气温下降12℃并伴有5级以上大风，最低气温降至4℃以下。</p>
+              <p>（4）高温：国家气象站连续7天日最高气温达37℃以上，且预计未来3天高温天气仍将持续。</p>
+              <p>（5）大雾：过去48小时已出现能见度小于50米的大雾天气，且预计未来24小时大雾天气持续；或者预计未来72小时全市大部地区将出现能见度小于200米的连续性大雾天气。</p>
+              <p>（6）各种灾害性天气已对群众生产生活造成特别重大损失和影响，超出本区处置能力，需要由市政府组织处置的，以及上述灾害已经启动Ⅳ级响应但仍可能持续发展或影响其他地区的。</p>
+            </section>
+            <section class="extreme-standard-level">
+              <h3>Ⅳ级响应</h3>
+              <p>（1）暴雨：过去24小时全市出现50毫米以上降水，且部分乡镇出现100毫米以上降水，预计未来24小时内，我市仍有100毫米以上的连续性降水天气。</p>
+              <p>（2）暴雪：预计未来24小时国家气象站降雪量达到10毫米以上，积雪深度达5厘米；或者过去24小时国家气象站降雪量达到10毫米以上，积雪深度达5厘米，且预计降雪将继续维持。</p>
+              <p>（3）寒潮：预计未来24小时最低气温下降10℃并伴有5级以上大风，最低气温降至4℃以下。</p>
+              <p>（4）高温：国家气象站出现5天最高气温达37℃以上，且预计未来3天高温天气仍将持续。</p>
+              <p>（5）大雾：过去48小时已出现能见度小于200米的大雾天气，且预计未来24小时大雾天气持续；或者预计未来72小时全市大部地区将出现能见度小于500米的连续性大雾天气。</p>
+              <p>（6）强对流：预计受系统性飑线影响，未来6小时所辖大部地区将出现10级以上雷雨大风、大冰雹等强对流天气，或者已经出现并可能持续。</p>
+              <p>（7）各种灾害性天气已对群众生产生活造成一定损失和影响。</p>
+            </section>
+          </div>
+        </div>
+      </section>
     </section>
 
     <!-- 餐饮场所燃气泄漏风险详情界面（复用极端天气界面的设计体系） -->
@@ -10250,6 +10538,9 @@
     const extremeWarningGuide = document.getElementById("extremeWarningGuide");
     const extremeTypeList = document.getElementById("extremeTypeList");
     const extremePlanDetail = document.getElementById("extremePlanDetail");
+    const extremeStandardBtn = document.getElementById("extremeStandardBtn");
+    const extremeStandardModal = document.getElementById("extremeStandardModal");
+    const extremeStandardClose = document.getElementById("extremeStandardClose");
     const gasScreen = document.getElementById("gasScreen");
     const gasBackBtn = document.getElementById("gasBackBtn");
     const gasVideoTabs = document.querySelector(".gas-video-tabs");
@@ -10446,6 +10737,45 @@
         guide: ["公安交管部门加强重点路段巡逻和分流管控；", "机场、港口、客运站做好延误提示和秩序维护；", "提醒驾驶人减速慢行，保持安全车距。"]
       }
     ];
+    const meteorologicalCommandSystem = {
+      commander: "市政府分管气象工作的副市长",
+      deputies: "市政府分管气象工作的副秘书长、市气象局局长",
+      members: "市委宣传部、市红十字会、鄂州军分区、武警鄂州支队、市发展和改革委员会、市教育局、市经济和信息化局、市公安局、市财政局、市自然资源和城乡建设局、市生态环境局、市住房和城市更新局、市交通运输局、市水利和湖泊局、市农业农村局、市商务局、市文化和旅游局、市卫生健康委员会、市应急管理局、市市场监督管理局、市城市管理执法委员会、市融媒体中心、市气象局、市消防救援局、市邮政管理局、市民航办、黄石海事局鄂州海事处、国网鄂州供电公司、中国电信鄂州分公司、中国移动鄂州分公司、中国联通鄂州分公司、鄂州火车站等单位。",
+      responsibility: "统一领导气象灾害应急工作；决定气象灾害防御和救灾重大事项；协调相关地区、有关部门开展应急处置；决定气象灾害应急响应启动、调整与终止。",
+      office: "指挥部办公室设在市气象局，由市气象局副局长兼任办公室主任；负责落实指挥部决议和工作部署、建立防御联络机制、组织会商培训演练、提出响应建议、传达指令、收集报送信息、协调与应急评估等工作。",
+      duties: [
+        ["市委宣传部", "指导市内新闻媒体，协调省新闻媒体做好宣传报道，收集跟踪境内舆情并做好舆论引导。"],
+        ["市红十字会", "配合专业医疗救护队伍开展群众性卫生救护，动员开展互助互济和经常性救灾捐赠活动。"],
+        ["鄂州军分区", "指挥、协调部队及民兵参与抢险救灾工作。"],
+        ["武警鄂州支队", "组织武警部队抢险救灾，配合公安机关维护灾区社会秩序、保卫重要设施。"],
+        ["市发展和改革委员会", "组织电力调配、保障电力供应；监测受灾地区生活必需品价格，做好粮油应急物资储备调度，协调防灾减灾基础设施建设。"],
+        ["市教育局", "部署教育系统抗灾救灾，指导学校根据预警综合研判应急防范措施，确保师生安全。"],
+        ["市经济和信息化局", "根据需要启动相关预案，组织应急物资生产企业生产调配，督促工业企业做好气象灾害防御。"],
+        ["市公安局", "维护灾区社会治安，组织交通疏导和管制，打击趁灾违法犯罪，协助抢险救灾和救护受灾群众。"],
+        ["市财政局", "负责抗灾救灾资金筹措、拨付和监督检查。"],
+        ["市自然资源和城乡建设局", "组织、协调、指导、监督气象灾害引发的地质灾害防治；联合气象部门做好地质灾害气象风险预警发布，指导林业生产单位防灾。"],
+        ["市生态环境局", "监测、分析灾区环境污染情况并提出处置方案，灾害得到控制后指导现场环境污染消除。"],
+        ["市住房和城市更新局", "保障城镇供气设施运行，组织供气设施抢修；指导物业小区防灾，加强市政工地和危险房屋隐患排查，必要时提醒停止户外作业。"],
+        ["市交通运输局", "监测道路运输，保障国省干线畅通；实施所辖内河水上交通管制和搜救，协调救灾人员物资运输及灾民转移交通工具。"],
+        ["市水利和湖泊局", "监测预报江河湖库洪水，发布水雨工情，调度水利设施水量，做好水旱灾害防御和水毁工程修复。"],
+        ["市农业农村局", "监测农业灾害、核报受灾情况，分析影响并提出建议，指导防灾减灾、灾后补救和生产自救。"],
+        ["市商务局", "组织灾区生活必需品供应和重要商品市场监测，配合价格监管维护市场稳定。"],
+        ["市文化和旅游局", "协助事发地政府疏散滞留景区游客，传播预警信息，必要时指导灾区旅游景点关停。"],
+        ["市卫生健康委员会", "组织医疗卫生机构组建救灾防病队伍，按需开展医疗救护、卫生防疫及灾区卫生应急指导援助。"],
+        ["市应急管理局", "指导开展安全生产检查，协调全市应急抢险、救援、救灾和受灾群众基本生活救助，组织灾情核查上报及人员转移安置。"],
+        ["市市场监督管理局", "查处民生必需品、相关商品及服务串通涨价、囤积居奇、哄抬价格等违法行为。"],
+        ["市城市管理执法委员会", "组织主城区道路、桥梁、涵洞积水疏排和设施抢修，组织洒水降温，指导处置折断、倾倒户外广告设施。"],
+        ["市融媒体中心", "及时发布气象信息，做好宣传报道工作。"],
+        ["市气象局", "监测、制作和发布灾害性天气预警预报及服务信息，为响应启动终止和防灾减灾提供决策依据，组织人工影响天气工作。"],
+        ["市消防救援局", "组织消防救援队伍开展抢险救灾。"],
+        ["市邮政管理局", "部署邮政快递业防灾抗灾，指导企业抗灾救灾、开展安全检查和防灾应急知识普及。"],
+        ["市民航办", "协调湖北国际物流机场有限公司防范应对气象灾害，协调滞留旅客安置、疏导转运。"],
+        ["黄石海事局鄂州海事处", "开展灾害性天气水上船舶安全宣传，必要时实施水上交通管制，组织遇险船舶及人员搜救。"],
+        ["国网鄂州供电公司", "监测电网和电力设施运行，组织设施抢修，保障安全有序用电，及时报告受灾影响和恢复情况。"],
+        ["电信、移动、联通鄂州分公司", "及时播发气象预警信息，抢修灾区通信设施，保障通信畅通。"],
+        ["鄂州火车站", "抢修受灾铁路线路，制定运输方案、调配运力，疏导滞留旅客，运送救援人员和物资，保障铁路畅通。"]
+      ]
+    };
     const weatherPlans = [
       {
         name: "暴雨",
@@ -10464,6 +10794,18 @@
           ["市自然资源和城乡建设局", "开展滑坡、崩塌、泥石流等地质灾害风险监测预警和风险区域排查。"],
           ["市住建局", "排查建筑工地、危险房屋、物业小区和供气设施风险，必要时停止户外施工。"],
           ["市应急管理局", "统筹抢险救援、灾情核查上报、危险区域群众转移安置和基本生活保障。"]
+        ],
+        measures: [
+          "加强监测预报，及时发布暴雨预警信号，适时增加预报密度。",
+          "组织对重要江河湖泊和水工程实施应急水量调度，开展堤防水库工程巡护查险等工作。",
+          "做好地质灾害监测预警和突发地质灾害应急处置，及时转移安置受灾群众并提供基本生活救助。",
+          "加强建筑工地、城乡危房等风险隐患排查整治和应急处置，督促建筑工程施工单位做好高空作业等户外高危作业安全保障。",
+          "加强城市渍水监测巡查，抢排渍水；对积水地区实行交通引导或管制。",
+          "针对农业生产做好监测预警、落实防御措施，组织抗灾救灾和灾后恢复生产。",
+          "通知灾害影响区域学校做好学生安全防护，调整上下学时间，必要时采取停课措施。",
+          "做好A级旅游景区（点）安全风险提示，做好游客转移、疏散等安全避险工作。",
+          "加强电力设施检查和电网运营监控，及时排除危险、排查故障。",
+          "相关应急处置部门和抢险单位随时准备启动抢险应急方案。"
         ]
       },
       {
@@ -10483,6 +10825,17 @@
           ["市住建局", "排查建筑工地、房屋和市政设施积雪风险，督促清雪除冰和安全加固。"],
           ["国网鄂州供电公司", "监测线路覆冰和电网运行，及时开展故障抢修和重点用户供电保障。"],
           ["市农业农村局", "指导大棚、种植、养殖设施除雪防冻，组织灾后恢复生产。"]
+        ],
+        measures: [
+          "加强监测、预报，及时发布低温预报和暴雪、道路结冰等预警信号，适时增加预报密度。",
+          "及时转移安置受灾群众并提供基本生活救助。",
+          "加强交通秩序维护，指挥、疏导行驶车辆；做好主要公路除雪，保障交通干线和抢险救灾重要线路畅通。",
+          "及时组织房屋建筑、市政工程施工现场、城市道路、桥梁、涵洞等清雪除冰工作。",
+          "指导设施农业种植户和畜牧、水产养殖户做好各类农业和养殖设施除雪及技术管理工作。",
+          "通知灾害影响区域学校做好学生安全防护，调整上下学时间，必要时采取停课措施。",
+          "做好室外A级旅游景区（点）安全风险提示，对危险路段、景点采取限行、关闭等措施，及时转移或妥善安置滞留游客。",
+          "注意电力调配及相关措施落实，加强电力设备巡查、养护，及时排查清除电力危险故障，做好电力设施设备覆冰应急处置。",
+          "相关应急处置部门和抢险单位随时准备启动抢险应急方案。"
         ]
       },
       {
@@ -10502,6 +10855,17 @@
           ["市农业农村局", "指导蔬菜、牲畜、家禽、水产、树木花卉落实防寒防风措施。"],
           ["市教育局", "根据预警调整上下学时间，必要时组织停课和学生安全防护。"],
           ["市卫健委", "做好寒潮相关疾病医疗救治和重点人群健康提示。"]
+        ],
+        measures: [
+          "加强监测、预报，及时发布寒潮、大风等预警信号，适时增加预报密度。",
+          "采取救助措施，开放避险场所；紧急转移安置受灾群众并提供基本生活救助。",
+          "巡查、加固城市公共服务设施，及时组织人员修复破坏的路灯、广告牌等市政设施。",
+          "通知高空、水上等户外作业单位做好防范，加固有关设施，必要时暂停户外作业。",
+          "指导果农、菜农、水产养殖户和林农采取防寒措施，做好蔬菜、牲畜、家禽、水生动物以及树木、花卉防寒防风工作。",
+          "通知灾害影响区域学校做好学生安全防护，调整上下学时间，必要时采取停课措施。",
+          "组织做好医疗救治工作。",
+          "加强电力设施检查和电网运营监控，及时排除危险、排查故障。",
+          "相关应急处置部门和抢险单位随时准备启动抢险应急方案。"
         ]
       },
       {
@@ -10521,6 +10885,16 @@
           ["市公安局/交通运输局", "加强高温下交通安全管理，防范车辆爆胎等道路风险。"],
           ["市农业农村局", "监测农作物、畜牧、水产受灾情况，开展抗旱抗高温技术指导和灾后恢复。"],
           ["市卫健委", "监测并处置中暑等高温相关事件，组织医疗机构做好救治准备。"]
+        ],
+        measures: [
+          "加强监测、预报，及时发布高温预警信号，适时增加预报密度。",
+          "做好电力调配及相关措施落实，保证居民和重要电力用户用电；加强电力设备巡查、养护，及时排查电力故障。",
+          "合理调度水源，做好用水安排，保证群众生活生产用水，保证市内重点湖泊生态水位和生态流量。",
+          "做好户外和高温作业人员的防暑工作，必要时调整作息时间，或采取停止作业措施。",
+          "做好交通安全管理工作，提醒车辆减速，防止高温爆胎。",
+          "指导农户、林业生产单位采取管理和技术措施，预防、减轻高温对农、林、畜、水产养殖业的影响；加强监控，做好森林火灾预防和扑救准备工作。",
+          "积极应对可能出现的高温中暑事件。",
+          "相关应急处置部门和抢险单位随时准备启动抢险应急方案。"
         ]
       },
       {
@@ -10540,6 +10914,15 @@
           ["市文旅局/属地", "指导公园、景区、游乐场发布警示，关闭危险区域并组织游客避险。"],
           ["国网鄂州供电公司", "加强电网巡查和故障处置，保障重要用户供电。"],
           ["市应急管理局/消防", "做好抢险救援准备，联动处置倒伏、坠落、积水等突发险情。"]
+        ],
+        measures: [
+          "加强监测、预报，及时发布强对流预警信号，适时增加预报密度。",
+          "督促施工单位必要时暂停户外作业。",
+          "针对农业生产做好监测预警、落实防御措施，组织抗灾救灾和灾后恢复生产。",
+          "通知灾害影响区域学校做好学生安全防护，调整上下学时间，必要时采取停课措施。",
+          "指导公园、景区、游乐场等户外场所经营管理单位及时发布警示信息，适时关闭相关区域，组织游客避险。",
+          "加强电力设施检查和电网运营监控，及时排除危险、排查故障。",
+          "相关应急处置部门和抢险单位随时准备启动抢险应急方案。"
         ]
       },
       {
@@ -10558,6 +10941,13 @@
           ["花湖机场及交通场站", "做好航班、客运延误提示和现场秩序维护。"],
           ["国网鄂州供电公司", "监控电网运行，防范大雾引发设备污闪故障。"],
           ["应急相关部门", "做好低能见度交通事故、滞留人员和突发险情抢险准备。"]
+        ],
+        measures: [
+          "加强监测、预报，及时发布大雾预警信号，适时增加预报密度。",
+          "加强对车辆的指挥和疏导，维持道路交通秩序，必要时暂时封闭高速公路。",
+          "及时发布雾航安全通知，加强水上船舶航行安全监管。",
+          "加强电网运营监控，采取措施尽量避免发生设备污闪故障，及时消除和减轻因设备污闪造成的影响。",
+          "相关应急处置部门和抢险单位随时准备启动抢险应急方案。"
         ]
       },
       {
@@ -10570,13 +10960,39 @@
         focus: ["道路结冰", "公交停运", "铁路晚点", "机场影响", "停电停水", "燃气异常", "通信中断", "生活物资"],
         chain: ["雨雪冰冻监测", "融雪防冻", "抢险救援", "交通保畅", "水电气通信", "物资保供", "群众安置", "恢复评估"],
         duties: [
-          ["融雪防冻组", "研判道路桥梁结冰点位，组织撒布融雪剂、机械除雪和桥梁道路恢复通行。"],
-          ["应急救灾组", "处置人员被困、转移、救援和安置需求，统筹救灾物资和医疗救治。"],
-          ["交通保障组", "负责公交、客运、铁路、航空、水运保畅，以及必要情况下停运、限行和疏导。"],
-          ["运行保障组", "统筹水、电、燃气、成品油、通信和生活必需品保障，处置停水停电、燃气异常和通信中断。"],
-          ["市城管委", "负责城市桥梁、道路、公园等融雪防冻，承担专项指挥部办公室相关职责。"],
-          ["市公安局", "开展道路疏导、封闭限速和交通事故处置，维护灾害期间社会秩序。"],
-          ["市住建局/交通运输局", "保障燃气供水、小区除冰、国省干线除雪和运输组织。"]
+          ["市委宣传部", "负责指导、协调新闻媒体做好低温雨雪冰冻灾害新闻报道和信息发布，做好舆论引导，及时回应舆论关切问题。"],
+          ["市委网信办", "负责做好低温雨雪冰冻灾害网络舆情监测、研判、处置工作。"],
+          ["市委直属机关工委", "负责动员、组织机关事业单位党员干部参与积雪清理工作。"],
+          ["鄂州军分区", "组织指挥所属部队、民兵预备役部队参加抢险救灾，协调、报批军队支援抢险救灾行动等事项。"],
+          ["武警鄂州支队", "负责组织指挥协调武警部队参加低温雨雪冰冻灾害重大抢险救灾行动。"],
+          ["市消防救援支队", "根据市指挥部统一部署，组织指挥全市消防救援队伍参与低温雨雪冰冻灾害抢险救援行动。"],
+          ["市城管委", "负责市指挥部办公室日常组织协调检查；组织主城区城市桥梁、公园、广场、游园、西山景区、垃圾场（站）、污水处理厂等重点区域融雪除雪、防冻防滑；负责主城区主次干道积雪清扫、树枝积雪清除，指导督促户外广告业主单位做好广告牌破损、倒塌等应急处置，检查极端天气下城区大型户外广告牌安全情况。"],
+          ["市应急管理局", "负责组织核查、报告灾情，申请、管理、分配救灾款物并监督使用；加强安全生产监管，指导矿山、危化等企业防灾；做好应急救灾物资储备，全力开展各类灾害事故救援，协调应急队伍参与突发事件救援处置，疏散被困人群并保障受灾困难群众基本生活。"],
+          ["市气象局", "负责雨雪冰冻灾害监测、预报，及时发布预警信息；为市指挥部启动和终止预案、组织抢险救灾提供决策依据和建议。"],
+          ["市发改委", "持续做好能源保供，监督指导电力企业做好供电保障和大面积停电应急处置；统筹协调重要民生商品保供稳价、灾后基础设施恢复重建；协调铁路部门做好鄂州火车站应对工作。"],
+          ["市教育局", "负责教育行政部门和学校防御雨雪冰冻灾害工作的协调管理，督促学校做好校区及门前道路积雪清理，开展学生防滑防冻常识教育，组织紧急情况停课及其他应急行动配合工作。"],
+          ["市经信局", "负责协调工业企业灾害防御及抢险救灾，督促工业企业做好厂区及周边道路扫雪除冰，防止次生、衍生灾害发生。"],
+          ["市公安局", "做好雨雪冰冻灾害下道路交通指挥疏导和交通事故快速处置，保障清雪作业机械通行，对部分道路实施封闭或限速；加强治安保卫，维护社会秩序，协助处置群体性事件并组织群众从危险区域安全转移。"],
+          ["市民政局", "负责养老机构、福利院等场所低温雨雪冰冻安全监督管理；组织困难群众安全排查，做好灾后困难群众最低生活保障、临时救助等工作。"],
+          ["市财政局", "负责雨雪冰冻灾害应急保障资金的落实、管理和监督。"],
+          ["市自然资源和城乡建设局", "督促做好降雪期间城市房屋建设等工地施工范围内积雪融雪、清扫及抢险；开展可能引发滑坡、山体崩塌、地面塌陷、泥石流等地质灾害的监测、应急调查和评估；负责林业防灾、灾情调查核实、灾后恢复生产技术指导及抗灾林木花卉种子种苗储备调用安排。"],
+          ["市生态环境局", "负责对环境污染情况进行监测、分析并提出处置方案。"],
+          ["市住房和城市更新局", "督促极端天气期间燃气、供水等企业供应保障；督促物业及小区管理单位做好内部融雪除冰和受灾房屋抢险，指导协调各区、葛店经开区、临空经济区做好因灾倒塌房屋恢复重建。"],
+          ["市交通运输局", "督促指导企业做好交通场站范围内道路融雪除雪；负责管养国省干线公路融雪除冰，保障干线畅通；组织协调城市公交、道路客运等企业制定营运应急措施，恶劣冰冻雨雪天气时督促采取停运措施。"],
+          ["市水利和湖泊局", "负责雨雪冰冻灾害期间水利设施及小水电系统安全工作。"],
+          ["市农业农村局", "负责农业防御雨雪冰冻灾害、农业灾情调查核实和灾后农业救灾恢复生产技术指导；负责抗灾种子储备和区域性应急调用安排；组织菜篮子商品生产和供应。"],
+          ["市商务局", "负责组织雨雪冰冻期间生活必需品和成品油供应，做好市场供应应急工作的综合协调和部门衔接，确保市场安全正常运转。"],
+          ["市文化和旅游局", "协调配合相关地方政府做好旅游景区安全监督管理，组织协调旅游企业做好游客和旅游从业人员疏散，在旅游行业开展防灾知识宣传。"],
+          ["市卫生健康委", "负责灾区疾病预防控制、卫生监督和医疗救护，及时提供灾区疫情和防治意见，预防、控制疫病发生和流行。"],
+          ["市市场监管局", "负责组织对应急救援使用的食品、药品和医疗器械进行质量安全监督与管理。"],
+          ["市通信发展管理办公室", "负责协调通信运营商灾害防御及抢险救灾，组织协调修复因灾损坏的设施，保障抢险救灾通信畅通。"],
+          ["市民航办公室", "负责协调机场公司开展低温雨雪冰冻灾害应对工作。"],
+          ["国网鄂州供电公司", "负责低温雨雪冰冻灾害期间供电和应急调度保障工作。"],
+          ["鄂州火车站", "负责组织开展鄂州火车站区域低温雨雪冰冻灾害应对工作。"],
+          ["中国电信、移动、联通、铁塔鄂州分公司", "负责低温雨雪冰冻灾害期间通信保障工作。"],
+          ["湖北国际物流机场有限公司", "负责组织开展花湖机场区域低温雨雪冰冻灾害应对工作。"],
+          ["湖北盐业集团鄂州分公司", "负责与各融雪剂使用部门、单位沟通衔接，按需做好融雪剂供应保障工作。"],
+          ["各区人民政府、葛店经开区管委会、临空经济区管委会", "全面负责本辖区低温雨雪冰冻灾害应急处置；及时贯彻市指挥部命令，会同相关单位开展应急处置、救灾救援；组织发动街道、社区、机关、企事业单位等社会力量参与应急处置，按要求报告处置情况；督促责任人履行门前四包责任制，及时清除门前冰雪，确保行人安全。"]
         ]
       }
     ];
@@ -10889,11 +11305,11 @@
       },
       {
         name: "自然灾害",
-        risks: ["城市洪涝", "森林火灾风险", "地震地质灾害风险"]
+        risks: ["城市洪涝", "森林火灾风险", "地震地质灾害风险", "极端天气"]
       },
       {
         name: "其他",
-        risks: ["极端天气灾害风险", "大型活动安保", "消防救援"]
+        risks: ["大型活动安保", "消防救援"]
       }
     ];
 
@@ -11071,6 +11487,22 @@
       extremePlanDetail.innerHTML = `
         <div class="extreme-section-title">${plan.name}应急预案</div>
         <p>${plan.source}</p>
+        ${activeWeatherPlan < 6 ? `
+          <div class="extreme-section-title">气象灾害应急指挥体系</div>
+          <div class="extreme-command-card">
+            <div class="extreme-command-row"><b>指挥长</b><span>${meteorologicalCommandSystem.commander}</span></div>
+            <div class="extreme-command-row"><b>副指挥长</b><span>${meteorologicalCommandSystem.deputies}</span></div>
+            <div class="extreme-command-row"><b>指挥部职责</b><span>${meteorologicalCommandSystem.responsibility}</span></div>
+            <div class="extreme-command-row"><b>办公室</b><span>${meteorologicalCommandSystem.office}</span></div>
+            <details class="extreme-command-details">
+              <summary>成员单位职责（${meteorologicalCommandSystem.duties.length}项）</summary>
+              <p>${meteorologicalCommandSystem.members}</p>
+              <div class="extreme-duty-list">
+                ${meteorologicalCommandSystem.duties.map(([role, duty]) => `<div class="extreme-duty-row"><b>${role}</b><span>${duty}</span></div>`).join("")}
+              </div>
+            </details>
+          </div>
+        ` : ""}
         <div class="extreme-plan-summary">
           ${plan.metrics.map(([value, label]) => `<div class="extreme-plan-metric"><b>${value}</b><span>${label}</span></div>`).join("")}
         </div>
@@ -11080,9 +11512,20 @@
         <div class="extreme-focus-grid">${plan.focus.map(item => `<span>${item}</span>`).join("")}</div>
         <div class="extreme-section-title">处置链条</div>
         <div class="extreme-chain">${plan.chain.map(item => `<span>${item}</span>`).join("")}</div>
-        <div class="extreme-section-title">部门职责</div>
+        ${plan.measures?.length ? `
+          <div class="extreme-section-title">应对措施</div>
+          <ol class="extreme-measure-list">
+            ${plan.measures.map((item, index) => `<li><span class="extreme-measure-index">${index + 1}</span><span>${item}</span></li>`).join("")}
+          </ol>
+        ` : ""}
+        <div class="extreme-section-title">${activeWeatherPlan < 6 ? "本灾种重点任务" : "成员单位职责"}</div>
         <div class="extreme-duty-list">
-          ${plan.duties.map(([role, duty]) => `<div class="extreme-duty-row"><b>${role}</b><span>${duty}</span></div>`).join("")}
+          ${plan.duties.map(([role, duty], index) => `
+            <div class="extreme-duty-row">
+              <b class="${plan.name === "低温雨雪冰冻" ? "has-index" : ""}">${plan.name === "低温雨雪冰冻" ? `<i class="extreme-duty-index">${index + 1}</i>` : ""}${role}</b>
+              <span>${duty}</span>
+            </div>
+          `).join("")}
         </div>
       `;
     }
@@ -11100,7 +11543,20 @@
       extremeScreen.setAttribute("aria-hidden", "false");
     }
 
+    function openExtremeStandardModal() {
+      extremeStandardModal.classList.add("is-open");
+      extremeStandardModal.setAttribute("aria-hidden", "false");
+      extremeStandardClose.focus();
+    }
+
+    function closeExtremeStandardModal() {
+      extremeStandardModal.classList.remove("is-open");
+      extremeStandardModal.setAttribute("aria-hidden", "true");
+      extremeStandardBtn.focus();
+    }
+
     function closeExtremeScreen() {
+      closeExtremeStandardModal();
       screenEl.classList.remove("extreme-active");
       extremeScreen.setAttribute("aria-hidden", "true");
       mainTitle.textContent = "鄂州市城市安全风险监测预警平台";
@@ -11309,22 +11765,34 @@
     }
 
     function gasShareHtml(item) {
-      const shares = [
-        { unit: "市应急管理局", type: "预警信息", method: "平台推送", time: item.time },
-        { unit: "市住建局", type: "监测数据", method: "接口共享", time: item.time },
-        { unit: "市消防救援支队", type: "事件详情", method: "联动同步", time: item.time },
-        { unit: "属地街道办", type: "处置记录", method: "工单推送", time: item.time },
-        { unit: "燃气公司", type: "设备信息", method: "平台共享", time: item.time }
+      const current = [
+        ["实有人口", 1],
+        ["小区户型图", 1],
+        ["实有楼栋", 1]
+      ];
+      const groups = [
+        { title: "周围人（200m）", items: [["特殊人群", 29], ["实有人口", 3120]] },
+        { title: "周围地（200m）", items: [["燃气管道", 358], ["实有楼栋", 52], ["实有房屋", 1852]] },
+        { title: "周围物（200m）", items: [["视频监控", 13], ["消防栓", 3]] },
+        { title: "周围组织（200m）", items: [["企业单位", 166], ["社会团体", 4], ["个体工商户", 754]] },
+        { title: "周围场所（200m）", items: [["重点单位及场所", 1]] }
       ];
       return `
-        <div class="gas-share-note">事件相关数据按权限共享至以下单位</div>
-        ${shares.map(share => `
-          <div class="gas-share-item">
-            <div class="gas-event-list-top">
-              <b>${share.unit}</b>
-              <span class="gas-share-type">${share.type}</span>
+        <div class="gas-zone-title">当前发生地要素</div>
+        <div class="gas-zone-grid">
+          ${current.map(([name, val]) => `
+            <div class="gas-zone-item"><b>${val}</b><span>${name}</span></div>
+          `).join("")}
+        </div>
+        <div class="gas-zone-title">周边 200m 要素</div>
+        ${groups.map(group => `
+          <div class="gas-zone-group">
+            <div class="gas-zone-group-title">${group.title}</div>
+            <div class="gas-zone-group-items">
+              ${group.items.map(([name, val]) => `
+                <span class="gas-zone-chip"><b>${val}</b><span>${name}</span></span>
+              `).join("")}
             </div>
-            <div class="gas-event-list-meta">共享方式：${share.method} · ${share.time}</div>
           </div>
         `).join("")}
       `;
@@ -12093,7 +12561,7 @@
       });
       list.querySelectorAll(".risk-item").forEach(button => {
         button.addEventListener("click", () => {
-          if (button.dataset.risk === "极端天气灾害风险") {
+          if (button.dataset.risk === "极端天气") {
             list.querySelectorAll(".risk-item").forEach(item => item.classList.remove("active"));
             button.classList.add("active");
             openExtremeScreen();
@@ -12429,6 +12897,11 @@
         activeHistoryType = extremeHistoryType.value;
         renderExtremeWarning();
       });
+      extremeStandardBtn.addEventListener("click", openExtremeStandardModal);
+      extremeStandardClose.addEventListener("click", closeExtremeStandardModal);
+      extremeStandardModal.addEventListener("click", event => {
+        if (event.target === extremeStandardModal) closeExtremeStandardModal();
+      });
       extremeTypeList.addEventListener("click", event => {
         const button = event.target.closest("[data-extreme-plan-index]");
         if (!button) return;
@@ -12459,6 +12932,10 @@
       window.addEventListener("keydown", event => {
         if (event.key === "Escape" && eventModal.classList.contains("is-open")) closeEventModal();
         if (event.key === "Escape" && weatherModal.classList.contains("is-open")) closeWeatherModal();
+        if (event.key === "Escape" && extremeStandardModal.classList.contains("is-open")) {
+          closeExtremeStandardModal();
+          return;
+        }
         if (event.key === "Escape" && screenEl.classList.contains("extreme-active")) closeExtremeScreen();
         if (event.key === "Escape" && gasPhotoView.classList.contains("is-open")) closeGasPhotoView();
         if (event.key === "Escape" && gasSiteDetail.classList.contains("is-open")) closeGasSiteDetail();
