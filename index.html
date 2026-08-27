@@ -2976,17 +2976,256 @@
       width: 520px;
       height: 350px;
     }
-    .extreme-type-panel {
+    .extreme-plan-panel {
+      right: 22px;
+      top: 302px;
+      width: 520px;
+      height: 436px;
+    }
+    .extreme-rescue-panel {
       right: 22px;
       top: 38px;
       width: 520px;
-      height: 172px;
+      height: 260px;
+      border-color: rgba(29, 99, 186, .22);
+      background: linear-gradient(135deg, rgba(248, 253, 255, .97), rgba(230, 244, 253, .92));
+      box-shadow: 0 18px 32px -26px rgba(29, 99, 186, .38);
     }
-    .extreme-plan-panel {
-      right: 22px;
-      top: 214px;
-      width: 520px;
-      height: 524px;
+    .extreme-rescue-body {
+      height: calc(100% - 38px);
+      overflow: hidden;
+      scrollbar-color: rgba(29, 99, 186, .35) transparent;
+      scrollbar-width: thin;
+    }
+    .extreme-rescue-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(28, 79, 133, .13);
+      color: #69839c;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .extreme-rescue-summary b { color: #1d63ba; }
+    .extreme-rescue-summary b::before {
+      content: "救援队伍";
+      margin-right: 6px;
+      padding: 2px 6px;
+      border-radius: 99px;
+      color: #47708f;
+      background: rgba(29, 99, 186, .09);
+      font-size: 9px;
+      font-weight: 900;
+    }
+    .extreme-rescue-table {
+      display: none;
+      width: 100%;
+      min-width: 1020px;
+      border-collapse: collapse;
+      color: #163553;
+      font-size: 10px;
+      line-height: 1.45;
+      letter-spacing: .01em;
+    }
+    .extreme-rescue-table th,
+    .extreme-rescue-table td {
+      padding: 7px 9px;
+      border-right: 1px solid rgba(28, 79, 133, .13);
+      border-bottom: 1px solid rgba(28, 79, 133, .13);
+      vertical-align: top;
+      text-align: left;
+    }
+    .extreme-rescue-table th:last-child,
+    .extreme-rescue-table td:last-child { border-right: 0; }
+    .extreme-rescue-table th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      color: #1d63ba;
+      background: rgba(226, 242, 255, .96);
+      font-size: 10px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .extreme-rescue-table tbody tr { background: rgba(255, 255, 255, .28); transition: background .16s ease; }
+    .extreme-rescue-table tbody tr:nth-child(even) { background: rgba(232, 242, 250, .36); }
+    .extreme-rescue-table tbody tr:hover { background: rgba(29, 99, 186, .11); box-shadow: inset 3px 0 0 #1d63ba; }
+    .extreme-rescue-table td:nth-child(1) { min-width: 168px; font-weight: 900; }
+    .extreme-rescue-table td:nth-child(2) { min-width: 90px; }
+    .extreme-rescue-table td:nth-child(3) { min-width: 48px; text-align: center; font-weight: 900; }
+    .extreme-rescue-table td:nth-child(4) { min-width: 142px; }
+    .extreme-rescue-table td:nth-child(5) { min-width: 112px; white-space: nowrap; }
+    .extreme-rescue-table td:nth-child(6) { min-width: 288px; }
+    .extreme-rescue-table td:nth-child(7) { min-width: 170px; }
+    .extreme-rescue-overview {
+      padding: 8px 10px;
+      background: radial-gradient(180px 80px at 100% 0, rgba(29,99,186,.12), transparent 72%);
+    }
+    .extreme-rescue-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 4px;
+    }
+    .extreme-rescue-metric {
+      min-height: 48px;
+      display: grid;
+      align-content: center;
+      gap: 3px;
+      padding: 4px 6px;
+      border: 1px solid rgba(29, 99, 186, .14);
+      border-radius: 10px;
+      color: #47708f;
+      background: rgba(255, 255, 255, .76);
+      box-shadow: 0 8px 16px -18px rgba(15,53,94,.72);
+      text-align: left;
+      cursor: pointer;
+      border-color: rgba(29, 99, 186, .14);
+      color: #47708f;
+      background: rgba(255,255,255,.76);
+    }
+    .extreme-rescue-metric:hover { transform: translateY(-1px); }
+    .extreme-rescue-metric:nth-child(1) { border-color: rgba(29,99,186,.2); background: rgba(29,99,186,.08); }
+    .extreme-rescue-metric:nth-child(2) { border-color: rgba(22,150,166,.22); background: rgba(22,150,166,.09); }
+    .extreme-rescue-metric:nth-child(3) { border-color: rgba(210,133,31,.24); background: rgba(210,133,31,.10); }
+    .extreme-rescue-metric:nth-child(4) { border-color: rgba(43,145,96,.22); background: rgba(43,145,96,.09); }
+    .extreme-rescue-metric:nth-child(2) b { color: #168898; }
+    .extreme-rescue-metric:nth-child(3) b { color: #b46d14; }
+    .extreme-rescue-metric:nth-child(4) b { color: #287d54; }
+    .extreme-rescue-metric b { color: #1556a5; font-size: 17px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+    .extreme-rescue-metric span { font-size: 10px; font-weight: 800; }
+    .extreme-rescue-search {
+      width: 100%;
+      height: 27px;
+      margin-top: 6px;
+      padding: 0 10px 0 28px;
+      border: 1px solid rgba(29, 99, 186, .18);
+      border-radius: 9px;
+      color: #163553;
+      background: rgba(255, 255, 255, .7);
+      font: inherit;
+      font-size: 11px;
+      outline: none;
+    }
+    .extreme-rescue-search-wrap { position: relative; }
+    .extreme-rescue-search-wrap::before { content: "⌕"; position: absolute; left: 10px; top: 11px; color: #1d63ba; font-weight: 900; }
+    .extreme-rescue-search:focus { border-color: #1d63ba; box-shadow: 0 0 0 3px rgba(29, 99, 186, .1); }
+    .extreme-rescue-materials { display: grid; gap: 3px; margin-top: 8px; }
+    .extreme-rescue-materials::before { content: "救援物资清单"; padding: 3px 5px; color: #1556a5; font-size: 11px; font-weight: 900; }
+    .extreme-rescue-materials button { min-width: 0; display: grid; grid-template-columns: 24px 1fr auto; align-items: center; padding: 5px 8px; border: 1px solid rgba(29,99,186,.12); border-radius: 6px; color: #47708f; background: rgba(255,255,255,.62); font-size: 11px; font-weight: 800; cursor: pointer; text-align: left; }
+    .extreme-rescue-materials button { pointer-events: none; cursor: default; }
+    .extreme-rescue-materials button::before { content: "●"; color: #1d63ba; font-size: 12px; }
+    .extreme-rescue-materials button b { color: #c87816; font-size: 12px; }
+    .extreme-rescue-materials button { display: none; }
+    .extreme-rescue-materials button[data-rescue-filter="救生衣"],
+    .extreme-rescue-materials button[data-rescue-filter="救生绳"],
+    .extreme-rescue-materials button[data-rescue-filter="橡皮艇"],
+    .extreme-rescue-materials button[data-rescue-filter="清水泵"] { display: grid; }
+    .extreme-rescue-materials button b { margin-left: 3px; color: #1d63ba; }
+    .extreme-rescue-materials button:hover { border-color: rgba(29,99,186,.4); background: rgba(29,99,186,.08); }
+    .extreme-rescue-drawer {
+      position: absolute;
+      left: 558px;
+      top: 38px;
+      z-index: 31;
+      width: 472px;
+      height: 510px;
+      display: none;
+      overflow: hidden;
+      border: 1px solid rgba(29, 99, 186, .25);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(251,254,255,.99), rgba(239,247,253,.98));
+      box-shadow: 0 28px 60px -30px rgba(15, 53, 94, .8);
+      pointer-events: auto;
+      border-color: rgba(29, 99, 186, .25);
+      background: linear-gradient(180deg, rgba(251,254,255,.99), rgba(239,247,253,.98));
+      color: #163553;
+    }
+    .extreme-rescue-drawer.is-open { display: flex; flex-direction: column; }
+    .extreme-rescue-drawer-head { height: 46px; display: flex; align-items: center; gap: 9px; padding: 0 14px; border-bottom: 1px solid rgba(29, 99, 186, .14); color: #163553; font-size: 14px; font-weight: 900; cursor: grab; user-select: none; background: rgba(226,242,255,.56); }
+    .extreme-rescue-drawer .extreme-rescue-search-wrap::before { left: 22px; top: 50%; transform: translateY(-25%); }
+    .extreme-rescue-drawer-head { color: #163553; border-bottom-color: rgba(29,99,186,.14); background: rgba(226,242,255,.56); }
+    .extreme-rescue-drawer-head span, .extreme-rescue-item span { color: #69839c; }
+    .extreme-rescue-item { border-color: rgba(29,99,186,.12); background: rgba(255,255,255,.74); color: #163553; }
+    .extreme-rescue-item:hover, .extreme-rescue-item.is-active { border-color: rgba(29,99,186,.42); background: rgba(29,99,186,.09); }
+    .extreme-rescue-drawer.is-dragging .extreme-rescue-drawer-head { cursor: grabbing; }
+    .extreme-rescue-drawer-head span { color: #69839c; font-size: 11px; }
+    .extreme-rescue-drawer-head button { margin-left: auto; width: 25px; height: 25px; border: 1px solid rgba(29, 99, 186, .16); border-radius: 6px; color: #1d63ba; background: #fff; font-size: 18px; cursor: pointer; }
+    .extreme-rescue-list { flex: 1; min-height: 0; overflow: auto; padding: 10px 12px 14px; }
+    .extreme-rescue-item { width: 100%; margin-bottom: 8px; padding: 10px 11px; border: 1px solid rgba(29, 99, 186, .12); border-radius: 10px; background: rgba(255,255,255,.74); color: #163553; text-align: left; cursor: pointer; box-shadow: 0 8px 16px -20px rgba(15,53,94,.75); }
+    .extreme-rescue-item:hover, .extreme-rescue-item.is-active { border-color: rgba(29, 99, 186, .4); background: rgba(29,99,186,.07); }
+    .extreme-rescue-item b { display: block; font-size: 13px; }
+    .rescue-kind { display: inline-flex; align-items: center; height: 18px; margin-left: 6px; padding: 0 6px; border-radius: 99px; font-size: 9px; font-style: normal; font-weight: 900; vertical-align: 1px; }
+    .rescue-kind.public { color: #1d63ba; background: rgba(29,99,186,.1); }
+    .rescue-kind.company { color: #a7650d; background: rgba(210,133,31,.12); }
+    .rescue-kind.other { color: #287d54; background: rgba(43,145,96,.11); }
+    .extreme-rescue-item span { display: block; margin-top: 5px; color: #69839c; font-size: 11px; line-height: 1.5; }
+    .extreme-rescue-item .rescue-emphasis { color: #c87816; font-size: 14px; font-weight: 900; font-variant-numeric: tabular-nums; }
+    .extreme-rescue-detail { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(29,99,186,.2); color: #47708f; font-size: 12px; line-height: 1.7; }
+    .extreme-rescue-detail strong { color: #c87816; font-size: 13px; font-weight: 900; }
+    .extreme-rescue-item.is-active .extreme-rescue-detail { display: block; }
+    .extreme-plan-panel .extreme-type-list {
+      height: 44px;
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 0;
+      padding: 3px 7px 0;
+      overflow: hidden;
+      border-bottom: 0;
+      background: linear-gradient(180deg, rgba(186,218,248,.76), rgba(235,245,253,.88));
+      border-radius: 14px 14px 0 0;
+    }
+    .extreme-plan-panel .extreme-type-item {
+      min-height: 0;
+      min-height: 40px;
+      padding: 3px 2px 8px;
+      border: 0;
+      border-radius: 12px 12px 0 0;
+      background: transparent;
+      color: #668099;
+      font-size: 12px;
+      line-height: 1.15;
+      white-space: nowrap;
+      position: relative;
+    }
+    .extreme-plan-panel .extreme-type-item span { display: none; }
+    .extreme-plan-panel .extreme-type-item.is-active {
+      color: #1d63ba;
+      border-color: transparent;
+      background: rgba(255,255,255,.96);
+      box-shadow: 0 -5px 14px -12px rgba(29,99,186,.6);
+      transform: none;
+      font-weight: 900;
+    }
+    .extreme-plan-panel .extreme-type-item.is-active::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 4px;
+      width: 26px;
+      height: 4px;
+      transform: translateX(-50%);
+      border: 0;
+      border-radius: 99px;
+      background: #287ee2;
+      z-index: 2;
+    }
+    .extreme-plan-panel .extreme-plan-section-title {
+      height: 18px;
+      display: flex;
+      align-items: center;
+      padding: 0 13px;
+      color: #1d63ba;
+      background: rgba(232, 242, 250, .48);
+      font-size: 11px;
+      font-weight: 900;
+      border-top: 2px solid rgba(29,99,186,.28);
+      color: #1556a5;
+    }
+    .extreme-plan-panel .extreme-plan-body {
+      height: calc(100% - 100px);
+      padding-top: 2px;
     }
     .gas-base-panel {
       left: 22px;
@@ -9915,17 +10154,44 @@
           <p id="extremeWarningGuide"></p>
         </div>
       </div>
-      <div class="extreme-panel extreme-type-panel">
-        <div class="extreme-panel-title">
-          <b>极端天气类型</b>
-          <div class="extreme-type-title-actions">
-            <button class="extreme-standard-btn" id="extremeStandardBtn" type="button">气象灾害应急分级标准</button>
+      <div class="extreme-panel extreme-rescue-panel">
+        <div class="extreme-panel-title"><b>救援力量</b></div>
+        <div class="extreme-rescue-body">
+          <div class="extreme-rescue-overview">
+            <div class="extreme-rescue-metrics">
+              <div class="extreme-rescue-metric"><b>47</b><span>避难场所</span></div>
+              <button class="extreme-rescue-metric" type="button" data-rescue-filter="all"><b id="rescueTeamCount">10</b><span>救援队伍</span></button>
+              <div class="extreme-rescue-metric"><b>8</b><span>医疗机构</span></div>
+            </div>
+            <div class="extreme-rescue-materials" id="rescueMaterials"></div>
           </div>
+          <table class="extreme-rescue-table">
+            <thead><tr><th>队伍名称</th><th>主管部门</th><th>人员编制</th><th>办公地点</th><th>负责人及电话</th><th>主要物资设备情况</th><th>储备地点</th></tr></thead>
+            <tbody>
+              <tr><td>鄂州市市政设施管理处应急抢险救援队</td><td>市城管委</td><td>97</td><td>百子正街4号（市政设施管理处）</td><td>雍松梅<br>13908682666</td><td>排水抢险车4000型2台、排水抢险车2000型1台、龙吸水1000型子母泵车1台、龙吸水1500型排水泵车1台、4寸排水一体泵3台、6寸排水一体泵6台、龙吸水排水车3000型1台、皮卡抢险车1台。</td><td>市政设施管理处应急抢险城南基地</td></tr>
+              <tr><td>鄂州市马龙、狮子口水库防汛抗旱应急抢险队伍</td><td>鄂州市水利和湖泊局</td><td>7</td><td>狮子口水库</td><td>胡志刚<br>13908689315</td><td>抗旱排涝装备设备10余万元。</td><td>马龙、狮子口水库</td></tr>
+              <tr><td>鄂城区防汛抗旱突击队</td><td>鄂城区应急局</td><td>20</td><td>鄂城区明堂后路23号</td><td>李洋<br>18727878115</td><td>协议储备石料200000立方米、编织袋86000条、彩条布21600平方米、桩木3534根、铁锹等160把、救生衣205件、救生圈70个、清水泵32台、发电机1台、巡堤查险灯具100台套、移动照明灯塔24台、高扬程水泵11台、无人机1台、送水车1台、卫星电话3部、对讲机3部、北斗手持终端7部，重型机械等其他防汛抗旱物资若干，总价值780余万元。</td><td>鄂城区应急物资储备库；鄂州市鄂城区樊口杨湖路众联物流（鄂州）有限公司8号仓库</td></tr>
+              <tr><td>碧石防汛抗旱突击队</td><td>碧石渡镇人民政府</td><td>30</td><td>碧石渡镇人民政府</td><td>尹建熊<br>18971980188</td><td>编织袋5000条、彩条布200平方米、桩木500根、砂石料30立方米、铁锹160把、救生衣200件、救生圈50个、救生绳20根、巡堤查险灯具50台套、清水泵8台、对讲机3部，其他防汛抗旱物资若干，总价值80余万元。</td><td>碧石渡镇人民政府应急物资储备库</td></tr>
+              <tr><td>杜山镇防汛抗旱突击队</td><td>杜山镇人民政府</td><td>30</td><td>杜山镇人民政府</td><td>王扶苏<br>19172802201</td><td>编织袋85000条、桩木1500根、铁锹等57套、救生衣72件、救生圈41个、救生绳27根、清水泵7台、巡堤查险灯具4台套、对讲机2部，其他防汛抗旱物资若干，总价值70余万元。</td><td>杜山镇人民政府应急物资储备库</td></tr>
+              <tr><td>樊口防汛抗旱突击队</td><td>樊口街道办事处</td><td>30</td><td>樊口街道办事处</td><td>李超<br>13986133792</td><td>编织袋7000条、彩条布180平方米、桩木680根、砂石料储备协议10000立方米、铁锹30套、橡皮艇1艘、救生衣70件、救生圈30个、救生绳27根、巡堤查险灯具24台套、高扬程水泵1台、对讲机3部，其他防汛抗旱物资若干，总价值90余万元。</td><td>樊口街道办事处应急物资储备库</td></tr>
+              <tr><td>凤凰防汛抗旱突击队</td><td>凤凰街道办事处</td><td>30</td><td>凤凰街道办事处</td><td>王汉桥<br>19908680652</td><td>编织袋2000条、桩木200根、砂石料5立方米、铁锹100把、橡皮艇1艘、救生衣60件、救生圈30个、救生绳27根、救生杆200根、巡堤查险灯具25台套、高扬程水泵3台、储水设备3个、对讲机5部，其他防汛抗旱物资若干，总价值50余万元。</td><td>凤凰街道办事处应急物资储备库</td></tr>
+              <tr><td>古楼防汛抗旱突击队</td><td>古楼街道办事处</td><td>30</td><td>古楼街道办事处</td><td>祝细林<br>18189762196</td><td>编织袋400条、铅丝1卷、救生衣70件、救生圈70个、橡皮艇1艘、救生绳2根、救生杆2根、对讲机3部，其他防汛抗旱物资若干，总价值30余万元。</td><td>古楼街道办事处应急物资储备库</td></tr>
+              <tr><td>花湖防汛抗旱突击队</td><td>花湖镇人民政府</td><td>30</td><td>花湖镇人民政府</td><td>阮利春<br>13886346268</td><td>桩木1000根、块石协议储备5000立方米、砂石料协议储备1000立方米、铁锹等150套、橡皮艇1艘、救生衣60件、救生圈30个、救生绳50根、巡堤查险灯具100台套、污水泵5台、高扬程水泵2台、储水设备6个、对讲机等4部，其他防汛抗旱物资若干，总价值130余万元。</td><td>花湖镇人民政府应急物资储备库</td></tr>
+              <tr><td>汀祖镇防汛抗旱突击队</td><td>汀祖镇人民政府</td><td>30</td><td>汀祖镇人民政府</td><td>刘水清<br>13476461216</td><td>编织袋10000条、桩木600根、砂石料3000立方米、铁锹100把、救生衣30件、救生圈100个、清水泵8台、无人机1台、巡堤查险灯具50台套、其他防汛抗旱物资若干，总价值140余万元。</td><td>汀祖镇人民政府应急物资储备库</td></tr>
+            </tbody>
+          </table>
         </div>
-        <div class="extreme-type-list" id="extremeTypeList"></div>
       </div>
+      <aside class="extreme-rescue-drawer" id="rescueDrawer" aria-hidden="true">
+        <div class="extreme-rescue-drawer-head"><b>救援力量检索</b><span id="rescueDrawerCount"></span><button id="rescueDrawerClose" type="button" aria-label="关闭">×</button></div>
+        <div class="extreme-rescue-search-wrap" style="padding:8px 12px 0"><input class="extreme-rescue-search" id="rescueSearch" type="search" placeholder="搜索队伍、区域或物资装备" style="margin-top:0"></div>
+        <div class="extreme-rescue-list" id="rescueList"></div>
+      </aside>
       <div class="extreme-panel extreme-plan-panel">
-        <div class="extreme-panel-title">应急预案</div>
+        <div class="extreme-panel-title">极端天气类型与应急预案</div>
+        <button id="extremeStandardBtn" type="button" hidden aria-hidden="true" tabindex="-1"></button>
+        <div class="extreme-type-list" id="extremeTypeList"></div>
+        <div class="extreme-plan-section-title">应急预案</div>
         <div class="extreme-plan-body" id="extremePlanDetail"></div>
       </div>
       <section class="extreme-standard-modal" id="extremeStandardModal" aria-hidden="true">
@@ -10541,6 +10807,16 @@
     const extremeStandardBtn = document.getElementById("extremeStandardBtn");
     const extremeStandardModal = document.getElementById("extremeStandardModal");
     const extremeStandardClose = document.getElementById("extremeStandardClose");
+    const rescueSearch = document.getElementById("rescueSearch");
+    const rescueDrawer = document.getElementById("rescueDrawer");
+    const rescueDrawerClose = document.getElementById("rescueDrawerClose");
+    const rescueDrawerCount = document.getElementById("rescueDrawerCount");
+    const rescueList = document.getElementById("rescueList");
+    const rescueTeams = Array.from(document.querySelectorAll(".extreme-rescue-table tbody tr")).map((row, index) => {
+      const cells = Array.from(row.cells).map(cell => cell.innerText.replace(/\s+/g, " ").trim());
+      return { index, name: cells[0], department: cells[1], people: Number(cells[2]) || 0, office: cells[3], leader: cells[4], equipment: cells[5], storage: cells[6] };
+    });
+    let activeRescueTeam = null;
     const gasScreen = document.getElementById("gasScreen");
     const gasBackBtn = document.getElementById("gasBackBtn");
     const gasVideoTabs = document.querySelector(".gas-video-tabs");
@@ -11478,6 +11754,7 @@
 
     function renderExtremePlan() {
       const plan = weatherPlans[activeWeatherPlan];
+      document.querySelector(".extreme-plan-section-title").textContent = `${plan.name}应急预案`;
       extremeTypeList.innerHTML = weatherPlans.map((item, index) => `
         <button class="extreme-type-item ${index === activeWeatherPlan ? "is-active" : ""}" type="button" data-extreme-plan-index="${index}">
           ${item.name}
@@ -11485,7 +11762,6 @@
         </button>
       `).join("");
       extremePlanDetail.innerHTML = `
-        <div class="extreme-section-title">${plan.name}应急预案</div>
         <p>${plan.source}</p>
         ${activeWeatherPlan < 6 ? `
           <div class="extreme-section-title">气象灾害应急指挥体系</div>
@@ -11543,6 +11819,39 @@
       extremeScreen.setAttribute("aria-hidden", "false");
     }
 
+    function renderRescueList(keyword = "") {
+      const query = keyword.trim().toLowerCase();
+      const rows = rescueTeams.filter(team => !query || Object.values(team).join(" ").toLowerCase().includes(query));
+      rescueDrawerCount.textContent = `匹配 ${rows.length} 支`;
+      rescueList.innerHTML = rows.length ? rows.map(team => `
+        <button class="extreme-rescue-item ${team.index === activeRescueTeam ? "is-active" : ""}" type="button" data-rescue-index="${team.index}">
+          <b>${team.name} · ${team.people} 人</b>
+          <span>${team.department}　${team.office}</span>
+          <span>${team.equipment.slice(0, 52)}${team.equipment.length > 52 ? "…" : ""}</span>
+          <div class="extreme-rescue-detail"><b>负责人：${team.leader}</b><br>储备地点：${team.storage}<br>物资设备：${team.equipment}</div>
+        </button>
+      `).join("") : `<div class="extreme-history-empty">未找到匹配的救援队伍</div>`;
+    }
+    function openRescueDrawer(keyword = "") {
+      rescueSearch.value = keyword;
+      activeRescueTeam = null;
+      renderRescueList(keyword);
+      rescueDrawer.classList.add("is-open");
+      rescueDrawer.setAttribute("aria-hidden", "false");
+    }
+    function closeRescueDrawer() {
+      rescueDrawer.classList.remove("is-open");
+      rescueDrawer.setAttribute("aria-hidden", "true");
+    }
+    function initRescueOverview() {
+      document.getElementById("rescueTeamCount").textContent = rescueTeams.length;
+      const rescueMedicalCount = document.getElementById("rescueMedicalCount");
+      if (rescueMedicalCount) rescueMedicalCount.textContent = "—";
+      const rescuePumpCount = document.getElementById("rescuePumpCount");
+      if (rescuePumpCount) rescuePumpCount.textContent = rescueTeams.filter(team => /泵/.test(team.equipment)).length;
+      document.getElementById("rescueDroneCount").textContent = rescueTeams.filter(team => /无人机/.test(team.equipment)).length;
+    }
+
     function openExtremeStandardModal() {
       extremeStandardModal.classList.add("is-open");
       extremeStandardModal.setAttribute("aria-hidden", "false");
@@ -11557,6 +11866,7 @@
 
     function closeExtremeScreen() {
       closeExtremeStandardModal();
+      closeRescueDrawer();
       screenEl.classList.remove("extreme-active");
       extremeScreen.setAttribute("aria-hidden", "true");
       mainTitle.textContent = "鄂州市城市安全风险监测预警平台";
@@ -12908,6 +13218,19 @@
         activeWeatherPlan = Number(button.dataset.extremePlanIndex);
         renderExtremePlan();
       });
+      document.querySelectorAll("[data-rescue-filter]").forEach(button => {
+        button.addEventListener("click", () => openRescueDrawer(button.dataset.rescueFilter === "all" ? "" : button.dataset.rescueFilter));
+      });
+      rescueSearch.addEventListener("input", () => openRescueDrawer(rescueSearch.value));
+      rescueDrawerClose.addEventListener("click", closeRescueDrawer);
+      rescueList.addEventListener("click", event => {
+        const row = event.target.closest("[data-rescue-index]");
+        if (!row) return;
+        const index = Number(row.dataset.rescueIndex);
+        activeRescueTeam = activeRescueTeam === index ? null : index;
+        renderRescueList(rescueSearch.value);
+      });
+      initRescueOverview();
       weatherHistoryList.addEventListener("click", event => {
         const button = event.target.closest("[data-weather-index]");
         if (!button) return;
@@ -14082,6 +14405,106 @@ if (document.getElementById("ff-forestOverlayBack")) {
     if (cdBackBtn) cdBackBtn.addEventListener("click", closeCityDetail);
 
 })();
+  </script>
+  <script>
+    (() => {
+      const search = document.getElementById("rescueSearch"), drawer = document.getElementById("rescueDrawer"), list = document.getElementById("rescueList"), count = document.getElementById("rescueDrawerCount");
+      const teams = Array.from(document.querySelectorAll(".extreme-rescue-table tbody tr")).map((row, index) => { const c = Array.from(row.cells).map(cell => cell.textContent.replace(/\s+/g, " ").trim()); return { index, name:c[0], department:c[1], people:+c[2]||0, office:c[3], leader:c[4], equipment:c[5], storage:c[6] }; });
+      let active = null;
+      const render = keyword => { const q = keyword.trim().toLowerCase(), rows = teams.filter(team => !q || Object.values(team).join(" ").toLowerCase().includes(q)); count.textContent = `匹配 ${rows.length} 支`; list.innerHTML = rows.length ? rows.map(team => `<button class="extreme-rescue-item ${team.index === active ? "is-active" : ""}" type="button" data-rescue-index="${team.index}"><b>${team.name} · <i class="rescue-emphasis">${team.people} 人</i></b><span>${team.department}　${team.office}</span><span>负责人：${team.leader}</span><div class="extreme-rescue-detail">储备地点：${team.storage}<br>物资设备：${team.equipment}</div></button>`).join("") : '<div class="extreme-history-empty">未找到匹配的救援队伍</div>'; };
+      const open = keyword => { search.value = keyword; active = null; render(keyword); drawer.classList.add("is-open"); drawer.setAttribute("aria-hidden", "false"); };
+      document.getElementById("rescueTeamCount").textContent = teams.length;
+      const medicalCount = document.getElementById("rescueMedicalCount");
+      if (medicalCount) medicalCount.textContent = "—";
+      const sumEquipment = keyword => teams.reduce((total, team) => total + Array.from(team.equipment.matchAll(new RegExp(`${keyword}[^，。；]*?(\\d+)\\s*(?:台|艘|立方米)`, "g"))).reduce((sum, match) => sum + Number(match[1]), 0), 0);
+      const sandCount = document.getElementById("rescueSandCount"); if (sandCount) sandCount.textContent = `${sumEquipment("砂石料")}m³`;
+      const pumpCount = document.getElementById("rescuePumpCount"); if (pumpCount) pumpCount.textContent = sumEquipment("泵");
+      const woodCount = document.getElementById("rescueWoodCount"); if (woodCount) woodCount.textContent = teams.reduce((total, team) => total + Array.from(team.equipment.matchAll(/桩木\s*(\d+)\s*根/g)).reduce((sum, match) => sum + Number(match[1]), 0), 0);
+      document.querySelectorAll("[data-rescue-filter]").forEach(button => button.addEventListener("click", () => open(button.dataset.rescueFilter === "all" ? "" : button.dataset.rescueFilter)));
+      search.addEventListener("input", () => open(search.value));
+      document.getElementById("rescueDrawerClose").addEventListener("click", () => { drawer.classList.remove("is-open"); drawer.setAttribute("aria-hidden", "true"); });
+      list.addEventListener("click", event => { const item = event.target.closest("[data-rescue-index]"); if (!item) return; active = active === +item.dataset.rescueIndex ? null : +item.dataset.rescueIndex; render(search.value); });
+    })();
+  </script>
+  <script>
+    (() => {
+      const drawer = document.getElementById("rescueDrawer");
+      const handle = drawer.querySelector(".extreme-rescue-drawer-head");
+      let startX = 0, startY = 0, left = 0, top = 0;
+      handle.addEventListener("pointerdown", event => {
+        if (event.target.closest("button")) return;
+        startX = event.clientX; startY = event.clientY;
+        const rect = drawer.getBoundingClientRect();
+        const host = document.getElementById("extremeScreen").getBoundingClientRect();
+        left = rect.left - host.left; top = rect.top - host.top;
+        drawer.classList.add("is-dragging"); handle.setPointerCapture(event.pointerId);
+      });
+      handle.addEventListener("pointermove", event => {
+        if (!drawer.classList.contains("is-dragging")) return;
+        const host = document.getElementById("extremeScreen").getBoundingClientRect();
+        const nextLeft = Math.max(8, Math.min(host.width - drawer.offsetWidth - 8, left + event.clientX - startX));
+        const nextTop = Math.max(8, Math.min(host.height - drawer.offsetHeight - 8, top + event.clientY - startY));
+        drawer.style.left = `${nextLeft}px`; drawer.style.top = `${nextTop}px`;
+      });
+      ["pointerup", "pointercancel"].forEach(type => handle.addEventListener(type, () => drawer.classList.remove("is-dragging")));
+    })();
+  </script>
+  <script>
+    (() => {
+      const container = document.getElementById("rescueMaterials");
+      const rows = Array.from(document.querySelectorAll(".extreme-rescue-table tbody tr"));
+      ["编织袋", "砂石料", "救生绳", "救生衣", "救生圈"].forEach(name => {
+        const count = rows.filter(row => row.cells[5].innerText.includes(name)).length;
+        const button = document.createElement("button");
+        button.type = "button"; button.dataset.rescueFilter = name;
+        button.innerHTML = `${name}<b>${count} 队</b>`;
+        button.addEventListener("click", () => { const input = document.getElementById("rescueSearch"); input.value = name; input.dispatchEvent(new Event("input")); });
+        container.appendChild(button);
+      });
+    })();
+  </script>
+  <script>
+    document.getElementById("rescueList").addEventListener("click", () => setTimeout(() => {
+      document.querySelectorAll(".extreme-rescue-detail").forEach(detail => {
+        if (detail.dataset.highlighted) return;
+        detail.innerHTML = detail.innerHTML.replace(/(\d+(?:\.\d+)?)/g, "<strong>$1</strong>");
+        detail.dataset.highlighted = "true";
+      });
+    }));
+  </script>
+  <script>
+    (() => {
+      const box = document.getElementById("rescueMaterials");
+      const equipment = Array.from(document.querySelectorAll(".extreme-rescue-table tbody tr")).map(row => row.cells[5].textContent);
+      const sum = pattern => equipment.reduce((total, text) => total + Array.from(text.matchAll(pattern)).reduce((value, match) => value + Number(match[1]), 0), 0);
+      const items = [
+        ["编织袋", sum(/编织袋\s*(\d+)\s*条/g), "条"],
+        ["砂石储备", sum(/砂石料(?:协议储备)?\s*(\d+)\s*立方米/g), "m³"],
+        ["救生绳", sum(/救生绳\s*(\d+)\s*根/g), "根"],
+        ["救生衣", sum(/救生衣\s*(\d+)\s*件/g), "件"],
+        ["救生圈", sum(/救生圈\s*(\d+)\s*个/g), "个"],
+        ["水泵", sum(/(?:高扬程水泵|污水泵|排水泵|潜水泵|水泵)\s*(\d+)\s*台/g), "台"],
+        ["清水泵", sum(/清水泵\s*(\d+)\s*台/g), "台"],
+        ["发电机", sum(/发电机(?:组)?\s*(\d+)\s*台/g), "台"],
+        ["移动照明", sum(/移动照明(?:灯塔)?\s*(\d+)\s*台(?:套)?/g), "台"],
+        ["橡皮艇", sum(/橡皮艇\s*(\d+)\s*艘/g), "艘"]
+      ];
+      box.innerHTML = items.map(([name, value, unit]) => `<button type="button" data-rescue-filter="${name.replace("储备", "")}">${name}<b>${value}${unit}</b></button>`).join("");
+      box.querySelectorAll("button").forEach(button => button.addEventListener("click", () => { const input = document.getElementById("rescueSearch"); input.value = button.dataset.rescueFilter; input.dispatchEvent(new Event("input")); }));
+    })();
+  </script>
+  <script>
+    (() => {
+      const list = document.getElementById("rescueList");
+      const label = item => /公司|企业|集团|电信/.test(item) ? ["企业", "company"] : /蓝天|民兵/.test(item) ? ["其他", "other"] : ["事业单位", "public"];
+      const apply = () => list.querySelectorAll(".extreme-rescue-item > b").forEach(title => {
+        if (title.querySelector(".rescue-kind")) return;
+        const [text, type] = label(title.textContent);
+        title.insertAdjacentHTML("beforeend", `<i class="rescue-kind ${type}">${text}</i>`);
+      });
+      new MutationObserver(apply).observe(list, { childList: true });
+      apply();
+    })();
   </script>
 </body>
 </html>
