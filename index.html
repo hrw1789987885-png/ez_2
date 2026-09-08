@@ -9636,6 +9636,39 @@
       color: #315f87;
       font-size: 12px;
     }
+    .portal-metric.portal-vitals-tile {
+      z-index: 5;
+      min-height: 116px;
+      align-content: center;
+      margin-block: -10px;
+      padding: 16px clamp(18px, 2vw, 34px);
+      border-radius: 10px;
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(8, 119, 196, .98), rgba(19, 132, 218, .96)),
+        linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,0));
+      box-shadow: 0 22px 42px -24px rgba(5, 57, 104, .72);
+    }
+    .portal-metric.portal-vitals-tile::before,
+    .portal-metric.portal-vitals-tile + .portal-metric::before { display: none; }
+    .portal-metric.portal-vitals-tile::after {
+      content: "";
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      top: 12px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .72), transparent);
+    }
+    .portal-metric.portal-vitals-tile b {
+      color: #fff;
+      font-size: clamp(19px, 1.45vw, 22px);
+      text-shadow: 0 1px 2px rgba(3, 43, 85, .22);
+    }
+    .portal-metric.portal-vitals-tile span {
+      color: rgba(239, 249, 255, .92);
+      font-weight: 800;
+    }
     .portal-metric.portal-tile.has-submenu {
       z-index: 6;
       cursor: default;
@@ -10093,13 +10126,6 @@
       color: #0877c4;
       background: rgba(225, 242, 255, .96);
     }
-    .system-note {
-      margin: 16px 0 0;
-      color: #5a7895;
-      font-size: 12px;
-      line-height: 1.7;
-      font-weight: 700;
-    }
     .system-content {
       display: grid;
       grid-template-rows: auto auto minmax(0, 1fr);
@@ -10334,6 +10360,7 @@
       font-size: 12px;
       font-weight: 800;
     }
+    .scene-config-feedback:empty { display: none; }
     .scene-config-list {
       min-height: 0;
       overflow: auto;
@@ -10443,6 +10470,7 @@
       .portal-metrics { left: 24px; right: 24px; grid-template-columns: repeat(2, 1fr); }
       .portal-metric:nth-child(3)::before,
       .portal-metric:nth-child(5)::before { display: none; }
+      .portal-metric.portal-vitals-tile { grid-column: 1 / -1; margin-block: 0; }
       .scene-shell { grid-template-columns: 240px minmax(0, 1fr); padding-inline: 18px; }
       .system-shell { grid-template-columns: 220px minmax(0, 1fr); padding-inline: 18px; }
       .scene-hero { grid-template-columns: 1fr; align-items: start; }
@@ -10468,6 +10496,7 @@
       .portal-metric { gap: 9px; padding: 12px; }
       .portal-metric strong { font-size: 28px; }
       .portal-metric b { font-size: 13px; }
+      .portal-metric.portal-vitals-tile { min-height: 86px; }
       .scene-screen,
       .system-screen { overflow-y: auto; }
       .scene-screen::before,
@@ -10550,6 +10579,7 @@
     <div class="portal-metrics" aria-label="门户业务板块">
       <div class="portal-metric portal-tile"><b>感知事件</b><span>多源事件汇聚</span></div>
       <div class="portal-metric portal-tile"><b>预警事件</b><span>风险预警处置</span></div>
+      <div class="portal-metric portal-tile portal-vitals-tile"><b>城市体征</b><span>城市运行体征</span></div>
       <div class="portal-metric portal-tile"><b>推演事件</b><span>态势推演研判</span></div>
       <div class="portal-metric portal-tile has-submenu" tabindex="0" aria-haspopup="menu">
         <b>指挥调度</b><span>联动调度闭环</span>
@@ -10564,7 +10594,6 @@
           <button type="button" role="menuitem" data-portal-empty="汇聚事件管理">汇聚事件管理</button>
         </div>
       </div>
-      <div class="portal-metric portal-tile"><b>城市体征</b><span>城市运行体征</span></div>
     </div>
   </section>
 
@@ -10647,9 +10676,8 @@
         <span class="scene-kicker">SYSTEM MANAGEMENT</span>
         <h2>系统管理</h2>
         <div class="system-menu">
-          <button class="is-active" type="button" aria-current="page"><span>场景配置</span><b>联动</b></button>
+          <button class="is-active" type="button" aria-current="page"><span>场景配置</span></button>
         </div>
-        <p class="system-note">在这里维护场景名称、免密链接、责任单位、描述、属性和类型；上架后的场景会同步展示到场景建设。</p>
       </aside>
 
       <section class="system-content" aria-label="场景配置">
@@ -10657,7 +10685,6 @@
           <div>
             <span class="scene-kicker">场景配置</span>
             <h2 tabindex="-1">场景上架与配置</h2>
-            <p>统一维护城市安全风险场景清单，支持新增、编辑、上架和下架，配置结果与场景建设页面实时联动。</p>
           </div>
           <div class="system-stats" aria-label="场景配置统计">
             <div class="system-stat"><strong id="sceneConfigTotal">0</strong><span>全部场景</span></div>
@@ -10669,7 +10696,7 @@
         <div class="scene-config-toolbar">
           <div>
             <strong>当前场景列表</strong>
-            <span class="scene-config-feedback" id="sceneConfigFeedback" role="status" aria-live="polite">默认展示已有场景，可新增、编辑或调整上下架状态。</span>
+            <span class="scene-config-feedback" id="sceneConfigFeedback" role="status" aria-live="polite"></span>
           </div>
           <button type="button" id="sceneConfigAdd">新增场景</button>
         </div>
@@ -16461,7 +16488,7 @@ if (document.getElementById("ff-forestOverlayBack")) {
       }));
       sceneConfigAdd?.addEventListener("click", () => {
         clearSceneConfigForm();
-        sceneConfigFeedback.textContent = "正在新增场景。";
+        sceneConfigFeedback.textContent = "";
         openSceneConfigModal();
       });
       document.getElementById("sceneModeFilters")?.addEventListener("click", event => {
