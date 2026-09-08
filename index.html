@@ -9369,6 +9369,7 @@
     }
     .portal-screen[hidden],
     .scene-screen[hidden],
+    .system-screen[hidden],
     .screen.dashboard-hidden { display: none !important; }
     .portal-screen::before {
       content: "";
@@ -9695,7 +9696,8 @@
       outline: 2px solid rgba(8, 119, 196, .26);
       outline-offset: 1px;
     }
-    .scene-screen {
+    .scene-screen,
+    .system-screen {
       position: fixed;
       inset: 0;
       z-index: 10000;
@@ -9707,7 +9709,8 @@
         radial-gradient(520px 240px at 78% 12%, rgba(65, 164, 238, .18), transparent 72%),
         linear-gradient(180deg, #f7fbff 0%, #eef6ff 58%, #e7f1fb 100%);
     }
-    .scene-screen::before {
+    .scene-screen::before,
+    .system-screen::before {
       content: "";
       position: absolute;
       inset: 64px 0 auto;
@@ -9992,6 +9995,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
       gap: 10px;
       padding-top: 8px;
       border-top: 1px solid rgba(41, 112, 198, .1);
@@ -10017,6 +10021,400 @@
       font-size: 12px;
       line-height: 1.6;
       text-align: left;
+    }
+    .scene-open-link {
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 9px;
+      border-radius: 6px;
+      color: #fff;
+      background: #0877c4;
+      font-size: 11px;
+      font-weight: 900;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .scene-open-link:hover { background: #065f9c; }
+    .system-shell {
+      position: relative;
+      z-index: 2;
+      height: calc(100dvh - 64px);
+      display: grid;
+      grid-template-columns: 244px minmax(0, 1fr);
+      gap: 18px;
+      padding: 20px clamp(22px, 3vw, 42px) 24px;
+    }
+    .system-sidebar,
+    .system-content {
+      min-height: 0;
+      border: 1px solid rgba(41, 112, 198, .14);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .93);
+      box-shadow: 0 18px 44px -34px rgba(22, 92, 158, .46);
+    }
+    .system-sidebar {
+      padding: 16px;
+      color: #17365d;
+    }
+    .system-sidebar h2,
+    .system-content h2 {
+      margin: 4px 0 0;
+      color: #123c68;
+      letter-spacing: 0;
+    }
+    .system-sidebar h2 { font-size: 22px; line-height: 1.2; }
+    .system-menu {
+      display: grid;
+      gap: 8px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(41, 112, 198, .12);
+    }
+    .system-menu button {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 0 12px;
+      border: 1px solid rgba(41, 112, 198, .13);
+      border-radius: 7px;
+      color: #285b86;
+      background: rgba(246, 251, 255, .82);
+      font-size: 13px;
+      font-weight: 900;
+      text-align: left;
+      cursor: pointer;
+    }
+    .system-menu button.is-active {
+      border-color: rgba(8, 119, 196, .32);
+      color: #0877c4;
+      background: rgba(225, 242, 255, .96);
+    }
+    .system-note {
+      margin: 16px 0 0;
+      color: #5a7895;
+      font-size: 12px;
+      line-height: 1.7;
+      font-weight: 700;
+    }
+    .system-content {
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr);
+      overflow: hidden;
+    }
+    .system-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: end;
+      padding: 18px 20px 16px;
+      border-bottom: 1px solid rgba(41, 112, 198, .12);
+      background:
+        linear-gradient(135deg, rgba(226, 242, 255, .78), rgba(255, 255, 255, .88)),
+        radial-gradient(220px 100px at 100% 0, rgba(8, 119, 196, .14), transparent 72%);
+    }
+    .system-hero h2 {
+      font-size: clamp(22px, 2.1vw, 30px);
+      line-height: 1.18;
+    }
+    .system-hero p {
+      max-width: 70ch;
+      margin: 8px 0 0;
+      color: #496d8e;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .system-stats {
+      display: grid;
+      grid-template-columns: repeat(3, auto);
+      gap: 10px;
+    }
+    .system-stat {
+      min-width: 78px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .84);
+      text-align: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.92);
+    }
+    .system-stat strong {
+      display: block;
+      color: #0877c4;
+      font-size: 22px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .system-stat span {
+      display: block;
+      margin-top: 5px;
+      color: #5b7894;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .scene-config-toolbar {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 0 20px;
+      border-bottom: 1px solid rgba(41, 112, 198, .1);
+      color: #315f87;
+      background: rgba(249, 252, 255, .76);
+    }
+    .scene-config-toolbar strong {
+      display: block;
+      color: #123c68;
+      font-size: 15px;
+      line-height: 1.3;
+    }
+    .scene-config-toolbar span {
+      display: block;
+      margin-top: 3px;
+      color: #5a7895;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .scene-config-toolbar button {
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 14px;
+      border: 1px solid rgba(8, 119, 196, .2);
+      border-radius: 7px;
+      color: #fff;
+      background: #0877c4;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .scene-config-toolbar button:hover { background: #065f9c; }
+    .scene-config-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 10020;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(9, 34, 62, .34);
+      backdrop-filter: blur(6px);
+    }
+    .scene-config-modal[hidden] { display: none !important; }
+    .scene-config-dialog {
+      width: min(880px, calc(100vw - 32px));
+      max-height: calc(100dvh - 48px);
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      overflow: hidden;
+      border: 1px solid rgba(41, 112, 198, .22);
+      border-radius: 8px;
+      background: #f8fcff;
+      box-shadow: 0 28px 70px -36px rgba(10, 47, 86, .8);
+    }
+    .scene-config-dialog-head {
+      min-height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(41, 112, 198, .12);
+      background:
+        linear-gradient(135deg, rgba(226, 242, 255, .82), rgba(255, 255, 255, .9)),
+        radial-gradient(180px 80px at 100% 0, rgba(8, 119, 196, .14), transparent 72%);
+    }
+    .scene-config-dialog-head h3 {
+      margin: 3px 0 0;
+      color: #123c68;
+      font-size: 20px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+    .scene-config-close {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(41, 112, 198, .18);
+      border-radius: 7px;
+      color: #215b9e;
+      background: rgba(255, 255, 255, .9);
+      font-size: 20px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .scene-config-close:hover { background: #fff; border-color: rgba(8, 119, 196, .38); }
+    .scene-config-form {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      padding: 14px 20px 16px;
+      border-bottom: 1px solid rgba(41, 112, 198, .1);
+      background: rgba(249, 252, 255, .78);
+    }
+    .scene-config-dialog .scene-config-form {
+      min-height: 0;
+      overflow: auto;
+      border-bottom: 0;
+      background: transparent;
+    }
+    .scene-config-field {
+      display: grid;
+      gap: 6px;
+      color: #315f87;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .scene-config-field.wide { grid-column: span 2; }
+    .scene-config-field.full { grid-column: 1 / -1; }
+    .scene-config-field input,
+    .scene-config-field select,
+    .scene-config-field textarea {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid rgba(41, 112, 198, .16);
+      border-radius: 7px;
+      color: #17365d;
+      background: rgba(255, 255, 255, .94);
+      font: inherit;
+      font-weight: 700;
+    }
+    .scene-config-field input,
+    .scene-config-field select { height: 36px; padding: 0 10px; }
+    .scene-config-field textarea {
+      min-height: 70px;
+      resize: vertical;
+      padding: 9px 10px;
+      line-height: 1.6;
+    }
+    .scene-config-field input:focus,
+    .scene-config-field select:focus,
+    .scene-config-field textarea:focus {
+      border-color: #0877c4;
+      outline: 2px solid rgba(8, 119, 196, .2);
+      outline-offset: 1px;
+    }
+    .scene-config-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .scene-config-actions button,
+    .scene-config-row button {
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 12px;
+      border: 1px solid rgba(41, 112, 198, .18);
+      border-radius: 7px;
+      color: #215b9e;
+      background: rgba(255, 255, 255, .88);
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .scene-config-actions button.primary {
+      border-color: rgba(8, 119, 196, .2);
+      color: #fff;
+      background: #0877c4;
+    }
+    .scene-config-actions button:hover,
+    .scene-config-row button:hover { border-color: rgba(8, 119, 196, .38); background: rgba(225, 242, 255, .96); }
+    .scene-config-actions button.primary:hover { background: #065f9c; }
+    .scene-config-feedback {
+      color: #496d8e;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .scene-config-list {
+      min-height: 0;
+      overflow: auto;
+      padding: 16px 20px 22px;
+      scrollbar-color: rgba(42, 119, 205, .3) transparent;
+    }
+    .scene-config-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+      font-size: 12px;
+    }
+    .scene-config-table th {
+      padding: 0 10px 2px;
+      color: #5a7895;
+      font-size: 11px;
+      font-weight: 900;
+      text-align: left;
+    }
+    .scene-config-table td {
+      padding: 12px 10px;
+      border-top: 1px solid rgba(41, 112, 198, .1);
+      border-bottom: 1px solid rgba(41, 112, 198, .1);
+      color: #315f87;
+      background: rgba(255, 255, 255, .88);
+      vertical-align: top;
+    }
+    .scene-config-table td:first-child {
+      border-left: 1px solid rgba(41, 112, 198, .1);
+      border-radius: 8px 0 0 8px;
+    }
+    .scene-config-table td:last-child {
+      border-right: 1px solid rgba(41, 112, 198, .1);
+      border-radius: 0 8px 8px 0;
+    }
+    .scene-config-table td .scene-tag + .scene-tag { margin-left: 6px; }
+    .scene-config-row.is-offline td { opacity: .62; background: rgba(245, 249, 253, .84); }
+    .scene-config-name {
+      min-width: 220px;
+      display: grid;
+      gap: 5px;
+    }
+    .scene-config-name b {
+      color: #123c68;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .scene-config-name span {
+      max-width: 58ch;
+      color: #5a7895;
+      line-height: 1.55;
+    }
+    .scene-config-link {
+      max-width: 180px;
+      display: inline-block;
+      overflow: hidden;
+      color: #0877c4;
+      font-weight: 900;
+      text-overflow: ellipsis;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .scene-config-link.missing { color: #7a92a8; }
+    .scene-status {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 8px;
+      border-radius: 6px;
+      color: #0877c4;
+      background: rgba(225, 242, 255, .92);
+      font-weight: 900;
+    }
+    .scene-status.offline {
+      color: #7a92a8;
+      background: rgba(230, 238, 246, .92);
+    }
+    .scene-config-row-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
     }
     .dashboard-return {
       height: 32px;
@@ -10046,9 +10444,13 @@
       .portal-metric:nth-child(3)::before,
       .portal-metric:nth-child(5)::before { display: none; }
       .scene-shell { grid-template-columns: 240px minmax(0, 1fr); padding-inline: 18px; }
+      .system-shell { grid-template-columns: 220px minmax(0, 1fr); padding-inline: 18px; }
       .scene-hero { grid-template-columns: 1fr; align-items: start; }
+      .system-hero { grid-template-columns: 1fr; align-items: start; }
       .scene-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .system-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .scene-card-grid { grid-template-columns: 1fr; }
+      .scene-config-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 620px) {
       .portal-screen { overflow-y: auto; }
@@ -10066,17 +10468,30 @@
       .portal-metric { gap: 9px; padding: 12px; }
       .portal-metric strong { font-size: 28px; }
       .portal-metric b { font-size: 13px; }
-      .scene-screen { overflow-y: auto; }
-      .scene-screen::before { top: 60px; }
+      .scene-screen,
+      .system-screen { overflow-y: auto; }
+      .scene-screen::before,
+      .system-screen::before { top: 60px; }
       .scene-shell { height: auto; min-height: calc(100dvh - 60px); grid-template-columns: 1fr; padding: 14px; }
+      .system-shell { height: auto; min-height: calc(100dvh - 60px); grid-template-columns: 1fr; padding: 14px; }
       .scene-sidebar,
       .scene-content,
       .scene-unit-groups { overflow: visible; }
+      .system-content { overflow: visible; }
       .scene-content { grid-template-rows: auto auto auto; }
+      .system-content { grid-template-rows: auto auto auto; }
       .scene-hero { padding: 16px; }
+      .system-hero { padding: 16px; }
       .scene-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+      .system-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
       .scene-stat { min-width: 0; padding-inline: 8px; }
+      .system-stat { min-width: 0; padding-inline: 8px; }
       .scene-toolbar { padding-inline: 16px; align-items: flex-start; flex-direction: column; justify-content: center; }
+      .scene-config-form { grid-template-columns: 1fr; padding: 14px 16px; }
+      .scene-config-field.wide,
+      .scene-config-field.full { grid-column: 1 / -1; }
+      .scene-config-list { overflow-x: auto; padding: 14px 16px 18px; }
+      .scene-config-table { min-width: 780px; }
       .scene-unit-groups { padding: 14px 16px 18px; }
       .scene-unit-head { grid-template-columns: 1fr; }
       .scene-card-grid { grid-template-columns: 1fr; }
@@ -10107,7 +10522,7 @@
         <button type="button" data-portal-target="scenes">场景建设</button>
         <button type="button" data-portal-empty="数字监管">数字监管</button>
         <button type="button" data-portal-empty="指挥调度">指挥调度</button>
-        <button type="button" data-portal-empty="系统管理">系统管理</button>
+        <button type="button" data-portal-target="system">系统管理</button>
       </nav>
       <div class="portal-user" aria-label="当前用户：管理用户">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 19c.8-4 3.2-6 7-6s6.2 2 7 6"/></svg>
@@ -10164,7 +10579,7 @@
         <button class="is-active" type="button" data-portal-target="scenes" aria-current="page">场景建设</button>
         <button type="button" data-portal-empty="数字监管">数字监管</button>
         <button type="button" data-portal-empty="指挥调度">指挥调度</button>
-        <button type="button" data-portal-empty="系统管理">系统管理</button>
+        <button type="button" data-portal-target="system">系统管理</button>
       </nav>
       <div class="portal-user" aria-label="当前用户：管理用户">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 19c.8-4 3.2-6 7-6s6.2 2 7 6"/></svg>
@@ -10191,7 +10606,7 @@
           <div>
             <span class="scene-kicker">按责任单位分组</span>
             <h2 tabindex="-1">城市安全风险场景建设清单</h2>
-            <p>围绕城市生命线、公共安全、生产安全、自然灾害和其它重点场景，按责任单位归集监测预警、分析研判与处置协同任务。</p>
+            <p>围绕城市生命线、公共安全、生产安全、自然灾害和其他重点场景，按责任单位归集监测预警、分析研判与处置协同任务。</p>
           </div>
           <div class="scene-stats" aria-label="场景统计">
             <div class="scene-stat"><strong id="sceneStatTotal">0</strong><span>建设场景</span></div>
@@ -10204,6 +10619,123 @@
           <span id="sceneViewMeta">按责任单位分组展示</span>
         </div>
         <div class="scene-unit-groups" id="sceneUnitGroups"></div>
+      </section>
+    </div>
+  </section>
+
+  <section class="system-screen" id="systemScreen" aria-label="系统管理" hidden>
+    <header class="portal-header">
+      <h1 class="portal-brand">数字鄂州一张图</h1>
+      <nav class="portal-nav" aria-label="系统管理主导航">
+        <button type="button" data-portal-home>首页</button>
+        <button type="button" data-portal-target="dashboard">驾驶舱</button>
+        <button type="button" data-portal-empty="全景图">全景图</button>
+        <button type="button" data-portal-empty="智能空间">智能空间</button>
+        <button type="button" data-portal-target="scenes">场景建设</button>
+        <button type="button" data-portal-empty="数字监管">数字监管</button>
+        <button type="button" data-portal-empty="指挥调度">指挥调度</button>
+        <button class="is-active" type="button" data-portal-target="system" aria-current="page">系统管理</button>
+      </nav>
+      <div class="portal-user" aria-label="当前用户：管理用户">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 19c.8-4 3.2-6 7-6s6.2 2 7 6"/></svg>
+        <span>管理用户</span>
+      </div>
+    </header>
+
+    <div class="system-shell">
+      <aside class="system-sidebar" aria-label="系统管理菜单">
+        <span class="scene-kicker">SYSTEM MANAGEMENT</span>
+        <h2>系统管理</h2>
+        <div class="system-menu">
+          <button class="is-active" type="button" aria-current="page"><span>场景配置</span><b>联动</b></button>
+        </div>
+        <p class="system-note">在这里维护场景名称、免密链接、责任单位、描述、属性和类型；上架后的场景会同步展示到场景建设。</p>
+      </aside>
+
+      <section class="system-content" aria-label="场景配置">
+        <div class="system-hero">
+          <div>
+            <span class="scene-kicker">场景配置</span>
+            <h2 tabindex="-1">场景上架与配置</h2>
+            <p>统一维护城市安全风险场景清单，支持新增、编辑、上架和下架，配置结果与场景建设页面实时联动。</p>
+          </div>
+          <div class="system-stats" aria-label="场景配置统计">
+            <div class="system-stat"><strong id="sceneConfigTotal">0</strong><span>全部场景</span></div>
+            <div class="system-stat"><strong id="sceneConfigOnline">0</strong><span>已上架</span></div>
+            <div class="system-stat"><strong id="sceneConfigOffline">0</strong><span>已下架</span></div>
+          </div>
+        </div>
+
+        <div class="scene-config-toolbar">
+          <div>
+            <strong>当前场景列表</strong>
+            <span class="scene-config-feedback" id="sceneConfigFeedback" role="status" aria-live="polite">默认展示已有场景，可新增、编辑或调整上下架状态。</span>
+          </div>
+          <button type="button" id="sceneConfigAdd">新增场景</button>
+        </div>
+
+        <div class="scene-config-list" aria-label="当前场景列表">
+          <table class="scene-config-table">
+            <thead>
+              <tr>
+                <th>场景</th>
+                <th>属性 / 类型</th>
+                <th>责任单位</th>
+                <th>免密链接</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="sceneConfigRows"></tbody>
+          </table>
+        </div>
+
+        <div class="scene-config-modal" id="sceneConfigModal" role="dialog" aria-modal="true" aria-labelledby="sceneConfigModalTitle" hidden>
+          <div class="scene-config-dialog">
+            <div class="scene-config-dialog-head">
+              <div>
+                <span class="scene-kicker">场景配置</span>
+                <h3 id="sceneConfigModalTitle">新增场景</h3>
+              </div>
+              <button class="scene-config-close" id="sceneConfigClose" type="button" aria-label="关闭场景配置弹窗">×</button>
+            </div>
+            <form class="scene-config-form" id="sceneConfigForm">
+              <input type="hidden" id="sceneConfigId">
+              <label class="scene-config-field wide">名称
+                <input id="sceneConfigName" type="text" required placeholder="请输入场景名称">
+              </label>
+              <label class="scene-config-field wide">免密链接
+                <input id="sceneConfigLink" type="text" placeholder="https:// 或内网地址">
+              </label>
+              <label class="scene-config-field wide">场景责任单位
+                <input id="sceneConfigUnits" type="text" required placeholder="多个单位用顿号或逗号分隔">
+              </label>
+              <label class="scene-config-field">属性
+                <select id="sceneConfigLevel" required>
+                  <option value="市级分类">市级</option>
+                  <option value="省级分类">省级</option>
+                  <option value="自建系统">自建</option>
+                </select>
+              </label>
+              <label class="scene-config-field">类型
+                <select id="sceneConfigCategory" required>
+                  <option value="城市生命线工程">城市生命线工程</option>
+                  <option value="公共安全">公共安全</option>
+                  <option value="生产安全">生产安全</option>
+                  <option value="自然灾害">自然灾害</option>
+                  <option value="其他">其他</option>
+                </select>
+              </label>
+              <label class="scene-config-field full">场景描述
+                <textarea id="sceneConfigDescription" required placeholder="请输入场景监测、研判和预警说明"></textarea>
+              </label>
+              <div class="scene-config-actions">
+                <button class="primary" type="submit" id="sceneConfigSubmit">保存并上架</button>
+                <button type="button" id="sceneConfigClear">清空</button>
+              </div>
+            </form>
+          </div>
+        </div>
       </section>
     </div>
   </section>
@@ -15642,11 +16174,12 @@ if (document.getElementById("ff-forestOverlayBack")) {
     (() => {
       const portal = document.getElementById("portalScreen");
       const scene = document.getElementById("sceneScreen");
+      const system = document.getElementById("systemScreen");
       const dashboard = document.getElementById("dashboardScreen");
       const status = document.getElementById("portalStatus");
       const enterDashboardBtn = document.getElementById("enterDashboardBtn");
       const dashboardReturnBtn = document.getElementById("dashboardReturnBtn");
-      const sceneData = [
+      let sceneData = [
         { level: "市级分类", category: "城市生命线工程", title: "燃气管线泄漏爆炸风险", units: ["市住房和城市更新局"], description: "监测报警后推送权属单位，依托监测数据溯源锁定泄漏点，模拟燃气扩散范围，研判事故类型，结合周边设施、危险源评估影响，分级预警，并探索可燃气体爆炸灾害链分析。" },
         { level: "自建系统", category: "城市生命线工程", title: "餐饮场所燃气泄漏爆炸风险", units: ["市住房和城市更新局", "市消防救援支队"], description: "可燃气体监测报警后第一时间通知场所相关人员。结合气象、建筑、人口等信息开展扩散分析，研判泄漏扩散规律及闪爆、火灾影响范围与损失，及时向公众及相关单位发布预警。" },
         { level: "市级分类", category: "城市生命线工程", title: "桥梁运行安全风险", units: ["市城管委"], description: "位移、应变、裂缝等监测参数超限后依规预警，开展数据分析，必要时组织专家研判桥梁安全风险，视情提出桥梁检测、通行管控等处置措施。" },
@@ -15665,7 +16198,7 @@ if (document.getElementById("ff-forestOverlayBack")) {
         { level: "省级分类", category: "自然灾害", title: "森林火灾风险", units: ["市自然资源规划局"], description: "结合气象、地形、植被、可燃物及历史灾情等数据，推演火情蔓延范围与速度，综合周边风险源、防护目标、应急资源等信息研判风险，动态调整预警层级，分级发布预警。" },
         { level: "省级分类", category: "自然灾害", title: "地震地质灾害风险", units: ["市自然资源规划局"], description: "依据震中、震级、烈度及地质构造信息，依托多媒介快速发布地震预警。结合降雨与地质环境，分析监测数据研判地质灾害风险，动态调整并分级发布预警。" },
         { level: "自建系统", category: "自然灾害", title: "极端天气灾害风险（包括台风、冰冻雨雪）", units: ["气象局"], description: "整合气温、大风、强降水、雷电等气象监测与预报数据，结合地形、承灾体、人口分布等信息，研判极端天气发展趋势、影响范围与危害程度，动态评估风险，分级发布预警信息。" },
-        { level: "自建系统", category: "其它", title: "大型活动安保", units: ["市公安局"], description: "整合场地环境、人流监测、安保力量、气象条件等数据，排查踩踏、治安、火灾等隐患，研判事故发生概率、影响范围与危害程度，动态评估风险，分级发布预警信息。" }
+        { level: "自建系统", category: "其他", title: "大型活动安保", units: ["市公安局"], description: "整合场地环境、人流监测、安保力量、气象条件等数据，排查踩踏、治安、火灾等隐患，研判事故发生概率、影响范围与危害程度，动态评估风险，分级发布预警信息。" }
       ];
       const unitDescriptions = {
         "市住房和城市更新局": "牵头房屋建筑、市政管线与工程建设安全场景，统筹权属单位预警闭环。",
@@ -15686,11 +16219,36 @@ if (document.getElementById("ff-forestOverlayBack")) {
       const sceneLevelLabel = item => item.level || "市级分类";
       const unique = values => Array.from(new Set(values));
       const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[char]));
+      const sceneStorageKey = "ezhou-scene-config-items";
+      const parseSceneUnits = value => String(value || "").split(/[、,，;；]/).map(item => item.trim()).filter(Boolean);
+      const safeSceneLink = value => {
+        const link = String(value || "").trim();
+        return /^javascript:/i.test(link) ? "" : link;
+      };
+      const normalizeSceneItem = (item, index) => ({
+        id: item.id || `scene-${index + 1}`,
+        title: item.title || item.name || "未命名场景",
+        link: safeSceneLink(item.link || ""),
+        units: Array.isArray(item.units) ? item.units.filter(Boolean) : parseSceneUnits(item.units),
+        description: item.description || "",
+        level: item.level || item.attribute || "市级分类",
+        category: item.category === "其它" ? "其他" : (item.category || "其他"),
+        online: item.online !== false
+      });
+      try {
+        const savedScenes = JSON.parse(localStorage.getItem(sceneStorageKey) || "null");
+        sceneData = Array.isArray(savedScenes) && savedScenes.length ? savedScenes : sceneData;
+      } catch (_) {}
+      sceneData = sceneData.map(normalizeSceneItem);
+      const saveSceneData = () => {
+        try { localStorage.setItem(sceneStorageKey, JSON.stringify(sceneData)); } catch (_) {}
+      };
+      const activeScenes = () => sceneData.filter(item => item.online !== false);
       const sceneLabel = () => {
         if (sceneState.value !== "all") return `${sceneState.mode} · ${sceneState.value}`;
         return sceneState.mode === "场景大类" ? "场景大类" : `${sceneState.mode} · 责任单位`;
       };
-      const filteredScenes = () => sceneData.filter(item => {
+      const filteredScenes = () => activeScenes().filter(item => {
         if (sceneState.mode === "场景大类") {
           return sceneState.value === "all" || item.category === sceneState.value;
         }
@@ -15700,17 +16258,18 @@ if (document.getElementById("ff-forestOverlayBack")) {
         const modeHost = document.getElementById("sceneModeFilters");
         const valueHost = document.getElementById("sceneValueFilters");
         const valueTitle = document.getElementById("sceneValueTitle");
+        const scenesForFilters = activeScenes();
         const levelCounts = ["省级分类", "市级分类", "自建系统"].reduce((map, level) => {
-          map[level] = sceneData.filter(item => sceneLevelLabel(item) === level).length;
+          map[level] = scenesForFilters.filter(item => sceneLevelLabel(item) === level).length;
           return map;
         }, {});
-        const categories = unique(sceneData.map(item => item.category));
-        const countForMode = mode => mode === "场景大类" ? sceneData.length : levelCounts[mode];
+        const categories = unique(scenesForFilters.map(item => item.category));
+        const countForMode = mode => mode === "场景大类" ? scenesForFilters.length : levelCounts[mode];
         const filterButton = (type, value, label, count, active) => `<button class="scene-filter ${active ? "is-active" : ""}" type="button" data-scene-${type}="${escapeHtml(value)}"><span>${escapeHtml(label)}</span><b>${count}</b></button>`;
         modeHost.innerHTML = sceneModes.map(mode => filterButton("mode", mode, sceneModeLabels[mode] || mode, countForMode(mode), sceneState.mode === mode)).join("");
         const valueItems = sceneState.mode === "场景大类"
-          ? categories.map(category => ({ label: category, value: category, count: sceneData.filter(item => item.category === category).length }))
-          : unique(sceneData.filter(item => sceneLevelLabel(item) === sceneState.mode).flatMap(item => item.units)).map(unit => ({ label: unit, value: unit, count: sceneData.filter(item => sceneLevelLabel(item) === sceneState.mode && item.units.includes(unit)).length }));
+          ? categories.map(category => ({ label: category, value: category, count: scenesForFilters.filter(item => item.category === category).length }))
+          : unique(scenesForFilters.filter(item => sceneLevelLabel(item) === sceneState.mode).flatMap(item => item.units)).map(unit => ({ label: unit, value: unit, count: scenesForFilters.filter(item => sceneLevelLabel(item) === sceneState.mode && item.units.includes(unit)).length }));
         valueTitle.textContent = sceneState.mode === "场景大类" ? "场景大类" : `${sceneState.mode.replace("分类", "")}责任单位`;
         valueHost.innerHTML = valueItems.length
           ? valueItems.map(item => filterButton("value", item.value, item.label, item.count, sceneState.value === item.value)).join("")
@@ -15727,8 +16286,9 @@ if (document.getElementById("ff-forestOverlayBack")) {
             grouped.get(unit).push(item);
           });
         });
-        document.getElementById("sceneStatTotal").textContent = sceneData.length;
-        document.getElementById("sceneStatUnits").textContent = unique(sceneData.flatMap(item => item.units)).length;
+        const scenesForStats = activeScenes();
+        document.getElementById("sceneStatTotal").textContent = scenesForStats.length;
+        document.getElementById("sceneStatUnits").textContent = unique(scenesForStats.flatMap(item => item.units)).length;
         document.getElementById("sceneStatShown").textContent = scenes.length;
         document.getElementById("sceneViewTitle").textContent = sceneLabel();
         document.getElementById("sceneViewMeta").textContent = grouped.size ? `当前按 ${grouped.size} 个责任单位展示` : "当前分类暂无匹配场景";
@@ -15748,7 +16308,7 @@ if (document.getElementById("ff-forestOverlayBack")) {
                   <div class="scene-card-top"><span class="scene-tag">${escapeHtml(item.category)}</span><span class="scene-tag level">${escapeHtml(sceneLevelLabel(item))}</span></div>
                   <h4>${escapeHtml(item.title)}</h4>
                   <p>${escapeHtml(item.description)}</p>
-                  <div class="scene-card-foot"><span>责任单位</span><b>${escapeHtml(item.units.join("、"))}</b></div>
+                  <div class="scene-card-foot"><span>责任单位</span><b>${escapeHtml(item.units.join("、"))}</b>${item.link ? `<a class="scene-open-link" href="${escapeHtml(item.link)}" target="_blank" rel="noopener">进入场景</a>` : ""}</div>
                 </article>
               `).join("")}
             </div>
@@ -15760,11 +16320,84 @@ if (document.getElementById("ff-forestOverlayBack")) {
         renderSceneCards();
         sceneState.rendered = true;
       };
+      const sceneConfigForm = document.getElementById("sceneConfigForm");
+      const sceneConfigRows = document.getElementById("sceneConfigRows");
+      const sceneConfigAdd = document.getElementById("sceneConfigAdd");
+      const sceneConfigModal = document.getElementById("sceneConfigModal");
+      const sceneConfigClose = document.getElementById("sceneConfigClose");
+      const sceneConfigFeedback = document.getElementById("sceneConfigFeedback");
+      const sceneConfigFields = {
+        id: document.getElementById("sceneConfigId"),
+        title: document.getElementById("sceneConfigName"),
+        link: document.getElementById("sceneConfigLink"),
+        units: document.getElementById("sceneConfigUnits"),
+        level: document.getElementById("sceneConfigLevel"),
+        category: document.getElementById("sceneConfigCategory"),
+        description: document.getElementById("sceneConfigDescription"),
+        submit: document.getElementById("sceneConfigSubmit"),
+        titleText: document.getElementById("sceneConfigModalTitle")
+      };
+      const renderSceneConfig = () => {
+        if (!sceneConfigRows) return;
+        const onlineCount = sceneData.filter(item => item.online !== false).length;
+        document.getElementById("sceneConfigTotal").textContent = sceneData.length;
+        document.getElementById("sceneConfigOnline").textContent = onlineCount;
+        document.getElementById("sceneConfigOffline").textContent = sceneData.length - onlineCount;
+        sceneConfigRows.innerHTML = sceneData.map(item => {
+          const linkHtml = item.link
+            ? `<a class="scene-config-link" href="${escapeHtml(item.link)}" target="_blank" rel="noopener">${escapeHtml(item.link)}</a>`
+            : `<span class="scene-config-link missing">未配置</span>`;
+          return `
+            <tr class="scene-config-row ${item.online === false ? "is-offline" : ""}">
+              <td><div class="scene-config-name"><b>${escapeHtml(item.title)}</b><span>${escapeHtml(item.description)}</span></div></td>
+              <td><span class="scene-tag level">${escapeHtml(sceneModeLabels[item.level] || item.level)}</span><span class="scene-tag">${escapeHtml(item.category)}</span></td>
+              <td>${escapeHtml(item.units.join("、"))}</td>
+              <td>${linkHtml}</td>
+              <td><span class="scene-status ${item.online === false ? "offline" : ""}">${item.online === false ? "已下架" : "已上架"}</span></td>
+              <td><div class="scene-config-row-actions"><button type="button" data-scene-edit="${escapeHtml(item.id)}">编辑</button><button type="button" data-scene-toggle="${escapeHtml(item.id)}">${item.online === false ? "上架" : "下架"}</button></div></td>
+            </tr>
+          `;
+        }).join("");
+      };
+      const clearSceneConfigForm = () => {
+        sceneConfigForm?.reset();
+        if (sceneConfigFields.id) sceneConfigFields.id.value = "";
+        if (sceneConfigFields.level) sceneConfigFields.level.value = "市级分类";
+        if (sceneConfigFields.category) sceneConfigFields.category.value = "城市生命线工程";
+        if (sceneConfigFields.submit) sceneConfigFields.submit.textContent = "保存并上架";
+        if (sceneConfigFields.titleText) sceneConfigFields.titleText.textContent = "新增场景";
+      };
+      const openSceneConfigModal = () => {
+        sceneConfigModal.hidden = false;
+        sceneConfigFields.title.focus();
+      };
+      const closeSceneConfigModal = () => {
+        sceneConfigModal.hidden = true;
+      };
+      const fillSceneConfigForm = item => {
+        sceneConfigFields.id.value = item.id;
+        sceneConfigFields.title.value = item.title;
+        sceneConfigFields.link.value = item.link || "";
+        sceneConfigFields.units.value = item.units.join("、");
+        sceneConfigFields.level.value = item.level;
+        sceneConfigFields.category.value = item.category;
+        sceneConfigFields.description.value = item.description;
+        sceneConfigFields.submit.textContent = "保存配置";
+        sceneConfigFields.titleText.textContent = "编辑场景";
+        sceneConfigFeedback.textContent = `正在编辑：${item.title}`;
+        openSceneConfigModal();
+      };
+      const refreshSceneViews = () => {
+        if (!scene.hidden) renderScene();
+        if (!system.hidden) renderSceneConfig();
+      };
       const openDashboard = () => {
         portal.hidden = true;
         portal.setAttribute("aria-hidden", "true");
         scene.hidden = true;
         scene.setAttribute("aria-hidden", "true");
+        system.hidden = true;
+        system.setAttribute("aria-hidden", "true");
         dashboard.classList.remove("dashboard-hidden");
         dashboard.setAttribute("aria-hidden", "false");
         document.title = "鄂州市城市安全风险监测预警平台";
@@ -15775,6 +16408,8 @@ if (document.getElementById("ff-forestOverlayBack")) {
         dashboard.setAttribute("aria-hidden", "true");
         scene.hidden = true;
         scene.setAttribute("aria-hidden", "true");
+        system.hidden = true;
+        system.setAttribute("aria-hidden", "true");
         portal.hidden = false;
         portal.setAttribute("aria-hidden", "false");
         status.textContent = "";
@@ -15786,24 +16421,49 @@ if (document.getElementById("ff-forestOverlayBack")) {
         dashboard.setAttribute("aria-hidden", "true");
         portal.hidden = true;
         portal.setAttribute("aria-hidden", "true");
+        system.hidden = true;
+        system.setAttribute("aria-hidden", "true");
         scene.hidden = false;
         scene.setAttribute("aria-hidden", "false");
-        if (!sceneState.rendered) renderScene();
+        renderScene();
         document.title = "场景建设 - 数字鄂州一张图";
         scene.querySelector(".scene-hero h2")?.focus?.();
+      };
+      const openSystem = () => {
+        dashboard.classList.add("dashboard-hidden");
+        dashboard.setAttribute("aria-hidden", "true");
+        portal.hidden = true;
+        portal.setAttribute("aria-hidden", "true");
+        scene.hidden = true;
+        scene.setAttribute("aria-hidden", "true");
+        system.hidden = false;
+        system.setAttribute("aria-hidden", "false");
+        clearSceneConfigForm();
+        closeSceneConfigModal();
+        renderSceneConfig();
+        document.title = "场景配置 - 系统管理";
+        system.querySelector(".system-hero h2")?.focus?.();
       };
 
       document.querySelectorAll("[data-portal-target='dashboard']").forEach(button => button.addEventListener("click", openDashboard));
       document.querySelectorAll("[data-portal-target='scenes']").forEach(button => button.addEventListener("click", openScene));
+      document.querySelectorAll("[data-portal-target='system']").forEach(button => button.addEventListener("click", openSystem));
       document.querySelectorAll("[data-portal-home]").forEach(button => button.addEventListener("click", openPortal));
       document.querySelectorAll("[data-portal-empty]").forEach(button => button.addEventListener("click", () => {
         const section = button.dataset.portalEmpty;
         if (!scene.hidden) {
           document.getElementById("sceneViewMeta").textContent = `${section}栏目已预留，后续可在此接入页面内容。`;
+        } else if (!system.hidden) {
+          sceneConfigFeedback.textContent = `${section}栏目已预留，后续可在此接入页面内容。`;
         } else {
           status.textContent = `${section}栏目已预留，后续可在此接入页面内容。`;
         }
       }));
+      sceneConfigAdd?.addEventListener("click", () => {
+        clearSceneConfigForm();
+        sceneConfigFeedback.textContent = "正在新增场景。";
+        openSceneConfigModal();
+      });
       document.getElementById("sceneModeFilters")?.addEventListener("click", event => {
         const button = event.target.closest("[data-scene-mode]");
         if (!button) return;
@@ -15816,6 +16476,66 @@ if (document.getElementById("ff-forestOverlayBack")) {
         if (!button) return;
         sceneState.value = sceneState.value === button.dataset.sceneValue ? "all" : button.dataset.sceneValue;
         renderScene();
+      });
+      sceneConfigForm?.addEventListener("submit", event => {
+        event.preventDefault();
+        const units = parseSceneUnits(sceneConfigFields.units.value);
+        if (!sceneConfigFields.title.value.trim() || !units.length || !sceneConfigFields.description.value.trim()) {
+          sceneConfigFeedback.textContent = "请补充名称、责任单位和场景描述。";
+          return;
+        }
+        const id = sceneConfigFields.id.value || `scene-${Date.now()}`;
+        const index = sceneData.findIndex(item => item.id === id);
+        const existingItem = index >= 0 ? sceneData[index] : null;
+        const payload = normalizeSceneItem({
+          id,
+          title: sceneConfigFields.title.value.trim(),
+          link: sceneConfigFields.link.value,
+          units,
+          level: sceneConfigFields.level.value,
+          category: sceneConfigFields.category.value,
+          description: sceneConfigFields.description.value.trim(),
+          online: existingItem ? existingItem.online !== false : true
+        }, sceneData.length);
+        if (index >= 0) sceneData[index] = payload;
+        else sceneData.unshift(payload);
+        saveSceneData();
+        sceneState.value = "all";
+        clearSceneConfigForm();
+        closeSceneConfigModal();
+        renderSceneConfig();
+        if (!scene.hidden) renderScene();
+        sceneConfigFeedback.textContent = index >= 0
+          ? `已保存配置，${payload.online ? "场景建设已同步更新。" : "下架状态已保留。"}`
+          : "已新增并上架，同步到场景建设。";
+      });
+      document.getElementById("sceneConfigClear")?.addEventListener("click", () => {
+        clearSceneConfigForm();
+        sceneConfigFeedback.textContent = "已清空弹窗内容。";
+      });
+      sceneConfigClose?.addEventListener("click", () => closeSceneConfigModal());
+      sceneConfigModal?.addEventListener("click", event => {
+        if (event.target === sceneConfigModal) closeSceneConfigModal();
+      });
+      sceneConfigRows?.addEventListener("click", event => {
+        const editButton = event.target.closest("[data-scene-edit]");
+        const toggleButton = event.target.closest("[data-scene-toggle]");
+        if (editButton) {
+          const item = sceneData.find(scene => scene.id === editButton.dataset.sceneEdit);
+          if (item) fillSceneConfigForm(item);
+          return;
+        }
+        if (toggleButton) {
+          const item = sceneData.find(scene => scene.id === toggleButton.dataset.sceneToggle);
+          if (!item) return;
+          item.online = item.online === false;
+          saveSceneData();
+          refreshSceneViews();
+          sceneConfigFeedback.textContent = `${item.title}已${item.online ? "上架" : "下架"}，场景建设已同步更新。`;
+        }
+      });
+      window.addEventListener("keydown", event => {
+        if (event.key === "Escape" && sceneConfigModal && !sceneConfigModal.hidden) closeSceneConfigModal();
       });
       dashboardReturnBtn?.addEventListener("click", openPortal);
       document.title = "数字鄂州一张图综合门户";
