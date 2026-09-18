@@ -10536,6 +10536,263 @@
         transform: translateY(0);
       }
     }
+    /* 建筑火灾风险：九小场所左侧情报栏 */
+    .screen.building-fire-active .panel,
+    .screen.building-fire-active .bottom-nav,
+    .screen.building-fire-active .key-panel,
+    .screen.building-fire-active .style-toggle-btn { display: none; }
+    .screen.building-fire-active .title-shell { display: none; }
+    .screen.building-fire-active .topbar { height: 0; background: transparent; border: 0; box-shadow: none; pointer-events: none; }
+    .screen.building-fire-active .top-left { display: none; }
+    .screen.building-fire-active .top-right { position: absolute; top: 13px; right: 148px; z-index: 30; height: auto; padding: 0; pointer-events: auto; }
+    .screen.building-fire-active .top-right > :not(.dashboard-return) { display: none; }
+    .screen.building-fire-active .dashboard-return { height: 30px; color: #bde9ff; border-color: rgba(75, 196, 255, .36); background: rgba(10, 73, 125, .5); box-shadow: none; }
+    .screen.building-fire-active .dashboard-return:hover { color: #fff; background: rgba(23, 147, 215, .5); }
+    #buildingFireScreen {
+      position: absolute;
+      inset: 0;
+      z-index: 22;
+      display: none;
+      overflow: hidden;
+      color: #d7ecff;
+      background:
+        radial-gradient(ellipse 76% 90% at 52% 42%, rgba(12, 69, 122, .33), transparent 68%),
+        linear-gradient(145deg, #030c17 0%, #061726 48%, #020914 100%);
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    }
+    #buildingFireScreen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .42;
+      background-image: linear-gradient(rgba(63, 176, 255, .045) 1px, transparent 1px), linear-gradient(90deg, rgba(63, 176, 255, .045) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.65), transparent 86%);
+    }
+    .screen.building-fire-active #buildingFireScreen { display: block; }
+    .building-fire-topbar {
+      position: relative;
+      z-index: 1;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      border-bottom: 1px solid rgba(63, 184, 255, .26);
+      background: linear-gradient(90deg, rgba(5, 38, 71, .93), rgba(6, 30, 54, .55) 60%, transparent);
+    }
+    .building-fire-brand { position: absolute; left: 50%; top: 0; display: flex; align-items: center; gap: 12px; height: 56px; min-width: 330px; padding: 0 34px; transform: translateX(-50%); background: linear-gradient(90deg, transparent, rgba(12, 77, 138, .52) 16%, rgba(8, 48, 93, .9) 50%, rgba(12, 77, 138, .52) 84%, transparent); clip-path: polygon(8% 0, 92% 0, 100% 100%, 0 100%); }
+    .building-fire-brand::before, .building-fire-brand::after { content: ""; position: absolute; bottom: 0; width: 74px; height: 2px; background: linear-gradient(90deg, transparent, #24d9ee); box-shadow: 0 0 12px rgba(36,217,238,.58); }
+    .building-fire-brand::before { left: 6px; }
+    .building-fire-brand::after { right: 6px; transform: scaleX(-1); }
+    .building-fire-brand-mark { display: grid; grid-template-columns: repeat(2, 8px); gap: 3px; transform: skewX(-12deg); }
+    .building-fire-brand-mark i { width: 8px; height: 8px; background: #18d5e5; box-shadow: 0 0 12px rgba(24,213,229,.55); }
+    .building-fire-brand-mark i:nth-child(2) { opacity: .6; }
+    .building-fire-brand-mark i:nth-child(3) { opacity: .6; }
+    .building-fire-brand h2 { margin: 0; color: #e5f5ff; font-size: 24px; letter-spacing: .2em; font-weight: 800; text-shadow: 0 0 16px rgba(104,221,255,.26); }
+    .building-fire-actions { display: flex; align-items: center; gap: 16px; }
+    .building-fire-clock { color: #83b7d7; font-size: 13px; font-variant-numeric: tabular-nums; letter-spacing: .05em; }
+    .building-fire-back { height: 30px; padding: 0 11px; border: 1px solid rgba(75, 196, 255, .36); color: #bde9ff; background: rgba(10, 73, 125, .24); font: inherit; font-size: 12px; cursor: pointer; clip-path: polygon(0 0, 100% 0, calc(100% - 7px) 100%, 0 100%); }
+    .building-fire-back:hover { color: #fff; background: rgba(23, 147, 215, .38); }
+    .building-fire-workspace { position: relative; z-index: 1; height: calc(100% - 56px); padding: 12px 22px; }
+    .building-fire-left {
+      width: min(390px, 30vw);
+      min-width: 340px;
+      height: 100%;
+      display: grid;
+      grid-template-rows: 36px minmax(0, 1fr);
+      gap: 8px;
+    }
+    .building-fire-mode-content { display: grid; min-height: 0; gap: 8px; }
+    #nineSmallContent { grid-template-rows: minmax(104px, 1.05fr) minmax(156px, 1.4fr) minmax(108px, .9fr) minmax(142px, 1.15fr); }
+    #keyPlaceContent { grid-template-rows: minmax(88px, .9fr) minmax(110px, 1.1fr) minmax(86px, .85fr) minmax(72px, .72fr) minmax(108px, 1.08fr); }
+    #nineSmallContent[hidden], #keyPlaceContent[hidden] { display: none; }
+    .building-fire-switch { display: grid; grid-template-columns: 1fr 1fr; height: 36px; padding: 3px; border: 1px solid rgba(57, 177, 255, .33); background: rgba(3, 27, 52, .68); clip-path: polygon(0 0, 96% 0, 100% 24%, 100% 100%, 4% 100%, 0 76%); }
+    .building-fire-switch button { border: 0; color: #89b8d8; background: transparent; font: inherit; font-size: 14px; font-weight: 800; cursor: pointer; transition: color .2s ease, background .2s ease; }
+    .building-fire-switch button:hover { color: #e5f8ff; background: rgba(24, 176, 238, .12); }
+    .building-fire-switch button.is-active { color: #ecfbff; background: linear-gradient(90deg, rgba(19, 187, 241, .35), rgba(23, 105, 198, .18)); box-shadow: inset 0 0 0 1px rgba(74, 221, 255, .4); }
+    .building-fire-panel { position: relative; border: 1px solid rgba(57, 177, 255, .28); background: linear-gradient(135deg, rgba(6, 37, 70, .91), rgba(3, 19, 38, .82)); clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); }
+    .building-fire-panel::after { content: ""; position: absolute; top: 0; left: 0; width: 76px; height: 2px; background: #25d8f2; box-shadow: 0 0 14px rgba(37,216,242,.7); }
+    .building-fire-panel-title { display: flex; align-items: center; gap: 8px; min-height: 32px; padding: 0 12px; color: #e5f6ff; font-size: 14px; font-weight: 800; letter-spacing: .04em; border-bottom: 1px solid rgba(66, 171, 244, .16); }
+    .building-fire-panel-title::before { content: ""; width: 4px; height: 13px; background: linear-gradient(#43e8ff, #177fdc); transform: skewX(-22deg); }
+    .building-fire-panel-title small { margin-left: auto; color: #719fc0; font-size: 11px; font-weight: 500; letter-spacing: 0; }
+    .fire-area-filter { height: 22px; margin-left: auto; padding: 0 24px 0 7px; border: 1px solid rgba(62, 182, 241, .32); color: #bce8ff; background: rgba(7, 54, 91, .72); font: inherit; font-size: 10px; outline: none; cursor: pointer; }
+    .fire-area-filter:focus { border-color: #35d9ef; box-shadow: 0 0 0 2px rgba(47, 207, 238, .14); }
+    .fire-area-filter option { color: #d9f3ff; background: #082442; }
+    .fire-ledger { display: grid; grid-template-columns: 116px minmax(0, 1fr); gap: 7px; padding: 8px; }
+    .fire-ledger-main { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 96px; padding: 7px 6px; text-align: center; background: linear-gradient(135deg, rgba(18, 102, 177, .28), rgba(4, 28, 56, .12)); border: 1px solid rgba(61, 185, 255, .22); }
+    .fire-ledger-main svg { display: none; }
+    .fire-ledger-main span, .fire-ledger-item span { display: block; color: #88afd0; font-size: 12px; }
+    .fire-ledger-main b { display: block; margin-top: 4px; color: #48bcff; font-size: 27px; line-height: 1; font-family: "Arial", sans-serif; letter-spacing: .01em; font-variant-numeric: tabular-nums; }
+    .fire-ledger-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 0; }
+    .fire-ledger-item { min-height: 45px; padding: 6px 8px; border: 1px solid rgba(61, 185, 255, .15); background: rgba(3, 22, 44, .47); }
+    .fire-ledger-item b { display: block; margin-top: 3px; color: #effaff; font-size: 18px; line-height: 1; font-family: Arial, sans-serif; font-variant-numeric: tabular-nums; }
+    .fire-ledger-item.warn b { color: #f7be35; }
+    .fire-ledger-item.alert b { color: #ff705d; }
+    .fire-top10, .fire-smoke, .fire-risk { min-height: 0; }
+    .fire-top10-body { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(5, minmax(0, 1fr)); gap: 4px 14px; height: calc(100% - 32px); padding: 8px 12px 10px; }
+    .fire-top10-row { display: grid; grid-template-columns: 58px 1fr 28px; gap: 6px; align-items: center; color: #9bc4df; font-size: 11px; }
+    .fire-top10-row b { color: #d8eeff; font-size: 11px; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+    .fire-top10-bar { height: 6px; overflow: hidden; background: rgba(45, 109, 157, .24); transform: skewX(-16deg); }
+    .fire-top10-bar i { display: block; width: var(--bar); height: 100%; background: linear-gradient(90deg, #147ed3, #25d7ef); box-shadow: 0 0 8px rgba(37,215,239,.38); transform-origin: left center; animation: fire-bar-reveal .72s cubic-bezier(.16,1,.3,1) both; }
+    .fire-top10-row:nth-child(2n) .fire-top10-bar i { animation-delay: .07s; }
+    .fire-top10-row:nth-child(3n) .fire-top10-bar i { animation-delay: .14s; }
+    .fire-smoke-grid { display: grid; grid-template-columns: 116px minmax(0, 1fr); gap: 7px; height: calc(100% - 32px); padding: 8px; }
+    .fire-smoke-total { display: grid; align-content: center; justify-items: center; min-height: 0; padding: 7px 5px; text-align: center; border: 1px solid rgba(61, 185, 255, .22); background: linear-gradient(135deg, rgba(18, 102, 177, .28), rgba(4, 28, 56, .12)); }
+    .fire-smoke-total b { color: #48bcff; font-family: Arial, sans-serif; font-size: 25px; line-height: 1; font-variant-numeric: tabular-nums; }
+    .fire-smoke-total span { margin-top: 5px; color: #9ac2dc; font-size: 11px; }
+    .fire-smoke-state-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .fire-smoke-item { position: relative; min-width: 0; padding: 6px 3px 5px 7px; border-top: 1px solid rgba(76, 190, 255, .22); background: linear-gradient(120deg, rgba(15, 96, 159, .17), transparent); }
+    .fire-smoke-item::before { content: ""; position: absolute; left: 0; top: 6px; bottom: 5px; width: 2px; background: var(--state); box-shadow: 0 0 7px var(--state); }
+    .fire-smoke-item b { display: block; color: #f0fbff; font-size: 15px; line-height: 1.15; font-family: Arial, sans-serif; font-variant-numeric: tabular-nums; }
+    .fire-smoke-item span { display: block; margin-top: 4px; color: #8db4cf; font-size: 10px; white-space: nowrap; }
+    .fire-risk-body { display: grid; grid-template-columns: repeat(3, 1fr); align-items: end; gap: 16px; height: calc(100% - 33px); padding: 8px 18px 11px; }
+    .fire-risk-item { display: grid; grid-template-rows: 1fr auto auto; align-items: end; height: 100%; text-align: center; }
+    .fire-risk-item b { margin-bottom: 6px; color: var(--risk); font-family: Arial, sans-serif; font-size: 16px; font-variant-numeric: tabular-nums; }
+    .fire-risk-column { position: relative; width: 30px; height: 64px; margin: 0 auto 5px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--risk), transparent 38%); background: rgba(14, 87, 144, .17); }
+    .fire-risk-column i { position: absolute; right: 0; bottom: 0; left: 0; height: var(--risk-height); background: linear-gradient(to top, color-mix(in srgb, var(--risk), #0467a8 35%), var(--risk)); box-shadow: 0 0 14px color-mix(in srgb, var(--risk), transparent 35%); transform-origin: bottom center; animation: fire-risk-rise .8s cubic-bezier(.16,1,.3,1) both; }
+    .fire-risk-item:nth-child(2) .fire-risk-column i { animation-delay: .13s; }
+    .fire-risk-item:nth-child(3) .fire-risk-column i { animation-delay: .25s; }
+    .fire-risk-item span { color: #a8cae0; font-size: 11px; white-space: nowrap; }
+    .key-overview { display: grid; grid-template-columns: 1fr 1.25fr; gap: 8px; height: calc(100% - 32px); padding: 8px; }
+    .key-overview-main, .key-overview-sub { display: flex; align-items: center; justify-content: center; min-width: 0; background: linear-gradient(135deg, rgba(15, 97, 160, .24), rgba(4, 25, 46, .3)); border: 1px solid rgba(62, 181, 245, .17); }
+    .key-overview-main { flex-direction: column; }
+    .key-overview-icon { width: 27px; height: 27px; margin-bottom: 5px; fill: none; stroke: #38d3ef; stroke-width: 1.6; filter: drop-shadow(0 0 6px rgba(56,211,239,.35)); }
+    .key-overview-main b, .key-overview-sub b { color: #45c9f2; font-family: Arial, sans-serif; font-size: 28px; line-height: 1; font-variant-numeric: tabular-nums; }
+    .key-overview-main span, .key-overview-sub span { margin-top: 5px; color: #9bc4dc; font-size: 11px; }
+    .key-overview-sub { gap: 9px; padding: 8px; }
+    .key-overview-sub i { width: 24px; height: 24px; border: 1px solid rgba(56, 209, 238, .68); background: linear-gradient(135deg, rgba(51, 213, 239, .3), transparent); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+    .key-overview-sub .key-overview-icon { width: 25px; height: 25px; margin: 0; }
+    .key-overview-sub div { display: grid; }
+    .key-overview-sub b { font-size: 25px; }
+    .key-levels { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; height: calc(100% - 32px); padding: 8px; }
+    .key-level { display: grid; align-content: center; justify-items: center; gap: 6px; background: color-mix(in srgb, var(--level), transparent 86%); border-top: 2px solid var(--level); }
+    .key-level span { color: var(--level); font-size: 11px; font-weight: 800; }
+    .key-level b { color: #eaf8ff; font-family: Arial, sans-serif; font-size: 24px; line-height: 1; font-variant-numeric: tabular-nums; }
+    .key-unit-risk-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: 8px; height: calc(100% - 32px); padding: 8px; }
+    .key-unit-risk-layout .key-levels { grid-template-columns: 1fr 1fr; height: 100%; padding: 0; gap: 5px; }
+    .key-unit-risk-layout .key-level { gap: 3px; }
+    .key-unit-risk-layout .key-level span { font-size: 10px; }
+    .key-unit-risk-layout .key-level b { font-size: 21px; }
+    .key-unit-risk-carousel { position: relative; min-width: 0; overflow: hidden; border: 1px solid rgba(62, 181, 245, .16); background: linear-gradient(135deg, rgba(13, 81, 128, .17), rgba(4, 26, 47, .44)); }
+    .key-unit-risk-carousel::before { content: "重点单位风险统计"; position: absolute; z-index: 3; top: 0; right: 0; left: 0; height: 23px; padding: 6px 8px 0; color: #b9e8fa; background: linear-gradient(90deg, rgba(10, 72, 117, .92), rgba(7, 38, 67, .72)); border-bottom: 1px solid rgba(62, 181, 245, .16); font-size: 10px; font-weight: 800; }
+    .key-unit-risk-track { display: grid; gap: 5px; padding: 30px 8px 8px; animation: key-unit-risk-scroll 12s linear infinite; }
+    .key-unit-risk-carousel:hover .key-unit-risk-track { animation-play-state: paused; }
+    .key-unit-risk-item { display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto 6px; column-gap: 8px; }
+    .key-unit-risk-item b { overflow: hidden; color: #d9f3ff; font-size: 11px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+    .key-unit-risk-item em { color: #ff806d; font-family: Arial, sans-serif; font-size: 12px; font-style: normal; font-weight: 800; white-space: nowrap; }
+    .key-unit-risk-item i { grid-column: 1 / -1; display: block; overflow: hidden; height: 6px; background: rgba(75, 132, 173, .2); }
+    .key-unit-risk-item i::after { content: ""; display: block; width: var(--risk-width); height: 100%; background: linear-gradient(90deg, #f3ba25, #ff6e62); box-shadow: 0 0 8px rgba(255, 111, 95, .35); }
+    @keyframes key-unit-risk-scroll { to { transform: translateY(-50%); } }
+    .key-risk-lines { display: grid; gap: 5px; height: calc(100% - 32px); padding: 8px 10px; }
+    .key-risk-line { display: grid; grid-template-columns: 1fr 28px; gap: 7px; align-items: center; color: #a8cbe0; font-size: 11px; }
+    .key-risk-line i { display: block; height: 6px; overflow: hidden; background: rgba(49, 120, 172, .22); }
+    .key-risk-line i::after { content: ""; display: block; width: var(--value); height: 100%; background: linear-gradient(90deg, #1888d8, #31d9e9); }
+    .key-risk-line b { color: #d9f1ff; font-family: Arial, sans-serif; font-size: 11px; text-align: right; }
+    .key-air-force { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; height: calc(100% - 32px); padding: 8px; }
+    .key-air-item { display: flex; align-items: center; gap: 8px; padding: 8px; border: 1px solid rgba(54, 183, 242, .17); background: rgba(5, 42, 72, .42); }
+    .key-air-icon { width: 25px; height: 25px; flex: 0 0 auto; border: 1px solid #29d4eb; clip-path: polygon(50% 0, 62% 36%, 100% 50%, 62% 64%, 50% 100%, 38% 64%, 0 50%, 38% 36%); background: rgba(28, 199, 230, .25); }
+    .key-air-item b { display: block; color: #e9faff; font-family: Arial, sans-serif; font-size: 22px; line-height: 1; font-variant-numeric: tabular-nums; }
+    .key-air-item span { display: block; margin-top: 5px; color: #97bed7; font-size: 10px; white-space: nowrap; }
+    .key-category { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; height: calc(100% - 32px); padding: 8px; }
+    .key-category-item { display: grid; align-content: center; justify-items: center; gap: 4px; min-width: 0; color: #ecfbff; background: color-mix(in srgb, var(--category), transparent 78%); border-top: 2px solid var(--category); }
+    .key-category-item b { font-family: Arial, sans-serif; font-size: 25px; line-height: 1; font-variant-numeric: tabular-nums; }
+    .key-category-item span { color: #e1f5ff; font-size: 11px; white-space: nowrap; }
+    .key-category-item small { color: color-mix(in srgb, var(--category), white 45%); font-size: 10px; }
+    @keyframes fire-bar-reveal { from { opacity: .25; transform: scaleX(0); } to { opacity: 1; transform: scaleX(1); } }
+    @keyframes fire-risk-rise { from { opacity: .25; transform: scaleY(0); } to { opacity: 1; transform: scaleY(1); } }
+    @media (prefers-reduced-motion: reduce) { .fire-top10-bar i, .fire-risk-column i, .key-unit-risk-track { animation: none; } }
+    .building-fire-map { position: absolute; top: 12px; bottom: 12px; left: calc(min(390px, 30vw) + 44px); right: calc(min(390px, 30vw) + 44px); overflow: hidden; border: 1px solid rgba(57, 177, 255, .25); background: #061728; }
+    .building-fire-map::before { content: ""; position: absolute; z-index: 1; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(3, 19, 38, .4), transparent 25%, transparent 75%, rgba(3, 19, 38, .35)), linear-gradient(0deg, rgba(3, 19, 38, .35), transparent 28%); }
+    .building-fire-map::after { content: ""; position: absolute; z-index: 2; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(74, 194, 255, .07) 1px, transparent 1px), linear-gradient(90deg, rgba(74, 194, 255, .07) 1px, transparent 1px); background-size: 40px 40px; mix-blend-mode: screen; }
+    .building-fire-map-title { position: absolute; z-index: 3; top: 12px; left: 14px; color: #cceeff; font-size: 14px; font-weight: 800; letter-spacing: .08em; }
+    .building-fire-map-title::before { content: ""; display: inline-block; width: 3px; height: 13px; margin-right: 8px; vertical-align: -2px; background: #2bd9ef; }
+    .building-fire-map img { width: 100%; height: 100%; object-fit: cover; opacity: .64; filter: saturate(.45) hue-rotate(160deg) contrast(1.12) brightness(.72); }
+    .fire-map-point { position: absolute; z-index: 4; width: 13px; height: 13px; border: 2px solid #f9c238; border-radius: 50%; background: rgba(249, 125, 45, .46); box-shadow: 0 0 0 6px rgba(249, 120, 37, .12), 0 0 18px rgba(249, 131, 39, .8); }
+    .fire-map-point::after { content: attr(data-label); position: absolute; top: -28px; left: 11px; min-width: max-content; padding: 4px 7px; color: #f3fbff; background: rgba(5, 26, 47, .86); border: 1px solid rgba(255, 191, 61, .46); font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .fire-map-point.is-alert { border-color: #ff715c; background: rgba(255, 75, 55, .58); box-shadow: 0 0 0 7px rgba(255, 83, 55, .12), 0 0 21px rgba(255, 83, 55, .9); }
+    .building-fire-right { position: absolute; top: 12px; right: 0; bottom: 12px; width: min(390px, 30vw); }
+    .building-fire-right-mode { display: grid; height: 100%; min-height: 0; gap: 8px; }
+    #nineSmallRight { grid-template-rows: .94fr 1.06fr; }
+    #keyPlaceRight { grid-template-rows: 1.1fr 1.12fr 1.05fr; }
+    #nineSmallRight[hidden], #keyPlaceRight[hidden] { display: none; }
+    .fire-video-panel, .fire-event-panel { min-height: 0; }
+    .fire-video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px; }
+    .key-video-all-btn { height: 22px; margin-left: auto; padding: 0 8px; border: 1px solid rgba(69, 196, 246, .36); color: #bdeeff; background: rgba(13, 109, 163, .26); font: inherit; font-size: 10px; font-weight: 800; cursor: pointer; }
+    .key-video-all-btn:hover { color: #fff; border-color: rgba(72, 216, 244, .72); background: rgba(18, 143, 203, .42); }
+    #keyPlaceRight .fire-video-grid { height: calc(100% - 32px); grid-template-rows: 1fr 1fr; }
+    #keyPlaceRight .fire-video { min-height: 0; }
+    #nineSmallRight .fire-video-grid { height: calc(100% - 32px); grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 1fr); }
+    #nineSmallRight .fire-video { min-height: 0; }
+    .fire-video { position: relative; min-height: 78px; overflow: hidden; border: 1px solid rgba(73, 169, 224, .2); background: radial-gradient(circle at 63% 38%, rgba(37, 144, 196, .3), transparent 25%), linear-gradient(145deg, #102c41, #061321 70%); }
+    .fire-video::before { content: ""; position: absolute; inset: 0; opacity: .28; background: linear-gradient(116deg, transparent 38%, rgba(103, 224, 255, .34) 39%, transparent 42%), linear-gradient(0deg, transparent 62%, rgba(115, 213, 255, .13) 63%, transparent 64%); }
+    .fire-video b { position: absolute; z-index: 1; top: 7px; left: 7px; color: #a9d7ed; font-size: 10px; font-weight: 700; }
+    .fire-video span { position: absolute; z-index: 1; right: 7px; bottom: 6px; color: #53f0b4; font-family: Arial, sans-serif; font-size: 10px; font-variant-numeric: tabular-nums; }
+    .fire-event-head { display: flex; align-items: center; justify-content: space-between; min-height: 32px; padding: 0 10px 0 12px; border-bottom: 1px solid rgba(66, 171, 244, .16); }
+    .fire-event-head b { color: #e5f6ff; font-size: 14px; }
+    .fire-event-tabs { display: flex; gap: 4px; }
+    .fire-event-tabs button { height: 23px; padding: 0 8px; border: 1px solid rgba(70, 171, 233, .23); color: #8cb7d3; background: rgba(6, 43, 75, .46); font: inherit; font-size: 10px; font-weight: 700; cursor: pointer; }
+    .fire-event-tabs button.is-active { color: #effbff; border-color: rgba(46, 205, 239, .52); background: rgba(17, 137, 201, .3); }
+    .fire-event-list { display: grid; gap: 5px; max-height: calc(100% - 33px); padding: 8px; overflow: auto; scrollbar-width: thin; scrollbar-color: rgba(52, 182, 238, .5) transparent; }
+    .fire-event-row { position: relative; display: grid; grid-template-columns: 26px minmax(0, 1fr); column-gap: 8px; align-items: start; min-height: 58px; padding: 8px 70px 8px 8px; border: 1px solid rgba(60, 158, 221, .16); background: linear-gradient(115deg, rgba(10, 57, 96, .72), rgba(4, 27, 50, .52)); }
+    .fire-event-icon { position: relative; display: grid; place-items: center; width: 24px; height: 24px; margin-top: 1px; border: 1px solid rgba(62, 194, 245, .6); color: #56d4ee; }
+    .fire-event-icon::before { content: ""; width: 8px; height: 8px; border: 1px solid currentColor; border-radius: 50%; }
+    .fire-event-icon::after { content: ""; position: absolute; bottom: 4px; width: 10px; height: 4px; border: 1px solid currentColor; border-top: 0; }
+    .fire-event-row time { position: absolute; top: 9px; right: 8px; color: #84b1ce; font-family: Arial, sans-serif; font-size: 9px; font-variant-numeric: tabular-nums; }
+    .fire-event-row b { overflow: hidden; color: #e1f4ff; font-size: 11px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+    .fire-event-row small { grid-column: 2; overflow: hidden; margin-top: 4px; color: #91b8d2; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .fire-event-row span { position: absolute; right: 8px; bottom: 8px; padding: 2px 5px; color: var(--event-color); border: 1px solid color-mix(in srgb, var(--event-color), transparent 58%); background: color-mix(in srgb, var(--event-color), transparent 88%); font-size: 9px; white-space: nowrap; }
+    .fire-event-row[hidden] { display: none; }
+    .key-iot-select { max-width: 185px; height: 22px; margin-left: auto; padding: 0 22px 0 7px; border: 1px solid rgba(62, 182, 241, .32); color: #bce8ff; background: rgba(7, 54, 91, .72); font: inherit; font-size: 10px; outline: none; }
+    .key-iot-body { display: grid; grid-template-rows: 1fr auto; height: calc(100% - 32px); padding: 8px; }
+    .key-iot-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .key-iot-metric { padding: 7px 6px; border: 1px solid rgba(62, 181, 245, .15); background: rgba(5, 40, 70, .42); }
+    .key-iot-metric b { display: block; color: #e8faff; font-family: Arial, sans-serif; font-size: 16px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .key-iot-metric span { display: block; margin-top: 4px; color: #91bbd5; font-size: 10px; white-space: nowrap; }
+    .key-iot-devices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 7px; padding-top: 7px; border-top: 1px solid rgba(62, 181, 245, .14); }
+    .key-iot-device { color: #9cc3da; font-size: 10px; text-align: center; }
+    .key-iot-device b { display: block; margin-bottom: 3px; color: #47cbe9; font-family: Arial, sans-serif; font-size: 15px; font-variant-numeric: tabular-nums; }
+    .key-iot-body { grid-template-rows: 106px minmax(78px, 1fr) auto; gap: 6px; padding: 6px 8px 8px; }
+    .key-gauge-grid { display: grid; grid-template-columns: 1fr 1fr .78fr; align-items: center; gap: 6px; min-height: 0; }
+    .key-gauge { display: grid; justify-items: center; min-width: 0; }
+    .key-gauge > span { color: #a6cce0; font-size: 10px; white-space: nowrap; }
+    .key-gauge-dial { position: relative; width: 74px; height: 74px; margin: 3px 0 4px; border-radius: 50%; background: conic-gradient(from 230deg, #f04852 0deg 54deg, #ff9c30 54deg 113deg, #38d3d6 113deg 220deg, transparent 220deg 360deg); filter: drop-shadow(0 0 6px rgba(47, 189, 219, .2)); }
+    .key-gauge-dial::before { content: ""; position: absolute; inset: 7px; border-radius: 50%; border: 1px solid rgba(150, 221, 238, .3); background: radial-gradient(circle at 50% 42%, rgba(18, 66, 91, .96), #071c30 72%); }
+    .key-gauge-dial::after { content: "0　　　0.8　　　1.6"; position: absolute; z-index: 1; right: -8px; bottom: 13px; left: -8px; color: #93bbd1; font-family: Arial, sans-serif; font-size: 7px; letter-spacing: -1px; text-align: center; }
+    .key-gauge-needle { position: absolute; z-index: 2; left: calc(50% - 1px); top: 13px; width: 2px; height: 25px; border-radius: 99px; background: #f6c02a; box-shadow: 0 0 5px rgba(246,192,42,.75); transform: rotate(var(--needle)); transform-origin: 50% 24px; transition: transform .45s cubic-bezier(.16,1,.3,1); }
+    .key-gauge-needle::after { content: ""; position: absolute; left: -3px; bottom: -4px; width: 8px; height: 8px; border-radius: 50%; background: #f6c02a; box-shadow: 0 0 0 2px #0a263e; }
+    .key-gauge-value { position: absolute; z-index: 3; right: 5px; bottom: 17px; left: 5px; color: #ecfbff; font-family: Arial, sans-serif; font-size: 12px; font-variant-numeric: tabular-nums; text-align: center; }
+    .key-gauge-value em { display: block; margin-top: 1px; color: #8ab7cf; font-size: 7px; font-style: normal; }
+    .key-monitor-total { display: grid; align-content: center; justify-items: center; align-self: stretch; padding: 8px 4px; border: 1px solid rgba(62, 181, 245, .2); background: linear-gradient(145deg, rgba(12, 88, 137, .24), rgba(4, 28, 52, .38)); }
+    .key-monitor-total span { color: #9cc8dc; font-size: 10px; }
+    .key-monitor-total b { margin: 6px 0 4px; color: #45d1eb; font-family: Arial, sans-serif; font-size: 32px; line-height: 1; font-variant-numeric: tabular-nums; text-shadow: 0 0 14px rgba(69,209,235,.24); }
+    .key-monitor-total small { color: #6edda6; font-size: 9px; }
+    .key-hydraulic-detail { display: grid; grid-template-rows: auto minmax(0, 1fr); min-height: 0; padding: 6px 7px; border-top: 1px solid rgba(62, 181, 245, .17); border-bottom: 1px solid rgba(62, 181, 245, .14); background: linear-gradient(90deg, rgba(11, 77, 119, .15), transparent); }
+    .key-hydraulic-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; color: #b9e6f7; font-size: 10px; font-weight: 800; }
+    .key-hydraulic-head span { color: #9abfd5; font-weight: 500; }
+    .key-hydraulic-head strong { color: #f4c24d; font-family: Arial, sans-serif; font-size: 13px; }
+    .key-hydraulic-list { display: grid; grid-template-columns: repeat(3, 1fr); align-items: stretch; gap: 5px; }
+    .key-hydraulic-item { display: grid; align-content: center; padding: 5px; border: 1px solid rgba(59, 167, 221, .15); background: rgba(5, 34, 59, .48); }
+    .key-hydraulic-item b { display: block; color: #51d0eb; font-family: Arial, sans-serif; font-size: 12px; font-variant-numeric: tabular-nums; }
+    .key-hydraulic-item span { display: block; margin-top: 3px; color: #a2c7db; font-size: 9px; white-space: nowrap; }
+    .key-warning-head { display: flex; align-items: center; justify-content: space-between; min-height: 32px; padding: 0 10px 0 12px; border-bottom: 1px solid rgba(66, 171, 244, .16); }
+    .key-warning-head b { color: #e5f6ff; font-size: 14px; }
+    .key-warning-tabs { display: flex; gap: 4px; }
+    .key-warning-tabs button { height: 23px; padding: 0 7px; border: 1px solid rgba(70, 171, 233, .23); color: #8cb7d3; background: rgba(6, 43, 75, .46); font: inherit; font-size: 10px; font-weight: 700; cursor: pointer; }
+    .key-warning-tabs button.is-active { color: #effbff; border-color: rgba(46, 205, 239, .52); background: rgba(17, 137, 201, .3); }
+    .key-warning-table-wrap { max-height: calc(100% - 33px); overflow: auto; scrollbar-width: thin; scrollbar-color: rgba(52, 182, 238, .5) transparent; }
+    .key-warning-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .key-warning-table th { position: sticky; top: 0; z-index: 1; padding: 6px 4px; color: #82b5d4; background: #082442; border-bottom: 1px solid rgba(72, 172, 231, .22); font-size: 10px; font-weight: 800; text-align: left; }
+    .key-warning-table td { padding: 7px 4px; border-bottom: 1px solid rgba(62, 151, 213, .12); color: #bfdded; font-size: 10px; line-height: 1.35; vertical-align: top; word-break: break-word; }
+    .key-warning-table th:nth-child(1), .key-warning-table td:nth-child(1) { width: 28px; text-align: center; }
+    .key-warning-table th:nth-child(2), .key-warning-table td:nth-child(2) { width: 80px; }
+    .key-warning-table th:nth-child(3), .key-warning-table td:nth-child(3) { width: 40px; text-align: center; }
+    .key-warning-level { color: #ff7471; font-weight: 800; }
+    .key-warning-row[hidden] { display: none; }
+    .building-fire-stage-note { display: none; }
+    @media (max-width: 1180px) { .building-fire-left { width: 370px; min-width: 0; } .building-fire-map { left: 410px; right: 410px; } .building-fire-right { width: 370px; } }
+    @media (max-width: 800px) { #buildingFireScreen { overflow: auto; } .building-fire-topbar { padding: 0 14px; } .building-fire-brand { min-width: 240px; padding: 0 20px; } .building-fire-brand h2 { font-size: 17px; } .building-fire-clock { display: none; } .building-fire-workspace { height: auto; padding: 12px; } .building-fire-left { width: 100%; } .building-fire-stage-note { display: none; } }
   </style>
 </head>
 <body>
@@ -12029,6 +12286,246 @@
       </section>
     </section>
 
+    <!-- 建筑火灾风险详情界面：首期完成九小场所左侧信息栏 -->
+    <section id="buildingFireScreen" aria-hidden="true" aria-label="建筑火灾风险监测大屏">
+      <header class="building-fire-topbar">
+        <div class="building-fire-brand">
+          <span class="building-fire-brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <h2>建筑火灾风险</h2>
+        </div>
+        <div class="building-fire-actions">
+          <div class="building-fire-clock" id="buildingFireClock">--</div>
+          <button class="building-fire-back" id="buildingFireBackBtn" type="button">返回总览</button>
+        </div>
+      </header>
+      <div class="building-fire-workspace">
+        <aside class="building-fire-left" aria-label="九小场所数据概览">
+          <div class="building-fire-switch" role="tablist" aria-label="场所类型切换">
+            <button class="is-active" id="nineSmallTab" type="button" role="tab" aria-selected="true">九小场所</button>
+            <button id="keyPlacesTab" type="button" role="tab" aria-selected="false">重点场所</button>
+          </div>
+          <div class="building-fire-mode-content" id="nineSmallContent">
+          <section class="building-fire-panel" aria-labelledby="fireLedgerTitle">
+            <div class="building-fire-panel-title" id="fireLedgerTitle">九小场所基础台账</div>
+            <div class="fire-ledger">
+              <div class="fire-ledger-main">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V8l8-4 8 4v12M8 20v-5h8v5M8 10h.01M12 10h.01M16 10h.01"/></svg>
+                <div><span>已在册场所</span><b>35,416</b></div>
+              </div>
+              <div class="fire-ledger-grid">
+                <div class="fire-ledger-item"><span>留宿场所数</span><b>3,123</b></div>
+                <div class="fire-ledger-item warn"><span>隐患场所数</span><b>12,325</b></div>
+                <div class="fire-ledger-item"><span>留宿人数</span><b>5,550</b></div>
+                <div class="fire-ledger-item alert"><span>隐患数</span><b>17,261</b></div>
+              </div>
+            </div>
+          </section>
+          <section class="building-fire-panel fire-top10" aria-labelledby="fireTop10Title">
+            <div class="building-fire-panel-title" id="fireTop10Title">全市隐患类别 TOP10 <small>示意排序</small></div>
+            <div class="fire-top10-body">
+              <div class="fire-top10-row"><span>类别 01</span><div class="fire-top10-bar"><i style="--bar:100%"></i></div><b>100</b></div>
+              <div class="fire-top10-row"><span>类别 06</span><div class="fire-top10-bar"><i style="--bar:61%"></i></div><b>61</b></div>
+              <div class="fire-top10-row"><span>类别 02</span><div class="fire-top10-bar"><i style="--bar:91%"></i></div><b>91</b></div>
+              <div class="fire-top10-row"><span>类别 07</span><div class="fire-top10-bar"><i style="--bar:53%"></i></div><b>53</b></div>
+              <div class="fire-top10-row"><span>类别 03</span><div class="fire-top10-bar"><i style="--bar:84%"></i></div><b>84</b></div>
+              <div class="fire-top10-row"><span>类别 08</span><div class="fire-top10-bar"><i style="--bar:45%"></i></div><b>45</b></div>
+              <div class="fire-top10-row"><span>类别 04</span><div class="fire-top10-bar"><i style="--bar:76%"></i></div><b>76</b></div>
+              <div class="fire-top10-row"><span>类别 09</span><div class="fire-top10-bar"><i style="--bar:38%"></i></div><b>38</b></div>
+              <div class="fire-top10-row"><span>类别 05</span><div class="fire-top10-bar"><i style="--bar:68%"></i></div><b>68</b></div>
+              <div class="fire-top10-row"><span>类别 10</span><div class="fire-top10-bar"><i style="--bar:31%"></i></div><b>31</b></div>
+            </div>
+          </section>
+          <section class="building-fire-panel fire-smoke" aria-labelledby="fireSmokeTitle">
+            <div class="building-fire-panel-title" id="fireSmokeTitle">烟感状态分析</div>
+            <div class="fire-smoke-grid">
+              <div class="fire-smoke-total"><b>35,416</b><span>设备总数</span></div>
+              <div class="fire-smoke-state-grid">
+                <div class="fire-smoke-item" style="--state:#38d69e"><b>33,768</b><span>正常</span></div>
+                <div class="fire-smoke-item" style="--state:#ffae32"><b>368</b><span>报警</span></div>
+                <div class="fire-smoke-item" style="--state:#ff7667"><b>491</b><span>故障</span></div>
+                <div class="fire-smoke-item" style="--state:#7d9ab0"><b>789</b><span>离线</span></div>
+              </div>
+            </div>
+          </section>
+          <section class="building-fire-panel fire-risk" aria-labelledby="fireRiskTitle">
+            <div class="building-fire-panel-title" id="fireRiskTitle">风险评估概览 <small>参考数值</small></div>
+            <div class="fire-risk-body">
+              <div class="fire-risk-item" style="--risk:#20cdf0; --risk-height:76%"><b>76%</b><div class="fire-risk-column"><i></i></div><span>建筑防火</span></div>
+              <div class="fire-risk-item" style="--risk:#f0b625; --risk-height:92%"><b>92%</b><div class="fire-risk-column"><i></i></div><span>消防设施</span></div>
+              <div class="fire-risk-item" style="--risk:#23d4eb; --risk-height:91%"><b>91%</b><div class="fire-risk-column"><i></i></div><span>安全管理</span></div>
+            </div>
+          </section>
+          </div>
+          <div class="building-fire-mode-content" id="keyPlaceContent" hidden>
+            <section class="building-fire-panel" aria-labelledby="keyOverviewTitle">
+              <div class="building-fire-panel-title" id="keyOverviewTitle">全市单位总览
+                <select class="fire-area-filter" data-key-area-filter aria-label="筛选全市单位总览区域">
+                  <option value="全市" selected>全市</option><option value="鄂城区">鄂城区</option><option value="华容区">华容区</option><option value="葛店区">葛店区</option><option value="梁子湖区">梁子湖区</option><option value="临空经济区">临空经济区</option>
+                </select>
+              </div>
+              <div class="key-overview">
+                <div class="key-overview-main"><svg class="key-overview-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V7l8-4 8 4v13M8 20v-5h8v5M8 10h.01M12 10h.01M16 10h.01"/></svg><b id="keyUnitCount">10</b><span>重点单位</span></div>
+                <div class="key-overview-sub"><svg class="key-overview-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h18v10H3zM5 10l2-5h10l2 5M7 14h.01M17 14h.01M8 20v-4h8v4"/></svg><div><b id="keyShopCount">14,375</b><span>沿街商铺</span></div></div>
+              </div>
+            </section>
+            <section class="building-fire-panel" aria-labelledby="keyLevelTitle">
+              <div class="building-fire-panel-title" id="keyLevelTitle">重点单位风险等级情况</div>
+              <div class="key-unit-risk-layout">
+                <div class="key-levels">
+                  <div class="key-level" style="--level:#ff6a6d"><span>红色</span><b data-key-unit-level="0">10</b></div>
+                  <div class="key-level" style="--level:#ff9c6b"><span>橙色</span><b data-key-unit-level="1">0</b></div>
+                  <div class="key-level" style="--level:#f6c449"><span>黄色</span><b data-key-unit-level="2">0</b></div>
+                  <div class="key-level" style="--level:#72d991"><span>绿色</span><b data-key-unit-level="3">0</b></div>
+                </div>
+                <div class="key-unit-risk-carousel" aria-label="重点单位风险统计轮播">
+                  <div class="key-unit-risk-track">
+                    <div class="key-unit-risk-item" style="--risk-width:100%"><b>鄂州市消防救援支队大楼</b><em>10 项</em><i></i></div>
+                    <div class="key-unit-risk-item" style="--risk-width:80%"><b>鄂州市博物馆</b><em>8 项</em><i></i></div>
+                    <div class="key-unit-risk-item" style="--risk-width:70%"><b>湖北新亚太商业管理有限公司</b><em>7 项</em><i></i></div>
+                    <div class="key-unit-risk-item" style="--risk-width:60%"><b>鄂州市凤凰路金钻音乐会所</b><em>6 项</em><i></i></div>
+                    <div class="key-unit-risk-item" style="--risk-width:100%" aria-hidden="true"><b>鄂州市消防救援支队大楼</b><em>10 项</em><i></i></div>
+                    <div class="key-unit-risk-item" style="--risk-width:80%" aria-hidden="true"><b>鄂州市博物馆</b><em>8 项</em><i></i></div>
+                    <div class="key-unit-risk-item" style="--risk-width:70%" aria-hidden="true"><b>湖北新亚太商业管理有限公司</b><em>7 项</em><i></i></div>
+                    <div class="key-unit-risk-item" style="--risk-width:60%" aria-hidden="true"><b>鄂州市凤凰路金钻音乐会所</b><em>6 项</em><i></i></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section class="building-fire-panel" aria-labelledby="cityLevelTitle">
+              <div class="building-fire-panel-title" id="cityLevelTitle">全市单位风险等级情况</div>
+              <div class="key-levels">
+                <div class="key-level" style="--level:#ff6a6d"><span>红色</span><b data-key-city-level="0">10</b></div>
+                <div class="key-level" style="--level:#ff9c6b"><span>橙色</span><b data-key-city-level="1">0</b></div>
+                <div class="key-level" style="--level:#f6c449"><span>黄色</span><b data-key-city-level="2">0</b></div>
+                <div class="key-level" style="--level:#72d991"><span>绿色</span><b data-key-city-level="3">0</b></div>
+              </div>
+            </section>
+            <section class="building-fire-panel" aria-labelledby="airForceTitle">
+              <div class="building-fire-panel-title" id="airForceTitle">空中力量</div>
+              <div class="key-air-force">
+                <div class="key-air-item"><i class="key-air-icon" aria-hidden="true"></i><div><b id="keyDroneCount">42</b><span>无人机设备数量</span></div></div>
+                <div class="key-air-item"><i class="key-air-icon" aria-hidden="true"></i><div><b id="keyNestCount">6</b><span>无人机机巢数量</span></div></div>
+              </div>
+            </section>
+            <section class="building-fire-panel" aria-labelledby="categoryTitle">
+              <div class="building-fire-panel-title" id="categoryTitle">风险类别分析
+                <select class="fire-area-filter" data-key-area-filter aria-label="筛选风险类别分析区域">
+                  <option value="全市" selected>全市</option><option value="鄂城区">鄂城区</option><option value="华容区">华容区</option><option value="葛店区">葛店区</option><option value="梁子湖区">梁子湖区</option><option value="临空经济区">临空经济区</option>
+                </select>
+              </div>
+              <div class="key-category">
+                <div class="key-category-item" style="--category:#79ca31"><b data-key-category-percent="0">33%</b><span>起火风险</span><small data-key-category-count="0">数量 72</small></div>
+                <div class="key-category-item" style="--category:#20b9bd"><b data-key-category-percent="1">33%</b><span>火灾蔓延风险</span><small data-key-category-count="1">数量 72</small></div>
+                <div class="key-category-item" style="--category:#f8be20"><b data-key-category-percent="2">33%</b><span>成灾风险</span><small data-key-category-count="2">数量 72</small></div>
+              </div>
+            </section>
+          </div>
+        </aside>
+        <section class="building-fire-map" aria-label="鄂州市建筑火灾风险地图">
+          <div class="building-fire-map-title">鄂州市建筑消防态势图</div>
+          <img src="assets/forest-map.png" alt="鄂州市地图">
+          <i class="fire-map-point is-alert" style="left:47%;top:42%" data-label="报警点位 · 古楼街道"></i>
+          <i class="fire-map-point" style="left:66%;top:61%" data-label="重点巡查 · 华容区"></i>
+          <i class="fire-map-point" style="left:33%;top:67%" data-label="设备报警 · 鄂城区"></i>
+        </section>
+        <aside class="building-fire-right" aria-label="视频监控与事件列表">
+          <div class="building-fire-right-mode" id="nineSmallRight">
+          <section class="building-fire-panel fire-video-panel" aria-labelledby="fireVideoTitle">
+            <div class="building-fire-panel-title" id="fireVideoTitle">视频监控 <small>在线 4 / 4</small><button class="key-video-all-btn" type="button" aria-label="查看全部九小场所视频">全部视频</button></div>
+            <div class="fire-video-grid">
+              <div class="fire-video"><b>古楼街道 01</b><span>● 在线</span></div>
+              <div class="fire-video"><b>凤凰路口 02</b><span>● 在线</span></div>
+              <div class="fire-video"><b>华容广场 03</b><span>● 在线</span></div>
+              <div class="fire-video"><b>葛店园区 04</b><span>● 在线</span></div>
+              <div class="fire-video"><b>滨湖社区 05</b><span>● 在线</span></div>
+              <div class="fire-video"><b>武昌大道 06</b><span>● 在线</span></div>
+            </div>
+          </section>
+          <section class="building-fire-panel fire-event-panel" aria-labelledby="fireEventTitle">
+            <div class="fire-event-head">
+              <b id="fireEventTitle">事件列表</b>
+              <div class="fire-event-tabs" role="tablist" aria-label="事件类型">
+                <button class="is-active" type="button" role="tab" aria-selected="true" data-fire-event-tab="warning">预警事件</button>
+                <button type="button" role="tab" aria-selected="false" data-fire-event-tab="disposal">处置事件</button>
+              </div>
+            </div>
+            <div class="fire-event-list" id="fireEventList">
+              <div class="fire-event-row" data-fire-event="warning"><i class="fire-event-icon" aria-hidden="true"></i><time>2026-09-17 19:34:08</time><b>火警 · 古楼街道沿街商铺</b><small>米兰烘焙店 · 烟感设备报警</small><span style="--event-color:#ff705d">自动告警</span></div>
+              <div class="fire-event-row" data-fire-event="warning"><i class="fire-event-icon" aria-hidden="true"></i><time>2026-09-17 19:21:34</time><b>设备离线 · 华容区留宿场所</b><small>楚藩大道居民小区 · 烟感离线</small><span style="--event-color:#f5bd35">待核查</span></div>
+              <div class="fire-event-row" data-fire-event="warning"><i class="fire-event-icon" aria-hidden="true"></i><time>2026-09-17 18:48:12</time><b>通道占用 · 凤凰路餐饮店</b><small>凤凰路沿街门店 · 视频识别发现</small><span style="--event-color:#f5bd35">自动告警</span></div>
+              <div class="fire-event-row" data-fire-event="warning"><i class="fire-event-icon" aria-hidden="true"></i><time>2026-09-17 18:20:06</time><b>水压异常 · 葛店园区</b><small>创业大道 88 号 · 消火栓压力低</small><span style="--event-color:#56c8f5">设备告警</span></div>
+              <div class="fire-event-row" data-fire-event="disposal" hidden><i class="fire-event-icon" aria-hidden="true"></i><time>2026-09-17 19:35:20</time><b>火警 · 古楼街道沿街商铺</b><small>已派单古楼街道消防专员现场核查</small><span style="--event-color:#49e0aa">处置中</span></div>
+              <div class="fire-event-row" data-fire-event="disposal" hidden><i class="fire-event-icon" aria-hidden="true"></i><time>2026-09-17 19:08:36</time><b>设备离线 · 华容区留宿场所</b><small>已通知维保单位处理离线设备</small><span style="--event-color:#49e0aa">已联动</span></div>
+              <div class="fire-event-row" data-fire-event="disposal" hidden><i class="fire-event-icon" aria-hidden="true"></i><time>2026-09-17 18:55:41</time><b>通道占用 · 凤凰路餐饮店</b><small>现场清理完成，待复核</small><span style="--event-color:#56c8f5">已办结</span></div>
+              <div class="fire-event-row" data-fire-event="disposal" hidden><i class="fire-event-icon" aria-hidden="true"></i><time>2026-09-17 18:31:18</time><b>水压异常 · 葛店园区</b><small>已安排设施巡检复核</small><span style="--event-color:#f5bd35">待反馈</span></div>
+            </div>
+          </section>
+          </div>
+          <div class="building-fire-right-mode" id="keyPlaceRight" hidden>
+            <section class="building-fire-panel fire-video-panel" aria-labelledby="keyVideoTitle">
+              <div class="building-fire-panel-title" id="keyVideoTitle">视频监控 <small>在线 4 / 4</small><button class="key-video-all-btn" type="button" aria-label="查看全部视频">全部视频</button></div>
+              <div class="fire-video-grid">
+                <div class="fire-video"><b>博物馆东门 01</b><span>● 在线</span></div>
+                <div class="fire-video"><b>吾悦广场北门 02</b><span>● 在线</span></div>
+                <div class="fire-video"><b>中心医院住院部 03</b><span>● 在线</span></div>
+                <div class="fire-video"><b>消防救援支队 04</b><span>● 在线</span></div>
+              </div>
+            </section>
+            <section class="building-fire-panel" aria-labelledby="keyIotTitle">
+              <div class="building-fire-panel-title" id="keyIotTitle">物联感知
+                <select class="key-iot-select" id="keyIotPlaceSelect" aria-label="筛选重点场所名称">
+                  <option>鄂州市博物馆</option><option>鄂州市城市福利中心</option><option>长城花园酒店股份有限公司</option><option>吾悦广场</option><option>鄂州市凤凰路金钻音乐会所</option><option>鄂州市中心医院</option><option>鄂州市滨湖大厦</option><option>鄂州市消防救援支队大楼</option><option>湖北新亚太商业管理有限公司</option><option>鄂州恒大首府二期商业及影院</option><option>武汉圣朗商业有限公司</option>
+                </select>
+              </div>
+              <div class="key-iot-body">
+                <div class="key-gauge-grid">
+                  <div class="key-gauge"><span>水压监测</span><div class="key-gauge-dial"><i class="key-gauge-needle" id="iotWaterNeedle" style="--needle:-46deg"></i><b class="key-gauge-value" id="iotWaterPressure">0.48<em>MPa</em></b></div><span>运行正常</span></div>
+                  <div class="key-gauge"><span>液压监测</span><div class="key-gauge-dial"><i class="key-gauge-needle" id="iotHydraulicNeedle" style="--needle:-63deg"></i><b class="key-gauge-value" id="iotHydraulicPressure">0.36<em>MPa</em></b></div><span>运行正常</span></div>
+                  <div class="key-monitor-total"><span>监控在线</span><b id="iotMonitorCount">36</b><small>在线数量</small></div>
+                </div>
+                <div class="key-hydraulic-detail">
+                  <div class="key-hydraulic-head"><b>液压详情</b><span>设备数量 <strong>3</strong> 个</span></div>
+                  <div class="key-hydraulic-list">
+                    <div class="key-hydraulic-item"><b id="iotHydraulicFloor1">0.28 MPa</b><span>-1F 消防栓</span></div>
+                    <div class="key-hydraulic-item"><b id="iotHydraulicFloor2">0.21 MPa</b><span>2F 消防栓</span></div>
+                    <div class="key-hydraulic-item"><b id="iotHydraulicFloor3">0.07 MPa</b><span>7F 消防栓</span></div>
+                  </div>
+                </div>
+                <div class="key-iot-devices">
+                  <div class="key-iot-device"><b id="iotPowerCount">2</b>电源</div>
+                  <div class="key-iot-device"><b id="iotHostCount">1</b>主机</div>
+                  <div class="key-iot-device"><b id="iotSmokeCount">128</b>烟感设备分布</div>
+                </div>
+              </div>
+            </section>
+            <section class="building-fire-panel" aria-labelledby="keyWarningTitle">
+              <div class="key-warning-head">
+                <b id="keyWarningTitle">全市隐患预警</b>
+                <div class="key-warning-tabs" role="tablist" aria-label="全市隐患事件类型">
+                  <button class="is-active" type="button" role="tab" aria-selected="true" data-key-warning-tab="warning">预警</button>
+                  <button type="button" role="tab" aria-selected="false" data-key-warning-tab="disposal">隐患处置</button>
+                </div>
+              </div>
+              <div class="key-warning-table-wrap">
+                <table class="key-warning-table">
+                  <thead><tr><th>排名</th><th>名称</th><th id="keyWarningStateHead">风险等级</th><th>首要风险</th></tr></thead>
+                  <tbody>
+                    <tr class="key-warning-row" data-key-warning="warning"><td>1</td><td>鄂州市凤凰路金钻音乐会所</td><td><span class="key-warning-level">红色</span></td><td>安全出口合规≤1天未处理；自动报警系统≤1天未处理；公共建筑消防安全重点单位</td></tr>
+                    <tr class="key-warning-row" data-key-warning="warning"><td>2</td><td>鄂州市消防救援支队大楼</td><td><span class="key-warning-level">红色</span></td><td>高层二类非消防安全重点单位；安全出口合规；疏散通道畅通</td></tr>
+                    <tr class="key-warning-row" data-key-warning="warning"><td>3</td><td>武汉圣朗商业有限公司</td><td><span class="key-warning-level">红色</span></td><td>应急照明≤1天未处理；自动报警系统异常</td></tr>
+                    <tr class="key-warning-row" data-key-warning="disposal" hidden><td>1</td><td>鄂州市凤凰路金钻音乐会所</td><td><span style="color:#4de4ad">处置中</span></td><td>已派单属地核查，等待现场反馈</td></tr>
+                    <tr class="key-warning-row" data-key-warning="disposal" hidden><td>2</td><td>鄂州市消防救援支队大楼</td><td><span style="color:#54c8f5">已派单</span></td><td>已通知管理单位开展整改复核</td></tr>
+                    <tr class="key-warning-row" data-key-warning="disposal" hidden><td>3</td><td>武汉圣朗商业有限公司</td><td><span style="color:#f4c347">待反馈</span></td><td>应急照明故障整改期限内跟踪</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        </aside>
+        <div class="building-fire-stage-note" aria-hidden="true"><b>建筑消防态势区</b>后续按设计逐步补充</div>
+      </div>
+    </section>
+
     <!-- 餐饮场所燃气泄漏风险详情界面（复用极端天气界面的设计体系） -->
     <section class="extreme-screen" id="gasScreen" aria-hidden="true">
       <button class="extreme-back-btn" type="button" id="gasBackBtn" aria-label="返回主界面">← 返回主界面</button>
@@ -12607,6 +13104,35 @@
     });
     let activeRescueTeam = null;
     const gasScreen = document.getElementById("gasScreen");
+    const buildingFireScreen = document.getElementById("buildingFireScreen");
+    const buildingFireClock = document.getElementById("buildingFireClock");
+    const buildingFireTabs = Array.from(document.querySelectorAll(".building-fire-switch button"));
+    const buildingFireModes = Array.from(document.querySelectorAll(".building-fire-mode-content"));
+    const buildingFireRightModes = Array.from(document.querySelectorAll(".building-fire-right-mode"));
+    const buildingFireMapTitle = document.querySelector(".building-fire-map-title");
+    const keyAreaFilters = Array.from(document.querySelectorAll("[data-key-area-filter]"));
+    const keyPlacePrototypeData = {
+      "全市": { units: 10, shops: 14375, unitLevels: [10, 0, 0, 0], cityLevels: [10, 0, 0, 0], drones: 42, nests: 6, categories: [[33, 72], [33, 72], [33, 72]] },
+      "鄂城区": { units: 3, shops: 4782, unitLevels: [3, 0, 0, 0], cityLevels: [3, 0, 0, 0], drones: 14, nests: 2, categories: [[36, 31], [32, 28], [32, 27]] },
+      "华容区": { units: 2, shops: 2960, unitLevels: [2, 0, 0, 0], cityLevels: [2, 0, 0, 0], drones: 8, nests: 1, categories: [[31, 18], [35, 20], [34, 19]] },
+      "葛店区": { units: 2, shops: 3410, unitLevels: [2, 0, 0, 0], cityLevels: [2, 0, 0, 0], drones: 9, nests: 1, categories: [[34, 25], [33, 24], [33, 24]] },
+      "梁子湖区": { units: 1, shops: 1632, unitLevels: [1, 0, 0, 0], cityLevels: [1, 0, 0, 0], drones: 5, nests: 1, categories: [[30, 11], [34, 12], [36, 13]] },
+      "临空经济区": { units: 2, shops: 1591, unitLevels: [2, 0, 0, 0], cityLevels: [2, 0, 0, 0], drones: 6, nests: 0, categories: [[35, 16], [32, 15], [33, 15]] }
+    };
+    const keyIotPrototypeData = {
+      "鄂州市博物馆": ["0.48 MPa", "0.36 MPa", 36, 2, 1, 128],
+      "鄂州市城市福利中心": ["0.46 MPa", "0.34 MPa", 28, 2, 1, 96],
+      "长城花园酒店股份有限公司": ["0.51 MPa", "0.39 MPa", 42, 3, 2, 168],
+      "吾悦广场": ["0.53 MPa", "0.41 MPa", 68, 4, 2, 286],
+      "鄂州市凤凰路金钻音乐会所": ["0.44 MPa", "0.31 MPa", 22, 2, 1, 74],
+      "鄂州市中心医院": ["0.55 MPa", "0.43 MPa", 84, 5, 3, 352],
+      "鄂州市滨湖大厦": ["0.49 MPa", "0.37 MPa", 31, 2, 1, 116],
+      "鄂州市消防救援支队大楼": ["0.52 MPa", "0.40 MPa", 46, 3, 2, 164],
+      "湖北新亚太商业管理有限公司": ["0.47 MPa", "0.35 MPa", 27, 2, 1, 102],
+      "鄂州恒大首府二期商业及影院": ["0.50 MPa", "0.38 MPa", 39, 3, 2, 148],
+      "武汉圣朗商业有限公司": ["0.45 MPa", "0.33 MPa", 25, 2, 1, 88]
+    };
+    const buildingFireBackBtn = document.getElementById("buildingFireBackBtn");
     const gasBackBtn = document.getElementById("gasBackBtn");
     const gasVideoTabs = document.querySelector(".gas-video-tabs");
     const gasVideoGrid = document.getElementById("gasVideoGrid");
@@ -14167,6 +14693,110 @@
       document.getElementById("forestScreen").setAttribute("aria-hidden", "false");
     }
 
+    function updateBuildingFireClock() {
+      if (!buildingFireClock) return;
+      buildingFireClock.textContent = new Intl.DateTimeFormat("zh-CN", {
+        year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
+      }).format(new Date()).replaceAll("/", "-");
+    }
+
+    function openBuildingFireScreen() {
+      closeWeatherModal();
+      closeEventModal();
+      closeLoopEventModal();
+      keyPanel.style.display = "none";
+      layerPanel.classList.remove("is-open");
+      updateBuildingFireClock();
+      screenEl.classList.add("building-fire-active");
+      buildingFireScreen.setAttribute("aria-hidden", "false");
+    }
+
+    function closeBuildingFireScreen() {
+      screenEl.classList.remove("building-fire-active");
+      buildingFireScreen.setAttribute("aria-hidden", "true");
+      mainTitle.textContent = "鄂州市城市安全风险监测预警平台";
+    }
+
+    function renderKeyPlaceData(area) {
+      const data = keyPlacePrototypeData[area] || keyPlacePrototypeData["全市"];
+      document.getElementById("keyUnitCount").textContent = data.units.toLocaleString("zh-CN");
+      document.getElementById("keyShopCount").textContent = data.shops.toLocaleString("zh-CN");
+      document.getElementById("keyDroneCount").textContent = data.drones.toLocaleString("zh-CN");
+      document.getElementById("keyNestCount").textContent = data.nests.toLocaleString("zh-CN");
+      document.querySelectorAll("[data-key-unit-level]").forEach(node => { node.textContent = data.unitLevels[Number(node.dataset.keyUnitLevel)]; });
+      document.querySelectorAll("[data-key-city-level]").forEach(node => { node.textContent = data.cityLevels[Number(node.dataset.keyCityLevel)]; });
+      document.querySelectorAll("[data-key-category-percent]").forEach(node => { node.textContent = `${data.categories[Number(node.dataset.keyCategoryPercent)][0]}%`; });
+      document.querySelectorAll("[data-key-category-count]").forEach(node => { node.textContent = `数量 ${data.categories[Number(node.dataset.keyCategoryCount)][1]}`; });
+      keyAreaFilters.forEach(filter => { filter.value = area; });
+    }
+
+    function renderKeyIotData(place) {
+      const data = keyIotPrototypeData[place] || keyIotPrototypeData["鄂州市博物馆"];
+      const water = Number.parseFloat(data[0]);
+      const hydraulic = Number.parseFloat(data[1]);
+      const monitor = Number(data[2]);
+      document.getElementById("iotWaterPressure").innerHTML = `${water.toFixed(2)}<em>MPa</em>`;
+      document.getElementById("iotHydraulicPressure").innerHTML = `${hydraulic.toFixed(2)}<em>MPa</em>`;
+      document.getElementById("iotMonitorCount").textContent = monitor;
+      document.getElementById("iotWaterNeedle").style.setProperty("--needle", `${-115 + Math.min(water, 1.6) / 1.6 * 230}deg`);
+      document.getElementById("iotHydraulicNeedle").style.setProperty("--needle", `${-115 + Math.min(hydraulic, 1.6) / 1.6 * 230}deg`);
+      [0.78, 0.58, 0.2].forEach((ratio, index) => {
+        document.getElementById(`iotHydraulicFloor${index + 1}`).textContent = `${(hydraulic * ratio).toFixed(2)} MPa`;
+      });
+      ["iotPowerCount", "iotHostCount", "iotSmokeCount"].forEach((id, index) => { document.getElementById(id).textContent = data[index + 3]; });
+    }
+
+    buildingFireTabs.forEach(button => {
+      button.addEventListener("click", () => {
+        const mode = button.id === "keyPlacesTab" ? "key" : "nine";
+        buildingFireTabs.forEach(tab => {
+          const active = tab === button;
+          tab.classList.toggle("is-active", active);
+          tab.setAttribute("aria-selected", String(active));
+        });
+        buildingFireModes.forEach(content => {
+          content.hidden = content.id !== (mode === "key" ? "keyPlaceContent" : "nineSmallContent");
+        });
+        buildingFireRightModes.forEach(content => {
+          content.hidden = content.id !== (mode === "key" ? "keyPlaceRight" : "nineSmallRight");
+        });
+        buildingFireMapTitle.textContent = mode === "key" ? "鄂州市重点场所消防态势图" : "鄂州市建筑消防态势图";
+        if (mode === "key") {
+          renderKeyPlaceData(keyAreaFilters[0].value);
+          renderKeyIotData(document.getElementById("keyIotPlaceSelect").value);
+        }
+      });
+    });
+    keyAreaFilters.forEach(filter => filter.addEventListener("change", () => renderKeyPlaceData(filter.value)));
+    document.getElementById("keyIotPlaceSelect").addEventListener("change", event => renderKeyIotData(event.target.value));
+    document.querySelectorAll("[data-key-warning-tab]").forEach(button => {
+      button.addEventListener("click", () => {
+        const type = button.dataset.keyWarningTab;
+        document.querySelectorAll("[data-key-warning-tab]").forEach(tab => {
+          const active = tab === button;
+          tab.classList.toggle("is-active", active);
+          tab.setAttribute("aria-selected", String(active));
+        });
+        document.querySelectorAll("[data-key-warning]").forEach(row => { row.hidden = row.dataset.keyWarning !== type; });
+        document.getElementById("keyWarningTitle").textContent = type === "warning" ? "全市隐患预警" : "全市隐患处置";
+        document.getElementById("keyWarningStateHead").textContent = type === "warning" ? "风险等级" : "处置状态";
+      });
+    });
+    document.querySelectorAll("[data-fire-event-tab]").forEach(button => {
+      button.addEventListener("click", () => {
+        const type = button.dataset.fireEventTab;
+        document.querySelectorAll("[data-fire-event-tab]").forEach(tab => {
+          const active = tab === button;
+          tab.classList.toggle("is-active", active);
+          tab.setAttribute("aria-selected", String(active));
+        });
+        document.querySelectorAll("[data-fire-event]").forEach(row => {
+          row.hidden = row.dataset.fireEvent !== type;
+        });
+      });
+    });
+    setInterval(updateBuildingFireClock, 1000);
+
     function closeForestScreen() {
       screenEl.classList.remove("forest-active");
       document.getElementById("forestScreen").setAttribute("aria-hidden", "true");
@@ -14674,6 +15304,12 @@
             openGasScreen();
             return;
           }
+          if (button.dataset.risk === "建筑火灾风险") {
+            list.querySelectorAll(".risk-item").forEach(item => item.classList.remove("active"));
+            button.classList.add("active");
+            openBuildingFireScreen();
+            return;
+          }
           if (button.dataset.risk === "森林火灾风险") {
             list.querySelectorAll(".risk-item").forEach(item => item.classList.remove("active"));
             button.classList.add("active");
@@ -14908,6 +15544,7 @@
       weatherCloseBtn.addEventListener("click", closeWeatherModal);
       extremeBackBtn.addEventListener("click", closeExtremeScreen);
       gasBackBtn.addEventListener("click", closeGasScreen);
+      buildingFireBackBtn.addEventListener("click", closeBuildingFireScreen);
       document.getElementById("ff-forestOverlayBack").addEventListener("click", closeForestScreen);
       gasVideoTabs.addEventListener("click", event => {
         const tab = event.target.closest("[data-gas-video-tab]");
