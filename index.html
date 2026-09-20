@@ -10591,7 +10591,10 @@
     .building-fire-brand-mark i:nth-child(2) { opacity: .6; }
     .building-fire-brand-mark i:nth-child(3) { opacity: .6; }
     .building-fire-brand h2 { margin: 0; color: #e5f5ff; font-size: 24px; letter-spacing: .2em; font-weight: 800; text-shadow: 0 0 16px rgba(104,221,255,.26); }
-    .building-fire-actions { display: flex; align-items: center; gap: 16px; }
+    .building-fire-actions { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+    .building-fire-icon-action { display: grid; place-items: center; width: 36px; height: 30px; padding: 0; border: 1px solid rgba(82, 191, 244, .3); color: #ffb03e; background: rgba(5, 38, 69, .5); cursor: pointer; clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 100%, 0 100%); transition: border-color .18s ease, background .18s ease, transform .18s ease; }
+    .building-fire-icon-action img { width: 27px; height: 20px; object-fit: contain; filter: drop-shadow(0 3px 3px rgba(0, 0, 0, .45)); }
+    .building-fire-icon-action:hover, .building-fire-icon-action:focus-visible { border-color: rgba(255, 163, 57, .82); background: rgba(126, 47, 14, .38); outline: none; transform: translateY(-1px); }
     .building-fire-clock { color: #83b7d7; font-size: 13px; font-variant-numeric: tabular-nums; letter-spacing: .05em; }
     .building-fire-back { height: 30px; padding: 0 11px; border: 1px solid rgba(75, 196, 255, .36); color: #bde9ff; background: rgba(10, 73, 125, .24); font: inherit; font-size: 12px; cursor: pointer; clip-path: polygon(0 0, 100% 0, calc(100% - 7px) 100%, 0 100%); }
     .building-fire-back:hover { color: #fff; background: rgba(23, 147, 215, .38); }
@@ -10606,7 +10609,7 @@
     }
     .building-fire-mode-content { display: grid; min-height: 0; gap: 8px; }
     #nineSmallContent { grid-template-rows: minmax(104px, 1.05fr) minmax(156px, 1.4fr) minmax(108px, .9fr) minmax(142px, 1.15fr); }
-    #keyPlaceContent { grid-template-rows: minmax(88px, .9fr) minmax(110px, 1.1fr) minmax(86px, .85fr) minmax(72px, .72fr) minmax(108px, 1.08fr); }
+    #keyPlaceContent { grid-template-rows: minmax(102px, .9fr) minmax(178px, 1.58fr) minmax(72px, .62fr) minmax(108px, .9fr); }
     #nineSmallContent[hidden], #keyPlaceContent[hidden] { display: none; }
     .building-fire-switch { display: grid; grid-template-columns: 1fr 1fr; height: 36px; padding: 3px; border: 1px solid rgba(57, 177, 255, .33); background: rgba(3, 27, 52, .68); clip-path: polygon(0 0, 96% 0, 100% 24%, 100% 100%, 4% 100%, 0 76%); }
     .building-fire-switch button { border: 0; color: #89b8d8; background: transparent; font: inherit; font-size: 14px; font-weight: 800; cursor: pointer; transition: color .2s ease, background .2s ease; }
@@ -10647,15 +10650,17 @@
     .fire-smoke-item::before { content: ""; position: absolute; left: 0; top: 6px; bottom: 5px; width: 2px; background: var(--state); box-shadow: 0 0 7px var(--state); }
     .fire-smoke-item b { display: block; color: #f0fbff; font-size: 15px; line-height: 1.15; font-family: Arial, sans-serif; font-variant-numeric: tabular-nums; }
     .fire-smoke-item span { display: block; margin-top: 4px; color: #8db4cf; font-size: 10px; white-space: nowrap; }
-    .fire-risk-body { display: grid; grid-template-columns: repeat(3, 1fr); align-items: end; gap: 16px; height: calc(100% - 33px); padding: 8px 18px 11px; }
-    .fire-risk-item { display: grid; grid-template-rows: 1fr auto auto; align-items: end; height: 100%; text-align: center; }
-    .fire-risk-item b { margin-bottom: 6px; color: var(--risk); font-family: Arial, sans-serif; font-size: 16px; font-variant-numeric: tabular-nums; }
-    .fire-risk-column { position: relative; width: 30px; height: 64px; margin: 0 auto 5px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--risk), transparent 38%); background: rgba(14, 87, 144, .17); }
-    .fire-risk-column i { position: absolute; right: 0; bottom: 0; left: 0; height: var(--risk-height); background: linear-gradient(to top, color-mix(in srgb, var(--risk), #0467a8 35%), var(--risk)); box-shadow: 0 0 14px color-mix(in srgb, var(--risk), transparent 35%); transform-origin: bottom center; animation: fire-risk-rise .8s cubic-bezier(.16,1,.3,1) both; }
-    .fire-risk-item:nth-child(2) .fire-risk-column i { animation-delay: .13s; }
-    .fire-risk-item:nth-child(3) .fire-risk-column i { animation-delay: .25s; }
-    .fire-risk-item span { color: #a8cae0; font-size: 11px; white-space: nowrap; }
-    .key-overview { display: grid; grid-template-columns: 1fr 1.25fr; gap: 8px; height: calc(100% - 32px); padding: 8px; }
+    .fire-risk-body { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 7px; height: calc(100% - 33px); padding: 7px 9px 9px; }
+    .fire-risk-item { position: relative; display: grid; grid-template-columns: 28px minmax(0, 1fr); grid-template-rows: auto 1fr; column-gap: 8px; align-items: center; min-width: 0; overflow: hidden; padding: 7px 8px; color: #dcefff; background: linear-gradient(112deg, color-mix(in srgb, var(--risk), transparent 83%), rgba(4, 29, 55, .33)); border: 1px solid color-mix(in srgb, var(--risk), transparent 60%); }
+    .fire-risk-item::before { content: ""; grid-row: 1 / span 2; width: 23px; height: 23px; background: color-mix(in srgb, var(--risk), transparent 76%); border: 1px solid var(--risk); clip-path: polygon(50% 0, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%); box-shadow: inset 0 0 0 4px rgba(3, 26, 49, .48), 0 0 11px color-mix(in srgb, var(--risk), transparent 48%); }
+    .fire-risk-item::after { content: ""; position: absolute; right: -22px; bottom: -28px; width: 82px; height: 48px; background: radial-gradient(ellipse, color-mix(in srgb, var(--risk), transparent 67%), transparent 69%); opacity: .7; pointer-events: none; animation: fire-risk-pulse 2.8s ease-in-out infinite; }
+    .fire-risk-item:nth-child(2)::after { animation-delay: -.7s; }
+    .fire-risk-item:nth-child(3)::after { animation-delay: -1.4s; }
+    .fire-risk-item:nth-child(4)::after { animation-delay: -2.1s; }
+    .fire-risk-item span { grid-column: 2; color: color-mix(in srgb, var(--risk), white 28%); font-size: 10px; font-weight: 800; letter-spacing: .04em; white-space: nowrap; }
+    .fire-risk-item b { grid-column: 2; align-self: start; margin-top: 2px; color: #f4fbff; font-family: Arial, sans-serif; font-size: 21px; line-height: 1; font-variant-numeric: tabular-nums; }
+    .fire-risk-item b small { margin-left: 3px; color: #8db7d4; font-size: 10px; font-weight: 500; }
+    .key-overview { display: grid; grid-template-columns: minmax(92px, .64fr) minmax(0, 1.36fr); gap: 8px; height: calc(100% - 32px); padding: 8px; }
     .key-overview-main, .key-overview-sub { display: flex; align-items: center; justify-content: center; min-width: 0; background: linear-gradient(135deg, rgba(15, 97, 160, .24), rgba(4, 25, 46, .3)); border: 1px solid rgba(62, 181, 245, .17); }
     .key-overview-main { flex-direction: column; }
     .key-overview-icon { width: 27px; height: 27px; margin-bottom: 5px; fill: none; stroke: #38d3ef; stroke-width: 1.6; filter: drop-shadow(0 0 6px rgba(56,211,239,.35)); }
@@ -10670,6 +10675,10 @@
     .key-level { display: grid; align-content: center; justify-items: center; gap: 6px; background: color-mix(in srgb, var(--level), transparent 86%); border-top: 2px solid var(--level); }
     .key-level span { color: var(--level); font-size: 11px; font-weight: 800; }
     .key-level b { color: #eaf8ff; font-family: Arial, sans-serif; font-size: 24px; line-height: 1; font-variant-numeric: tabular-nums; }
+    .key-overview .key-levels { height: 100%; padding: 0; gap: 5px; }
+    .key-overview .key-level { gap: 4px; }
+    .key-overview .key-level span { font-size: 10px; }
+    .key-overview .key-level b { font-size: 20px; }
     .key-unit-risk-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: 8px; height: calc(100% - 32px); padding: 8px; }
     .key-unit-risk-layout .key-levels { grid-template-columns: 1fr 1fr; height: 100%; padding: 0; gap: 5px; }
     .key-unit-risk-layout .key-level { gap: 3px; }
@@ -10679,6 +10688,26 @@
     .key-unit-risk-carousel::before { content: "重点单位风险统计"; position: absolute; z-index: 3; top: 0; right: 0; left: 0; height: 23px; padding: 6px 8px 0; color: #b9e8fa; background: linear-gradient(90deg, rgba(10, 72, 117, .92), rgba(7, 38, 67, .72)); border-bottom: 1px solid rgba(62, 181, 245, .16); font-size: 10px; font-weight: 800; }
     .key-unit-risk-track { display: grid; gap: 5px; padding: 30px 8px 8px; animation: key-unit-risk-scroll 12s linear infinite; }
     .key-unit-risk-carousel:hover .key-unit-risk-track { animation-play-state: paused; }
+    .key-risk-stat-panel .key-unit-risk-carousel { height: calc(100% - 32px); margin: 8px; }
+    .key-risk-stat-panel .key-unit-risk-carousel::before { display: none; }
+    .key-risk-stat-panel .key-unit-risk-track { display: block; height: 100%; padding: 0; animation: none; }
+    .key-rank-filters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 6px 8px; border-bottom: 1px solid rgba(62, 181, 245, .16); background: rgba(7, 44, 76, .42); }
+    .key-rank-filter { min-height: 22px; border: 1px solid rgba(65, 168, 228, .25); color: #94c4e0; background: rgba(4, 28, 51, .48); font: inherit; font-size: 10px; font-weight: 700; cursor: pointer; transition: background .18s ease, color .18s ease, border-color .18s ease; }
+    .key-rank-filter:hover, .key-rank-filter:focus-visible { color: #eafaff; border-color: rgba(61, 212, 241, .76); outline: none; }
+    .key-rank-filter.is-active { color: #eaffff; border-color: rgba(50, 222, 243, .68); background: linear-gradient(90deg, rgba(17, 151, 202, .42), rgba(6, 69, 119, .4)); }
+    .key-rank-head, .key-rank-row { display: grid; grid-template-columns: 28px minmax(80px, 1.1fr) 40px minmax(0, 2.25fr); column-gap: 7px; align-items: center; }
+    .key-rank-head { min-height: 24px; padding: 0 9px; color: #77adca; background: rgba(7, 42, 71, .66); font-size: 10px; font-weight: 700; }
+    .key-rank-list { height: calc(100% - 24px); overflow: auto; scrollbar-width: thin; scrollbar-color: #2b96bf rgba(3, 26, 47, .46); }
+    .key-rank-list::-webkit-scrollbar { width: 4px; }
+    .key-rank-list::-webkit-scrollbar-track { background: rgba(3, 26, 47, .46); }
+    .key-rank-list::-webkit-scrollbar-thumb { background: #2b96bf; }
+    .key-rank-row { min-height: 38px; padding: 5px 9px; color: #cfe9f7; border-bottom: 1px solid rgba(62, 181, 245, .12); font-size: 10px; line-height: 1.35; }
+    .key-rank-row:hover { background: rgba(22, 118, 168, .15); }
+    .key-rank-row[hidden] { display: none; }
+    .key-rank-row b { overflow: hidden; color: #e8f8ff; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .key-rank-row em { color: #ff7471; font-style: normal; font-weight: 800; text-align: center; }
+    .key-rank-row small { color: #a8cadf; font-size: 10px; }
+    .key-rank-empty { display: grid; place-items: center; height: 100%; color: #7ea8c4; font-size: 11px; }
     .key-unit-risk-item { display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto 6px; column-gap: 8px; }
     .key-unit-risk-item b { overflow: hidden; color: #d9f3ff; font-size: 11px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
     .key-unit-risk-item em { color: #ff806d; font-family: Arial, sans-serif; font-size: 12px; font-style: normal; font-weight: 800; white-space: nowrap; }
@@ -10701,8 +10730,8 @@
     .key-category-item span { color: #e1f5ff; font-size: 11px; white-space: nowrap; }
     .key-category-item small { color: color-mix(in srgb, var(--category), white 45%); font-size: 10px; }
     @keyframes fire-bar-reveal { from { opacity: .25; transform: scaleX(0); } to { opacity: 1; transform: scaleX(1); } }
-    @keyframes fire-risk-rise { from { opacity: .25; transform: scaleY(0); } to { opacity: 1; transform: scaleY(1); } }
-    @media (prefers-reduced-motion: reduce) { .fire-top10-bar i, .fire-risk-column i, .key-unit-risk-track { animation: none; } }
+    @keyframes fire-risk-pulse { 0%, 100% { opacity: .4; transform: scale(.9); } 50% { opacity: .88; transform: scale(1.12); } }
+    @media (prefers-reduced-motion: reduce) { .fire-top10-bar i, .fire-risk-item::after, .key-unit-risk-track { animation: none; } }
     .building-fire-map { position: absolute; top: 12px; bottom: 12px; left: calc(min(390px, 30vw) + 44px); right: calc(min(390px, 30vw) + 44px); overflow: hidden; border: 1px solid rgba(57, 177, 255, .25); background: #061728; }
     .building-fire-map::before { content: ""; position: absolute; z-index: 1; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(3, 19, 38, .4), transparent 25%, transparent 75%, rgba(3, 19, 38, .35)), linear-gradient(0deg, rgba(3, 19, 38, .35), transparent 28%); }
     .building-fire-map::after { content: ""; position: absolute; z-index: 2; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(74, 194, 255, .07) 1px, transparent 1px), linear-gradient(90deg, rgba(74, 194, 255, .07) 1px, transparent 1px); background-size: 40px 40px; mix-blend-mode: screen; }
@@ -10793,6 +10822,11 @@
     .building-fire-stage-note { display: none; }
     @media (max-width: 1180px) { .building-fire-left { width: 370px; min-width: 0; } .building-fire-map { left: 410px; right: 410px; } .building-fire-right { width: 370px; } }
     @media (max-width: 800px) { #buildingFireScreen { overflow: auto; } .building-fire-topbar { padding: 0 14px; } .building-fire-brand { min-width: 240px; padding: 0 20px; } .building-fire-brand h2 { font-size: 17px; } .building-fire-clock { display: none; } .building-fire-workspace { height: auto; padding: 12px; } .building-fire-left { width: 100%; } .building-fire-stage-note { display: none; } }
+  </style>
+  <style>
+    /* Weather service owns its full viewport; other risk surfaces keep their styles. */
+    .screen.extreme-active #extremeScreen { position:absolute; inset:0; z-index:100; pointer-events:auto; background:#eef1f5; }
+    #weatherDashboardFrame { display:block; width:100%; height:100%; border:0; }
   </style>
 </head>
 <body>
@@ -12132,158 +12166,8 @@
     </section>
     </section>
 
-    <section class="extreme-screen" id="extremeScreen" aria-hidden="true">
-      <button class="extreme-back-btn" type="button" id="extremeBackBtn" aria-label="返回主界面">← 返回主界面</button>
-      <div class="extreme-skin-switch" role="group" aria-label="极端天气界面皮肤">
-        <button type="button" data-extreme-skin="light" class="is-active" aria-pressed="true">浅色</button>
-        <button type="button" data-extreme-skin="night" aria-pressed="false">深科技蓝</button>
-      </div>
-      <div class="extreme-panel extreme-forecast-panel">
-        <div class="extreme-panel-title">天气预报</div>
-        <div class="extreme-forecast-list">
-          <div class="extreme-forecast-day"><b>今日</b><i aria-label="晴">☀</i><span>晴热</span><em>29/38℃</em></div>
-          <div class="extreme-forecast-day"><b>周五</b><i aria-label="多云">☁</i><span>多云</span><em>28/36℃</em></div>
-          <div class="extreme-forecast-day"><b>周六</b><i aria-label="阵雨">☂</i><span>阵雨</span><em>27/34℃</em></div>
-          <div class="extreme-forecast-day"><b>周日</b><i aria-label="雷阵雨">⚡</i><span>雷阵雨</span><em>26/33℃</em></div>
-          <div class="extreme-forecast-day"><b>周一</b><i aria-label="短时雨">☂</i><span>短时雨</span><em>26/35℃</em></div>
-          <div class="extreme-forecast-day"><b>周二</b><i aria-label="轻雾">≋</i><span>轻雾</span><em>27/34℃</em></div>
-          <div class="extreme-forecast-day"><b>周三</b><i aria-label="晴">☀</i><span>晴</span><em>28/37℃</em></div>
-        </div>
-      </div>
-      <div class="extreme-panel extreme-history-panel">
-        <div class="extreme-panel-title">预警列表</div>
-        <div class="extreme-history-filters">
-          <label class="extreme-history-filter"><span>时间</span>
-            <select id="extremeHistoryTime" aria-label="历史预警时间筛选">
-              <option value="all">全部时间</option>
-              <option value="7d">近7日</option>
-              <option value="30d">近30日</option>
-              <option value="year">今年</option>
-              <option value="archive">往年</option>
-            </select>
-          </label>
-          <label class="extreme-history-filter"><span>类型</span>
-            <select id="extremeHistoryType" aria-label="历史预警类型筛选">
-              <option value="all">全部类型</option>
-              <option value="高温">高温</option>
-              <option value="暴雨">暴雨</option>
-              <option value="强对流">强对流</option>
-              <option value="道路结冰">道路结冰</option>
-              <option value="雷电">雷电</option>
-              <option value="大雾">大雾</option>
-            </select>
-          </label>
-        </div>
-        <div class="extreme-history-list" id="extremeHistoryList"></div>
-      </div>
-      <div class="extreme-panel extreme-warning-panel">
-        <div class="extreme-panel-title">预警详情</div>
-        <div class="extreme-warning-body">
-          <div class="extreme-warning-head">
-            <div class="extreme-warning-icon" id="extremeWarningIcon">⚠</div>
-            <div>
-              <h3 id="extremeWarningName">鄂州市气象台发布高温黄色预警</h3>
-              <span class="extreme-badge" id="extremeWarningLevel">黄色预警</span>
-              <span class="extreme-warning-time" id="extremeWarningTime"></span>
-            </div>
-          </div>
-          <p class="extreme-warning-summary" id="extremeWarningSummary"></p>
-          <div class="extreme-section-title">预警时段</div>
-          <p id="extremeWarningPeriod"></p>
-          <div class="extreme-section-title">发布单位</div>
-          <p id="extremeWarningUnit"></p>
-          <div class="extreme-section-title">预警内容</div>
-          <p id="extremeWarningContent"></p>
-          <div class="extreme-section-title">预警标准</div>
-          <p id="extremeWarningStandard"></p>
-          <div class="extreme-section-title">防御指南</div>
-          <p id="extremeWarningGuide"></p>
-        </div>
-      </div>
-      <div class="extreme-panel extreme-rescue-panel">
-        <div class="extreme-panel-title"><b>救援力量</b></div>
-        <div class="extreme-rescue-body">
-          <div class="extreme-rescue-overview">
-            <div class="extreme-rescue-metrics">
-              <div class="extreme-rescue-metric"><b>47</b><span>避难场所</span></div>
-              <button class="extreme-rescue-metric" type="button" data-rescue-filter="all"><b id="rescueTeamCount">10</b><span>救援队伍</span></button>
-              <div class="extreme-rescue-metric"><b>8</b><span>医疗机构</span></div>
-            </div>
-            <div class="extreme-rescue-materials" id="rescueMaterials"></div>
-          </div>
-          <table class="extreme-rescue-table">
-            <thead><tr><th>队伍名称</th><th>主管部门</th><th>人员编制</th><th>办公地点</th><th>负责人及电话</th><th>主要物资设备情况</th><th>储备地点</th></tr></thead>
-            <tbody>
-              <tr><td>鄂州市市政设施管理处应急抢险救援队</td><td>市城管委</td><td>97</td><td>百子正街4号（市政设施管理处）</td><td>雍松梅<br>13908682666</td><td>排水抢险车4000型2台、排水抢险车2000型1台、龙吸水1000型子母泵车1台、龙吸水1500型排水泵车1台、4寸排水一体泵3台、6寸排水一体泵6台、龙吸水排水车3000型1台、皮卡抢险车1台。</td><td>市政设施管理处应急抢险城南基地</td></tr>
-              <tr><td>鄂州市马龙、狮子口水库防汛抗旱应急抢险队伍</td><td>鄂州市水利和湖泊局</td><td>7</td><td>狮子口水库</td><td>胡志刚<br>13908689315</td><td>抗旱排涝装备设备10余万元。</td><td>马龙、狮子口水库</td></tr>
-              <tr><td>鄂城区防汛抗旱突击队</td><td>鄂城区应急局</td><td>20</td><td>鄂城区明堂后路23号</td><td>李洋<br>18727878115</td><td>协议储备石料200000立方米、编织袋86000条、彩条布21600平方米、桩木3534根、铁锹等160把、救生衣205件、救生圈70个、清水泵32台、发电机1台、巡堤查险灯具100台套、移动照明灯塔24台、高扬程水泵11台、无人机1台、送水车1台、卫星电话3部、对讲机3部、北斗手持终端7部，重型机械等其他防汛抗旱物资若干，总价值780余万元。</td><td>鄂城区应急物资储备库；鄂州市鄂城区樊口杨湖路众联物流（鄂州）有限公司8号仓库</td></tr>
-              <tr><td>碧石防汛抗旱突击队</td><td>碧石渡镇人民政府</td><td>30</td><td>碧石渡镇人民政府</td><td>尹建熊<br>18971980188</td><td>编织袋5000条、彩条布200平方米、桩木500根、砂石料30立方米、铁锹160把、救生衣200件、救生圈50个、救生绳20根、巡堤查险灯具50台套、清水泵8台、对讲机3部，其他防汛抗旱物资若干，总价值80余万元。</td><td>碧石渡镇人民政府应急物资储备库</td></tr>
-              <tr><td>杜山镇防汛抗旱突击队</td><td>杜山镇人民政府</td><td>30</td><td>杜山镇人民政府</td><td>王扶苏<br>19172802201</td><td>编织袋85000条、桩木1500根、铁锹等57套、救生衣72件、救生圈41个、救生绳27根、清水泵7台、巡堤查险灯具4台套、对讲机2部，其他防汛抗旱物资若干，总价值70余万元。</td><td>杜山镇人民政府应急物资储备库</td></tr>
-              <tr><td>樊口防汛抗旱突击队</td><td>樊口街道办事处</td><td>30</td><td>樊口街道办事处</td><td>李超<br>13986133792</td><td>编织袋7000条、彩条布180平方米、桩木680根、砂石料储备协议10000立方米、铁锹30套、橡皮艇1艘、救生衣70件、救生圈30个、救生绳27根、巡堤查险灯具24台套、高扬程水泵1台、对讲机3部，其他防汛抗旱物资若干，总价值90余万元。</td><td>樊口街道办事处应急物资储备库</td></tr>
-              <tr><td>凤凰防汛抗旱突击队</td><td>凤凰街道办事处</td><td>30</td><td>凤凰街道办事处</td><td>王汉桥<br>19908680652</td><td>编织袋2000条、桩木200根、砂石料5立方米、铁锹100把、橡皮艇1艘、救生衣60件、救生圈30个、救生绳27根、救生杆200根、巡堤查险灯具25台套、高扬程水泵3台、储水设备3个、对讲机5部，其他防汛抗旱物资若干，总价值50余万元。</td><td>凤凰街道办事处应急物资储备库</td></tr>
-              <tr><td>古楼防汛抗旱突击队</td><td>古楼街道办事处</td><td>30</td><td>古楼街道办事处</td><td>祝细林<br>18189762196</td><td>编织袋400条、铅丝1卷、救生衣70件、救生圈70个、橡皮艇1艘、救生绳2根、救生杆2根、对讲机3部，其他防汛抗旱物资若干，总价值30余万元。</td><td>古楼街道办事处应急物资储备库</td></tr>
-              <tr><td>花湖防汛抗旱突击队</td><td>花湖镇人民政府</td><td>30</td><td>花湖镇人民政府</td><td>阮利春<br>13886346268</td><td>桩木1000根、块石协议储备5000立方米、砂石料协议储备1000立方米、铁锹等150套、橡皮艇1艘、救生衣60件、救生圈30个、救生绳50根、巡堤查险灯具100台套、污水泵5台、高扬程水泵2台、储水设备6个、对讲机等4部，其他防汛抗旱物资若干，总价值130余万元。</td><td>花湖镇人民政府应急物资储备库</td></tr>
-              <tr><td>汀祖镇防汛抗旱突击队</td><td>汀祖镇人民政府</td><td>30</td><td>汀祖镇人民政府</td><td>刘水清<br>13476461216</td><td>编织袋10000条、桩木600根、砂石料3000立方米、铁锹100把、救生衣30件、救生圈100个、清水泵8台、无人机1台、巡堤查险灯具50台套、其他防汛抗旱物资若干，总价值140余万元。</td><td>汀祖镇人民政府应急物资储备库</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <aside class="extreme-rescue-drawer" id="rescueDrawer" aria-hidden="true">
-        <div class="extreme-rescue-drawer-head"><b>救援力量检索</b><span id="rescueDrawerCount"></span><button id="rescueDrawerClose" type="button" aria-label="关闭">×</button></div>
-        <div class="extreme-rescue-search-wrap" style="padding:8px 12px 0"><input class="extreme-rescue-search" id="rescueSearch" type="search" placeholder="搜索队伍、区域或物资装备" style="margin-top:0"></div>
-        <div class="extreme-rescue-list" id="rescueList"></div>
-      </aside>
-      <div class="extreme-panel extreme-plan-panel">
-        <div class="extreme-panel-title">极端天气类型与应急预案</div>
-        <button id="extremeStandardBtn" type="button" hidden aria-hidden="true" tabindex="-1"></button>
-        <div class="extreme-type-list" id="extremeTypeList"></div>
-        <div class="extreme-plan-section-title">应急预案</div>
-        <div class="extreme-plan-body" id="extremePlanDetail"></div>
-      </div>
-      <section class="extreme-standard-modal" id="extremeStandardModal" aria-hidden="true">
-        <div class="extreme-standard-dialog" role="dialog" aria-modal="true" aria-labelledby="extremeStandardTitle">
-          <div class="extreme-standard-head">
-            <strong id="extremeStandardTitle">气象灾害应急分级标准</strong>
-            <button type="button" id="extremeStandardClose" aria-label="关闭气象灾害应急分级标准">×</button>
-          </div>
-          <div class="extreme-standard-body">
-            <p class="extreme-standard-category">一、自然灾害类</p>
-            <section class="extreme-standard-level">
-              <h3>Ⅰ级响应</h3>
-              <p>（1）暴雨：过去48小时全市80%以上的观测站出现250毫米以上降水，预计未来24小时内，我市仍有100毫米以上的连续性降水天气。</p>
-              <p>（2）暴雪：过去24小时国家气象站降雪量达到25毫米以上，积雪深度达20厘米，且预计强降雪将继续维持。</p>
-              <p>（3）各种灾害性天气已对群众生产生活造成特别重大损失和影响，超出本区处置能力，需要由市政府组织处置的，以及上述灾害已经启动Ⅱ级响应但仍可能持续发展或影响其他地区的。</p>
-            </section>
-            <section class="extreme-standard-level">
-              <h3>Ⅱ级响应</h3>
-              <p>（1）暴雨：过去48小时全市80%以上的观测站出现200毫米以上降水，且有30%以上观测站出现250毫米以上降水，预计未来24小时内，我市仍有100毫米以上的连续性降水天气。</p>
-              <p>（2）暴雪：过去24小时国家气象站降雪量达到20毫米以上，积雪深度达15厘米，且预计强降雪将继续维持。</p>
-              <p>（3）寒潮：预计48小时最低气温下降14℃并伴有5级以上大风，最低气温降至2℃以下。</p>
-              <p>（4）高温：国家气象站连续10天日最高气温达37℃以上，且有1日最高气温达40℃，预计未来3天高温天气仍将持续。</p>
-              <p>（5）各种灾害性天气已对群众生产生活造成特别重大损失和影响，超出本区处置能力，需要由市政府组织处置的，以及上述灾害已经启动Ⅲ级响应但仍可能持续发展或影响其他地区的。</p>
-            </section>
-            <section class="extreme-standard-level">
-              <h3>Ⅲ级响应</h3>
-              <p>（1）暴雨：过去24小时全市出现100毫米以上降水，且有30%以上的观测站出现200毫米以上降水，预计未来24小时内，我市仍有100毫米以上的连续性降水天气。</p>
-              <p>（2）暴雪：过去24小时国家气象站降雪量达到15毫米以上，积雪深度达10厘米，且预计强降雪将继续维持。</p>
-              <p>（3）寒潮：预计24小时最低气温下降12℃并伴有5级以上大风，最低气温降至4℃以下。</p>
-              <p>（4）高温：国家气象站连续7天日最高气温达37℃以上，且预计未来3天高温天气仍将持续。</p>
-              <p>（5）大雾：过去48小时已出现能见度小于50米的大雾天气，且预计未来24小时大雾天气持续；或者预计未来72小时全市大部地区将出现能见度小于200米的连续性大雾天气。</p>
-              <p>（6）各种灾害性天气已对群众生产生活造成特别重大损失和影响，超出本区处置能力，需要由市政府组织处置的，以及上述灾害已经启动Ⅳ级响应但仍可能持续发展或影响其他地区的。</p>
-            </section>
-            <section class="extreme-standard-level">
-              <h3>Ⅳ级响应</h3>
-              <p>（1）暴雨：过去24小时全市出现50毫米以上降水，且部分乡镇出现100毫米以上降水，预计未来24小时内，我市仍有100毫米以上的连续性降水天气。</p>
-              <p>（2）暴雪：预计未来24小时国家气象站降雪量达到10毫米以上，积雪深度达5厘米；或者过去24小时国家气象站降雪量达到10毫米以上，积雪深度达5厘米，且预计降雪将继续维持。</p>
-              <p>（3）寒潮：预计未来24小时最低气温下降10℃并伴有5级以上大风，最低气温降至4℃以下。</p>
-              <p>（4）高温：国家气象站出现5天最高气温达37℃以上，且预计未来3天高温天气仍将持续。</p>
-              <p>（5）大雾：过去48小时已出现能见度小于200米的大雾天气，且预计未来24小时大雾天气持续；或者预计未来72小时全市大部地区将出现能见度小于500米的连续性大雾天气。</p>
-              <p>（6）强对流：预计受系统性飑线影响，未来6小时所辖大部地区将出现10级以上雷雨大风、大冰雹等强对流天气，或者已经出现并可能持续。</p>
-              <p>（7）各种灾害性天气已对群众生产生活造成一定损失和影响。</p>
-            </section>
-          </div>
-        </div>
-      </section>
+    <section class="extreme-screen" id="extremeScreen" aria-hidden="true" aria-label="气象灾害监测预警服务">
+      <iframe id="weatherDashboardFrame" title="气象灾害监测预警服务" data-src="assets/weather-dashboard.html"></iframe>
     </section>
 
     <!-- 建筑火灾风险详情界面：首期完成九小场所左侧信息栏 -->
@@ -12294,8 +12178,9 @@
           <h2>建筑火灾风险</h2>
         </div>
         <div class="building-fire-actions">
+          <button class="building-fire-icon-action" type="button" aria-label="火灾风险功能入口" title="火灾风险功能入口"><img src="assets/fire-action-icon.webp" alt=""></button>
           <div class="building-fire-clock" id="buildingFireClock">--</div>
-          <button class="building-fire-back" id="buildingFireBackBtn" type="button">返回总览</button>
+          <button class="building-fire-back" id="buildingFireBackBtn" type="button">返回驾驶舱</button>
         </div>
       </header>
       <div class="building-fire-workspace">
@@ -12348,56 +12233,57 @@
             </div>
           </section>
           <section class="building-fire-panel fire-risk" aria-labelledby="fireRiskTitle">
-            <div class="building-fire-panel-title" id="fireRiskTitle">风险评估概览 <small>参考数值</small></div>
+            <div class="building-fire-panel-title" id="fireRiskTitle">风险评估概览 <small>共 35,416 处</small></div>
             <div class="fire-risk-body">
-              <div class="fire-risk-item" style="--risk:#20cdf0; --risk-height:76%"><b>76%</b><div class="fire-risk-column"><i></i></div><span>建筑防火</span></div>
-              <div class="fire-risk-item" style="--risk:#f0b625; --risk-height:92%"><b>92%</b><div class="fire-risk-column"><i></i></div><span>消防设施</span></div>
-              <div class="fire-risk-item" style="--risk:#23d4eb; --risk-height:91%"><b>91%</b><div class="fire-risk-column"><i></i></div><span>安全管理</span></div>
+              <div class="fire-risk-item" style="--risk:#ff626d"><span>红色风险</span><b>1,258<small>处</small></b></div>
+              <div class="fire-risk-item" style="--risk:#ff9b53"><span>橙色风险</span><b>4,826<small>处</small></b></div>
+              <div class="fire-risk-item" style="--risk:#f5c542"><span>黄色风险</span><b>9,713<small>处</small></b></div>
+              <div class="fire-risk-item" style="--risk:#42d68d"><span>绿色风险</span><b>19,619<small>处</small></b></div>
             </div>
           </section>
           </div>
           <div class="building-fire-mode-content" id="keyPlaceContent" hidden>
             <section class="building-fire-panel" aria-labelledby="keyOverviewTitle">
-              <div class="building-fire-panel-title" id="keyOverviewTitle">全市单位总览
+              <div class="building-fire-panel-title" id="keyOverviewTitle">鄂州市单位总览
                 <select class="fire-area-filter" data-key-area-filter aria-label="筛选全市单位总览区域">
-                  <option value="全市" selected>全市</option><option value="鄂城区">鄂城区</option><option value="华容区">华容区</option><option value="葛店区">葛店区</option><option value="梁子湖区">梁子湖区</option><option value="临空经济区">临空经济区</option>
+                  <option value="全市" selected>鄂州市</option><option value="鄂城区">鄂城区</option><option value="华容区">华容区</option><option value="葛店区">葛店区</option><option value="梁子湖区">梁子湖区</option><option value="临空经济区">临空经济区</option>
                 </select>
               </div>
               <div class="key-overview">
                 <div class="key-overview-main"><svg class="key-overview-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V7l8-4 8 4v13M8 20v-5h8v5M8 10h.01M12 10h.01M16 10h.01"/></svg><b id="keyUnitCount">10</b><span>重点单位</span></div>
-                <div class="key-overview-sub"><svg class="key-overview-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h18v10H3zM5 10l2-5h10l2 5M7 14h.01M17 14h.01M8 20v-4h8v4"/></svg><div><b id="keyShopCount">14,375</b><span>沿街商铺</span></div></div>
+                <div class="key-levels" aria-label="全市单位风险等级情况">
+                  <div class="key-level" style="--level:#ff6a6d"><span>红色</span><b data-key-city-level="0">10</b></div>
+                  <div class="key-level" style="--level:#ff9c6b"><span>橙色</span><b data-key-city-level="1">0</b></div>
+                  <div class="key-level" style="--level:#f6c449"><span>黄色</span><b data-key-city-level="2">0</b></div>
+                  <div class="key-level" style="--level:#72d991"><span>绿色</span><b data-key-city-level="3">0</b></div>
+                </div>
               </div>
             </section>
-            <section class="building-fire-panel" aria-labelledby="keyLevelTitle">
-              <div class="building-fire-panel-title" id="keyLevelTitle">重点单位风险等级情况</div>
-              <div class="key-unit-risk-layout">
-                <div class="key-levels">
-                  <div class="key-level" style="--level:#ff6a6d"><span>红色</span><b data-key-unit-level="0">10</b></div>
-                  <div class="key-level" style="--level:#ff9c6b"><span>橙色</span><b data-key-unit-level="1">0</b></div>
-                  <div class="key-level" style="--level:#f6c449"><span>黄色</span><b data-key-unit-level="2">0</b></div>
-                  <div class="key-level" style="--level:#72d991"><span>绿色</span><b data-key-unit-level="3">0</b></div>
-                </div>
-                <div class="key-unit-risk-carousel" aria-label="重点单位风险统计轮播">
-                  <div class="key-unit-risk-track">
-                    <div class="key-unit-risk-item" style="--risk-width:100%"><b>鄂州市消防救援支队大楼</b><em>10 项</em><i></i></div>
-                    <div class="key-unit-risk-item" style="--risk-width:80%"><b>鄂州市博物馆</b><em>8 项</em><i></i></div>
-                    <div class="key-unit-risk-item" style="--risk-width:70%"><b>湖北新亚太商业管理有限公司</b><em>7 项</em><i></i></div>
-                    <div class="key-unit-risk-item" style="--risk-width:60%"><b>鄂州市凤凰路金钻音乐会所</b><em>6 项</em><i></i></div>
-                    <div class="key-unit-risk-item" style="--risk-width:100%" aria-hidden="true"><b>鄂州市消防救援支队大楼</b><em>10 项</em><i></i></div>
-                    <div class="key-unit-risk-item" style="--risk-width:80%" aria-hidden="true"><b>鄂州市博物馆</b><em>8 项</em><i></i></div>
-                    <div class="key-unit-risk-item" style="--risk-width:70%" aria-hidden="true"><b>湖北新亚太商业管理有限公司</b><em>7 项</em><i></i></div>
-                    <div class="key-unit-risk-item" style="--risk-width:60%" aria-hidden="true"><b>鄂州市凤凰路金钻音乐会所</b><em>6 项</em><i></i></div>
+            <section class="building-fire-panel key-risk-stat-panel" aria-labelledby="keyRiskStatTitle">
+              <div class="building-fire-panel-title" id="keyRiskStatTitle">全市单位火灾风险情况
+                <select class="fire-area-filter" data-key-area-filter aria-label="筛选火灾风险排名区域">
+                  <option value="全市" selected>鄂州市</option><option value="鄂城区">鄂城区</option><option value="华容区">华容区</option><option value="葛店区">葛店区</option><option value="梁子湖区">梁子湖区</option><option value="临空经济区">临空经济区</option>
+                </select>
+              </div>
+              <div class="key-unit-risk-carousel" aria-label="全市单位火灾风险情况">
+                <div class="key-unit-risk-track">
+                  <div class="key-rank-head"><span>排名</span><span>名称</span><span>等级</span><span>首要风险</span></div>
+                  <div class="key-rank-list" id="keyRiskRankList">
+                    <div class="key-rank-row" data-rank-type="重点单位" data-rank-area="全市"><span>1</span><b>鄂州市凤凰路金钻音乐会所</b><em>红色</em><small>安全出口未合规≤1天未处理、自动报警系统≤1天未处理、单多层公共建筑消防安全重点单位</small></div>
+                    <div class="key-rank-row" data-rank-type="重点单位" data-rank-area="全市"><span>2</span><b>鄂州市消防救援支队大楼</b><em>红色</em><small>公共建筑高层二类非消防安全重点单位、安全出口合规、疏散通道畅通</small></div>
+                    <div class="key-rank-row" data-rank-type="重点单位" data-rank-area="全市"><span>3</span><b>武汉圣朗商业有限公司</b><em>红色</em><small>应急照明≤1天未处理、自动报警系统≤1天未处理、单多层公共建筑消防安全重点单位</small></div>
+                    <div class="key-rank-row" data-rank-type="重点单位" data-rank-area="全市"><span>4</span><b>湖北新亚太商业管理有限公司</b><em>红色</em><small>疏散指示标志≤1天未处理、公共建筑高层二类消防安全重点单位、安全出口合规</small></div>
+                    <div class="key-rank-row" data-rank-type="重点单位" data-rank-area="全市"><span>5</span><b>长城花园酒店股份有限公司</b><em>红色</em><small>疏散指示标志≤1天未处理、单多层公共建筑消防安全重点单位、安全出口合规</small></div>
+                    <div class="key-rank-row" data-rank-type="重点单位" data-rank-area="全市"><span>6</span><b>鄂州市中心医院</b><em>红色</em><small>公共建筑高层一类消防安全重点单位、自动报警系统≤1天未处理、安全出口合规</small></div>
+                    <div class="key-rank-row" data-rank-type="重点单位" data-rank-area="全市"><span>7</span><b>鄂州恒大首府二期商业及影院</b><em>红色</em><small>疏散通道不畅≤1天未处理、疏散指示标志≤1天未处理、应急照明≤1天未处理</small></div>
+                    <div class="key-rank-row" data-rank-type="重点单位" data-rank-area="全市"><span>8</span><b>吾悦广场</b><em>红色</em><small>自动报警系统≤1天未处理、公共建筑高层二类消防安全重点单位、安全出口合规</small></div>
+                    <div class="key-rank-row" data-rank-type="重点单位" data-rank-area="全市"><span>9</span><b>鄂州市滨湖大厦</b><em>红色</em><small>公共建筑高层二类消防安全重点单位、安全出口合规、疏散通道畅通</small></div>
+                    <div class="key-rank-row" data-rank-type="重点单位" data-rank-area="全市"><span>10</span><b>鄂州市博物馆</b><em>红色</em><small>单多层公共建筑消防安全重点单位、安全出口合规、疏散通道畅通</small></div>
+                    <div class="key-rank-row" data-rank-type="重点单位" data-rank-area="全市"><span>11</span><b>湖北苏星制衣有限公司</b><em>红色</em><small>单多层公共建筑消防安全重点单位、安全出口合规、疏散通道畅通</small></div>
+                    <div class="key-rank-row" data-rank-type="重点单位" data-rank-area="全市"><span>12</span><b>鄂州市城市福利中心</b><em>红色</em><small>单多层公共建筑消防安全重点单位、安全出口合规、疏散通道畅通</small></div>
+                    <div class="key-rank-empty" id="keyRiskRankEmpty" hidden>当前筛选暂无风险排名数据</div>
                   </div>
                 </div>
-              </div>
-            </section>
-            <section class="building-fire-panel" aria-labelledby="cityLevelTitle">
-              <div class="building-fire-panel-title" id="cityLevelTitle">全市单位风险等级情况</div>
-              <div class="key-levels">
-                <div class="key-level" style="--level:#ff6a6d"><span>红色</span><b data-key-city-level="0">10</b></div>
-                <div class="key-level" style="--level:#ff9c6b"><span>橙色</span><b data-key-city-level="1">0</b></div>
-                <div class="key-level" style="--level:#f6c449"><span>黄色</span><b data-key-city-level="2">0</b></div>
-                <div class="key-level" style="--level:#72d991"><span>绿色</span><b data-key-city-level="3">0</b></div>
               </div>
             </section>
             <section class="building-fire-panel" aria-labelledby="airForceTitle">
@@ -13074,35 +12960,6 @@
     const screenEl = document.querySelector(".screen");
     const mainTitle = document.querySelector(".title-shell h1");
     const extremeScreen = document.getElementById("extremeScreen");
-    const extremeBackBtn = document.getElementById("extremeBackBtn");
-    const extremeHistoryList = document.getElementById("extremeHistoryList");
-    const extremeHistoryTime = document.getElementById("extremeHistoryTime");
-    const extremeHistoryType = document.getElementById("extremeHistoryType");
-    const extremeWarningIcon = document.getElementById("extremeWarningIcon");
-    const extremeWarningName = document.getElementById("extremeWarningName");
-    const extremeWarningLevel = document.getElementById("extremeWarningLevel");
-    const extremeWarningTime = document.getElementById("extremeWarningTime");
-    const extremeWarningSummary = document.getElementById("extremeWarningSummary");
-    const extremeWarningPeriod = document.getElementById("extremeWarningPeriod");
-    const extremeWarningUnit = document.getElementById("extremeWarningUnit");
-    const extremeWarningContent = document.getElementById("extremeWarningContent");
-    const extremeWarningStandard = document.getElementById("extremeWarningStandard");
-    const extremeWarningGuide = document.getElementById("extremeWarningGuide");
-    const extremeTypeList = document.getElementById("extremeTypeList");
-    const extremePlanDetail = document.getElementById("extremePlanDetail");
-    const extremeStandardBtn = document.getElementById("extremeStandardBtn");
-    const extremeStandardModal = document.getElementById("extremeStandardModal");
-    const extremeStandardClose = document.getElementById("extremeStandardClose");
-    const rescueSearch = document.getElementById("rescueSearch");
-    const rescueDrawer = document.getElementById("rescueDrawer");
-    const rescueDrawerClose = document.getElementById("rescueDrawerClose");
-    const rescueDrawerCount = document.getElementById("rescueDrawerCount");
-    const rescueList = document.getElementById("rescueList");
-    const rescueTeams = Array.from(document.querySelectorAll(".extreme-rescue-table tbody tr")).map((row, index) => {
-      const cells = Array.from(row.cells).map(cell => cell.innerText.replace(/\s+/g, " ").trim());
-      return { index, name: cells[0], department: cells[1], people: Number(cells[2]) || 0, office: cells[3], leader: cells[4], equipment: cells[5], storage: cells[6] };
-    });
-    let activeRescueTeam = null;
     const gasScreen = document.getElementById("gasScreen");
     const buildingFireScreen = document.getElementById("buildingFireScreen");
     const buildingFireClock = document.getElementById("buildingFireClock");
@@ -13589,8 +13446,6 @@
     ];
     let activeWeatherWarning = 0;
     let activeWeatherPlan = 0;
-    let activeHistoryTime = "all";
-    let activeHistoryType = "all";
     const gasVideoSets = {
       place: [
         { name: "明塘市场-入口", tag: "场所布防", time: "14:32:05" },
@@ -14028,164 +13883,30 @@
       eventModal.setAttribute("aria-hidden", "true");
     }
 
-    function getExtremeHistoryRows() {
-      const referenceTime = new Date("2026-08-20T23:59:59");
-      return weatherWarnings.map((item, index) => ({ item, index })).filter(({ item }) => {
-        if (activeHistoryType !== "all" && item.type !== activeHistoryType) return false;
-        if (activeHistoryTime === "all") return true;
-        const warningTime = new Date(item.time.replace(" ", "T"));
-        if (activeHistoryTime === "7d") return referenceTime - warningTime <= 7 * 24 * 60 * 60 * 1000;
-        if (activeHistoryTime === "30d") return referenceTime - warningTime <= 30 * 24 * 60 * 60 * 1000;
-        if (activeHistoryTime === "year") return warningTime.getFullYear() === referenceTime.getFullYear();
-        return warningTime.getFullYear() < referenceTime.getFullYear();
-      });
-    }
-
-    function renderExtremeWarning() {
-      const rows = getExtremeHistoryRows();
-      if (rows.length && !rows.some(({ index }) => index === activeWeatherWarning)) {
-        activeWeatherWarning = rows[0].index;
-      }
-      const warning = weatherWarnings[activeWeatherWarning];
-      extremeWarningIcon.textContent = warning.icon;
-      extremeWarningName.textContent = warning.title;
-      extremeWarningLevel.textContent = warning.level;
-      extremeWarningTime.textContent = warning.time;
-      extremeWarningSummary.textContent = warning.content;
-      extremeWarningPeriod.textContent = warning.period;
-      extremeWarningUnit.textContent = warning.unit;
-      extremeWarningContent.textContent = warning.content;
-      extremeWarningStandard.textContent = warning.standard;
-      extremeWarningGuide.textContent = warning.guide.map((item, index) => `${index + 1}.${item}`).join(" ");
-      extremeHistoryList.innerHTML = rows.length
-        ? rows.map(({ item, index }) => `
-          <button class="extreme-history-item ${index === activeWeatherWarning ? "is-active" : ""}" type="button" data-extreme-warning-index="${index}">
-            ${item.historyTitle}
-            <span>${item.type} · ${item.level}</span>
-          </button>
-        `).join("")
-        : `<div class="extreme-history-empty">当前筛选条件下暂无历史预警</div>`;
-    }
-
-    function renderExtremePlan() {
-      const plan = weatherPlans[activeWeatherPlan];
-      document.querySelector(".extreme-plan-section-title").textContent = `${plan.name}应急预案`;
-      extremeTypeList.innerHTML = weatherPlans.map((item, index) => `
-        <button class="extreme-type-item ${index === activeWeatherPlan ? "is-active" : ""}" type="button" data-extreme-plan-index="${index}">
-          ${item.name}
-          <span>${item.level}</span>
-        </button>
-      `).join("");
-      extremePlanDetail.innerHTML = `
-        <p>${plan.source}</p>
-        ${activeWeatherPlan < 6 ? `
-          <div class="extreme-section-title">气象灾害应急指挥体系</div>
-          <div class="extreme-command-card">
-            <div class="extreme-command-row"><b>指挥长</b><span>${meteorologicalCommandSystem.commander}</span></div>
-            <div class="extreme-command-row"><b>副指挥长</b><span>${meteorologicalCommandSystem.deputies}</span></div>
-            <div class="extreme-command-row"><b>指挥部职责</b><span>${meteorologicalCommandSystem.responsibility}</span></div>
-            <div class="extreme-command-row"><b>办公室</b><span>${meteorologicalCommandSystem.office}</span></div>
-            <details class="extreme-command-details">
-              <summary>成员单位职责（${meteorologicalCommandSystem.duties.length}项）</summary>
-              <p>${meteorologicalCommandSystem.members}</p>
-              <div class="extreme-duty-list">
-                ${meteorologicalCommandSystem.duties.map(([role, duty]) => `<div class="extreme-duty-row"><b>${role}</b><span>${duty}</span></div>`).join("")}
-              </div>
-            </details>
-          </div>
-        ` : ""}
-        <div class="extreme-plan-summary">
-          ${plan.metrics.map(([value, label]) => `<div class="extreme-plan-metric"><b>${value}</b><span>${label}</span></div>`).join("")}
-        </div>
-        <div class="extreme-section-title">指挥与调度</div>
-        <p>${plan.command}；${plan.dispatch}。</p>
-        <div class="extreme-section-title">监测重点</div>
-        <div class="extreme-focus-grid">${plan.focus.map(item => `<span>${item}</span>`).join("")}</div>
-        <div class="extreme-section-title">处置链条</div>
-        <div class="extreme-chain">${plan.chain.map(item => `<span>${item}</span>`).join("")}</div>
-        ${plan.measures?.length ? `
-          <div class="extreme-section-title">应对措施</div>
-          <ol class="extreme-measure-list">
-            ${plan.measures.map((item, index) => `<li><span class="extreme-measure-index">${index + 1}</span><span>${item}</span></li>`).join("")}
-          </ol>
-        ` : ""}
-        <div class="extreme-section-title">${activeWeatherPlan < 6 ? "本灾种重点任务" : "成员单位职责"}</div>
-        <div class="extreme-duty-list">
-          ${plan.duties.map(([role, duty], index) => `
-            <div class="extreme-duty-row">
-              <b class="${plan.name === "低温雨雪冰冻" ? "has-index" : ""}">${plan.name === "低温雨雪冰冻" ? `<i class="extreme-duty-index">${index + 1}</i>` : ""}${role}</b>
-              <span>${duty}</span>
-            </div>
-          `).join("")}
-        </div>
-      `;
-    }
-
     function openExtremeScreen() {
       closeWeatherModal();
       closeEventModal();
       closeLoopEventModal();
       keyPanel.style.display = "none";
       layerPanel.classList.remove("is-open");
-      renderExtremeWarning();
-      renderExtremePlan();
-      mainTitle.textContent = "极端天气灾害风险监测";
+      const frame = document.getElementById("weatherDashboardFrame");
+      if (!frame.hasAttribute("src")) frame.src = frame.dataset.src;
+      mainTitle.textContent = "气象灾害监测预警服务";
       screenEl.classList.add("extreme-active");
       extremeScreen.setAttribute("aria-hidden", "false");
-    }
-
-    function renderRescueList(keyword = "") {
-      const query = keyword.trim().toLowerCase();
-      const rows = rescueTeams.filter(team => !query || Object.values(team).join(" ").toLowerCase().includes(query));
-      rescueDrawerCount.textContent = `匹配 ${rows.length} 支`;
-      rescueList.innerHTML = rows.length ? rows.map(team => `
-        <button class="extreme-rescue-item ${team.index === activeRescueTeam ? "is-active" : ""}" type="button" data-rescue-index="${team.index}">
-          <b>${team.name} · ${team.people} 人</b>
-          <span>${team.department}　${team.office}</span>
-          <span>${team.equipment.slice(0, 52)}${team.equipment.length > 52 ? "…" : ""}</span>
-          <div class="extreme-rescue-detail"><b>负责人：${team.leader}</b><br>储备地点：${team.storage}<br>物资设备：${team.equipment}</div>
-        </button>
-      `).join("") : `<div class="extreme-history-empty">未找到匹配的救援队伍</div>`;
-    }
-    function openRescueDrawer(keyword = "") {
-      rescueSearch.value = keyword;
-      activeRescueTeam = null;
-      renderRescueList(keyword);
-      rescueDrawer.classList.add("is-open");
-      rescueDrawer.setAttribute("aria-hidden", "false");
-    }
-    function closeRescueDrawer() {
-      rescueDrawer.classList.remove("is-open");
-      rescueDrawer.setAttribute("aria-hidden", "true");
-    }
-    function initRescueOverview() {
-      document.getElementById("rescueTeamCount").textContent = rescueTeams.length;
-      const rescueMedicalCount = document.getElementById("rescueMedicalCount");
-      if (rescueMedicalCount) rescueMedicalCount.textContent = "—";
-      const rescuePumpCount = document.getElementById("rescuePumpCount");
-      if (rescuePumpCount) rescuePumpCount.textContent = rescueTeams.filter(team => /泵/.test(team.equipment)).length;
-      document.getElementById("rescueDroneCount").textContent = rescueTeams.filter(team => /无人机/.test(team.equipment)).length;
-    }
-
-    function openExtremeStandardModal() {
-      extremeStandardModal.classList.add("is-open");
-      extremeStandardModal.setAttribute("aria-hidden", "false");
-      extremeStandardClose.focus();
-    }
-
-    function closeExtremeStandardModal() {
-      extremeStandardModal.classList.remove("is-open");
-      extremeStandardModal.setAttribute("aria-hidden", "true");
-      extremeStandardBtn.focus();
+      frame.focus();
     }
 
     function closeExtremeScreen() {
-      closeExtremeStandardModal();
-      closeRescueDrawer();
       screenEl.classList.remove("extreme-active");
       extremeScreen.setAttribute("aria-hidden", "true");
       mainTitle.textContent = "鄂州市城市安全风险监测预警平台";
+      document.querySelector('[data-risk="极端天气"]')?.focus();
     }
+    window.addEventListener("message", event => {
+      const frame = document.getElementById("weatherDashboardFrame");
+      if (event.source === frame.contentWindow && event.data?.type === "weather-dashboard-close") closeExtremeScreen();
+    });
 
     function renderGasVideoGrid() {
       gasVideoGrid.innerHTML = gasVideoSets[activeGasVideoTab].map(item => `
@@ -14720,14 +14441,13 @@
     function renderKeyPlaceData(area) {
       const data = keyPlacePrototypeData[area] || keyPlacePrototypeData["全市"];
       document.getElementById("keyUnitCount").textContent = data.units.toLocaleString("zh-CN");
-      document.getElementById("keyShopCount").textContent = data.shops.toLocaleString("zh-CN");
       document.getElementById("keyDroneCount").textContent = data.drones.toLocaleString("zh-CN");
       document.getElementById("keyNestCount").textContent = data.nests.toLocaleString("zh-CN");
-      document.querySelectorAll("[data-key-unit-level]").forEach(node => { node.textContent = data.unitLevels[Number(node.dataset.keyUnitLevel)]; });
       document.querySelectorAll("[data-key-city-level]").forEach(node => { node.textContent = data.cityLevels[Number(node.dataset.keyCityLevel)]; });
       document.querySelectorAll("[data-key-category-percent]").forEach(node => { node.textContent = `${data.categories[Number(node.dataset.keyCategoryPercent)][0]}%`; });
       document.querySelectorAll("[data-key-category-count]").forEach(node => { node.textContent = `数量 ${data.categories[Number(node.dataset.keyCategoryCount)][1]}`; });
       keyAreaFilters.forEach(filter => { filter.value = area; });
+      filterKeyRiskRanks(area);
     }
 
     function renderKeyIotData(place) {
@@ -14768,6 +14488,29 @@
       });
     });
     keyAreaFilters.forEach(filter => filter.addEventListener("change", () => renderKeyPlaceData(filter.value)));
+    const keyRankFilters = Array.from(document.querySelectorAll("[data-rank-type]"));
+    const keyRankRows = Array.from(document.querySelectorAll(".key-rank-row"));
+    const keyRiskRankEmpty = document.getElementById("keyRiskRankEmpty");
+    let activeRankType = "all";
+    function filterKeyRiskRanks(area) {
+      let visibleCount = 0;
+      keyRankRows.forEach(row => {
+        const visible = (activeRankType === "all" || row.dataset.rankType === activeRankType) && (area === "全市" || row.dataset.rankArea === area);
+        row.hidden = !visible;
+        if (visible) visibleCount += 1;
+      });
+      keyRiskRankEmpty.hidden = visibleCount !== 0;
+    }
+    keyRankFilters.forEach(button => button.addEventListener("click", () => {
+      const type = button.dataset.rankType;
+      activeRankType = type;
+      keyRankFilters.forEach(item => {
+        const active = item === button;
+        item.classList.toggle("is-active", active);
+        item.setAttribute("aria-selected", String(active));
+      });
+      filterKeyRiskRanks(keyAreaFilters[0].value);
+    }));
     document.getElementById("keyIotPlaceSelect").addEventListener("change", event => renderKeyIotData(event.target.value));
     document.querySelectorAll("[data-key-warning-tab]").forEach(button => {
       button.addEventListener("click", () => {
@@ -15542,7 +15285,6 @@
       videoPanelClose.addEventListener("click", closeVideoPanel);
       deviceStatusClose.addEventListener("click", closeDeviceStatusPanel);
       weatherCloseBtn.addEventListener("click", closeWeatherModal);
-      extremeBackBtn.addEventListener("click", closeExtremeScreen);
       gasBackBtn.addEventListener("click", closeGasScreen);
       buildingFireBackBtn.addEventListener("click", closeBuildingFireScreen);
       document.getElementById("ff-forestOverlayBack").addEventListener("click", closeForestScreen);
@@ -15621,44 +15363,6 @@
         openGasPhotoView();
       });
       gasPhotoViewClose.addEventListener("click", closeGasPhotoView);
-      extremeHistoryList.addEventListener("click", event => {
-        const button = event.target.closest("[data-extreme-warning-index]");
-        if (!button) return;
-        activeWeatherWarning = Number(button.dataset.extremeWarningIndex);
-        renderExtremeWarning();
-      });
-      extremeHistoryTime.addEventListener("change", () => {
-        activeHistoryTime = extremeHistoryTime.value;
-        renderExtremeWarning();
-      });
-      extremeHistoryType.addEventListener("change", () => {
-        activeHistoryType = extremeHistoryType.value;
-        renderExtremeWarning();
-      });
-      extremeStandardBtn.addEventListener("click", openExtremeStandardModal);
-      extremeStandardClose.addEventListener("click", closeExtremeStandardModal);
-      extremeStandardModal.addEventListener("click", event => {
-        if (event.target === extremeStandardModal) closeExtremeStandardModal();
-      });
-      extremeTypeList.addEventListener("click", event => {
-        const button = event.target.closest("[data-extreme-plan-index]");
-        if (!button) return;
-        activeWeatherPlan = Number(button.dataset.extremePlanIndex);
-        renderExtremePlan();
-      });
-      document.querySelectorAll("[data-rescue-filter]").forEach(button => {
-        button.addEventListener("click", () => openRescueDrawer(button.dataset.rescueFilter === "all" ? "" : button.dataset.rescueFilter));
-      });
-      rescueSearch.addEventListener("input", () => openRescueDrawer(rescueSearch.value));
-      rescueDrawerClose.addEventListener("click", closeRescueDrawer);
-      rescueList.addEventListener("click", event => {
-        const row = event.target.closest("[data-rescue-index]");
-        if (!row) return;
-        const index = Number(row.dataset.rescueIndex);
-        activeRescueTeam = activeRescueTeam === index ? null : index;
-        renderRescueList(rescueSearch.value);
-      });
-      initRescueOverview();
       weatherHistoryList.addEventListener("click", event => {
         const button = event.target.closest("[data-weather-index]");
         if (!button) return;
@@ -15683,10 +15387,6 @@
       window.addEventListener("keydown", event => {
         if (event.key === "Escape" && eventModal.classList.contains("is-open")) closeEventModal();
         if (event.key === "Escape" && weatherModal.classList.contains("is-open")) closeWeatherModal();
-        if (event.key === "Escape" && extremeStandardModal.classList.contains("is-open")) {
-          closeExtremeStandardModal();
-          return;
-        }
         if (event.key === "Escape" && screenEl.classList.contains("extreme-active")) closeExtremeScreen();
         if (event.key === "Escape" && gasPhotoView.classList.contains("is-open")) closeGasPhotoView();
         if (event.key === "Escape" && gasSiteDetail.classList.contains("is-open")) closeGasSiteDetail();
@@ -17205,126 +16905,12 @@ if (document.getElementById("ff-forestOverlayBack")) {
       document.title = "数字鄂州一张图综合门户";
     })();
   </script>
-  <script>
-    (() => {
-      const search = document.getElementById("rescueSearch"), drawer = document.getElementById("rescueDrawer"), list = document.getElementById("rescueList"), count = document.getElementById("rescueDrawerCount");
-      const teams = Array.from(document.querySelectorAll(".extreme-rescue-table tbody tr")).map((row, index) => { const c = Array.from(row.cells).map(cell => cell.textContent.replace(/\s+/g, " ").trim()); return { index, name:c[0], department:c[1], people:+c[2]||0, office:c[3], leader:c[4], equipment:c[5], storage:c[6] }; });
-      let active = null;
-      const render = keyword => { const q = keyword.trim().toLowerCase(), rows = teams.filter(team => !q || Object.values(team).join(" ").toLowerCase().includes(q)); count.textContent = `匹配 ${rows.length} 支`; list.innerHTML = rows.length ? rows.map(team => `<button class="extreme-rescue-item ${team.index === active ? "is-active" : ""}" type="button" data-rescue-index="${team.index}"><b>${team.name} · <i class="rescue-emphasis">${team.people} 人</i></b><span>${team.department}　${team.office}</span><span>负责人：${team.leader}</span><div class="extreme-rescue-detail">储备地点：${team.storage}<br>物资设备：${team.equipment}</div></button>`).join("") : '<div class="extreme-history-empty">未找到匹配的救援队伍</div>'; };
-      const open = keyword => { search.value = keyword; active = null; render(keyword); drawer.classList.add("is-open"); drawer.setAttribute("aria-hidden", "false"); };
-      document.getElementById("rescueTeamCount").textContent = teams.length;
-      const medicalCount = document.getElementById("rescueMedicalCount");
-      if (medicalCount) medicalCount.textContent = "—";
-      const sumEquipment = keyword => teams.reduce((total, team) => total + Array.from(team.equipment.matchAll(new RegExp(`${keyword}[^，。；]*?(\\d+)\\s*(?:台|艘|立方米)`, "g"))).reduce((sum, match) => sum + Number(match[1]), 0), 0);
-      const sandCount = document.getElementById("rescueSandCount"); if (sandCount) sandCount.textContent = `${sumEquipment("砂石料")}m³`;
-      const pumpCount = document.getElementById("rescuePumpCount"); if (pumpCount) pumpCount.textContent = sumEquipment("泵");
-      const woodCount = document.getElementById("rescueWoodCount"); if (woodCount) woodCount.textContent = teams.reduce((total, team) => total + Array.from(team.equipment.matchAll(/桩木\s*(\d+)\s*根/g)).reduce((sum, match) => sum + Number(match[1]), 0), 0);
-      document.querySelectorAll("[data-rescue-filter]").forEach(button => button.addEventListener("click", () => open(button.dataset.rescueFilter === "all" ? "" : button.dataset.rescueFilter)));
-      search.addEventListener("input", () => open(search.value));
-      document.getElementById("rescueDrawerClose").addEventListener("click", () => { drawer.classList.remove("is-open"); drawer.setAttribute("aria-hidden", "true"); });
-      list.addEventListener("click", event => { const item = event.target.closest("[data-rescue-index]"); if (!item) return; active = active === +item.dataset.rescueIndex ? null : +item.dataset.rescueIndex; render(search.value); });
-    })();
-  </script>
-  <script>
-    (() => {
-      const drawer = document.getElementById("rescueDrawer");
-      const handle = drawer.querySelector(".extreme-rescue-drawer-head");
-      let startX = 0, startY = 0, left = 0, top = 0;
-      handle.addEventListener("pointerdown", event => {
-        if (event.target.closest("button")) return;
-        startX = event.clientX; startY = event.clientY;
-        const rect = drawer.getBoundingClientRect();
-        const host = document.getElementById("extremeScreen").getBoundingClientRect();
-        left = rect.left - host.left; top = rect.top - host.top;
-        drawer.classList.add("is-dragging"); handle.setPointerCapture(event.pointerId);
-      });
-      handle.addEventListener("pointermove", event => {
-        if (!drawer.classList.contains("is-dragging")) return;
-        const host = document.getElementById("extremeScreen").getBoundingClientRect();
-        const nextLeft = Math.max(8, Math.min(host.width - drawer.offsetWidth - 8, left + event.clientX - startX));
-        const nextTop = Math.max(8, Math.min(host.height - drawer.offsetHeight - 8, top + event.clientY - startY));
-        drawer.style.left = `${nextLeft}px`; drawer.style.top = `${nextTop}px`;
-      });
-      ["pointerup", "pointercancel"].forEach(type => handle.addEventListener(type, () => drawer.classList.remove("is-dragging")));
-    })();
-  </script>
-  <script>
-    (() => {
-      const container = document.getElementById("rescueMaterials");
-      const rows = Array.from(document.querySelectorAll(".extreme-rescue-table tbody tr"));
-      ["编织袋", "砂石料", "救生绳", "救生衣", "救生圈"].forEach(name => {
-        const count = rows.filter(row => row.cells[5].innerText.includes(name)).length;
-        const button = document.createElement("button");
-        button.type = "button"; button.dataset.rescueFilter = name;
-        button.innerHTML = `${name}<b>${count} 队</b>`;
-        button.addEventListener("click", () => { const input = document.getElementById("rescueSearch"); input.value = name; input.dispatchEvent(new Event("input")); });
-        container.appendChild(button);
-      });
-    })();
-  </script>
-  <script>
-    document.getElementById("rescueList").addEventListener("click", () => setTimeout(() => {
-      document.querySelectorAll(".extreme-rescue-detail").forEach(detail => {
-        if (detail.dataset.highlighted) return;
-        detail.innerHTML = detail.innerHTML.replace(/(\d+(?:\.\d+)?)/g, "<strong>$1</strong>");
-        detail.dataset.highlighted = "true";
-      });
-    }));
-  </script>
-  <script>
-    (() => {
-      const box = document.getElementById("rescueMaterials");
-      const equipment = Array.from(document.querySelectorAll(".extreme-rescue-table tbody tr")).map(row => row.cells[5].textContent);
-      const sum = pattern => equipment.reduce((total, text) => total + Array.from(text.matchAll(pattern)).reduce((value, match) => value + Number(match[1]), 0), 0);
-      const items = [
-        ["编织袋", sum(/编织袋\s*(\d+)\s*条/g), "条"],
-        ["砂石储备", sum(/砂石料(?:协议储备)?\s*(\d+)\s*立方米/g), "m³"],
-        ["救生绳", sum(/救生绳\s*(\d+)\s*根/g), "根"],
-        ["救生衣", sum(/救生衣\s*(\d+)\s*件/g), "件"],
-        ["救生圈", sum(/救生圈\s*(\d+)\s*个/g), "个"],
-        ["水泵", sum(/(?:高扬程水泵|污水泵|排水泵|潜水泵|水泵)\s*(\d+)\s*台/g), "台"],
-        ["清水泵", sum(/清水泵\s*(\d+)\s*台/g), "台"],
-        ["发电机", sum(/发电机(?:组)?\s*(\d+)\s*台/g), "台"],
-        ["移动照明", sum(/移动照明(?:灯塔)?\s*(\d+)\s*台(?:套)?/g), "台"],
-        ["橡皮艇", sum(/橡皮艇\s*(\d+)\s*艘/g), "艘"]
-      ];
-      box.innerHTML = items.map(([name, value, unit]) => `<button type="button" data-rescue-filter="${name.replace("储备", "")}">${name}<b>${value}${unit}</b></button>`).join("");
-      box.querySelectorAll("button").forEach(button => button.addEventListener("click", () => { const input = document.getElementById("rescueSearch"); input.value = button.dataset.rescueFilter; input.dispatchEvent(new Event("input")); }));
-    })();
-  </script>
-  <script>
-    (() => {
-      const list = document.getElementById("rescueList");
-      const label = item => /公司|企业|集团|电信/.test(item) ? ["企业", "company"] : /蓝天|民兵/.test(item) ? ["其他", "other"] : ["事业单位", "public"];
-      const apply = () => list.querySelectorAll(".extreme-rescue-item > b").forEach(title => {
-        if (title.querySelector(".rescue-kind")) return;
-        const [text, type] = label(title.textContent);
-        title.insertAdjacentHTML("beforeend", `<i class="rescue-kind ${type}">${text}</i>`);
-      });
-      new MutationObserver(apply).observe(list, { childList: true });
-      apply();
-    })();
-  </script>
-  <script>
-    (() => {
-      const screen = document.getElementById("extremeScreen");
-      const buttons = Array.from(document.querySelectorAll("[data-extreme-skin]"));
-      const storageKey = "ezhou-extreme-weather-skin";
-      const applySkin = skin => {
-        const night = skin === "night";
-        screen.classList.toggle("extreme-night", night);
-        buttons.forEach(button => {
-          const active = button.dataset.extremeSkin === (night ? "night" : "light");
-          button.classList.toggle("is-active", active);
-          button.setAttribute("aria-pressed", String(active));
-        });
-        try { localStorage.setItem(storageKey, night ? "night" : "light"); } catch (_) {}
-      };
-      let saved = "light";
-      try { saved = localStorage.getItem(storageKey) || "light"; } catch (_) {}
-      applySkin(saved);
-      buttons.forEach(button => button.addEventListener("click", () => applySkin(button.dataset.extremeSkin)));
-    })();
-  </script>
+
+
+
+
+
+
+
 </body>
 </html>
