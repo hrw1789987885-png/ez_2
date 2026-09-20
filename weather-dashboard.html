@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>气象灾害监测预警服务</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <style>
+    :root { color-scheme:light; --blue:#2469d8; --ink:#193858; --muted:#5b728a; --line:#d6e3f1; --card:#eaf3fc; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:#eef1f5; color:var(--ink); font:14px/1.55 "Microsoft YaHei","PingFang SC",sans-serif; }
+    button,input,select { font:inherit; color:inherit; }
+    button { cursor:pointer; }
+    button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible { outline:3px solid #77abfa; outline-offset:3px; }
+    button:hover { filter:brightness(.97); }
+    ::selection { background:#b9d7ff; color:#143965; }
+    * { scrollbar-width:thin; scrollbar-color:#a9bfd8 transparent; }
+    .dashboard { height:100dvh; min-height:760px; padding:16px; display:grid; grid-template-columns:minmax(0,20fr) minmax(0,55fr) minmax(0,25fr); gap:14px; }
+    .rail { display:grid; gap:14px; min-width:0; min-height:0; }
+    .left { grid-template-rows:.84fr 1.08fr 1.08fr; }
+    .right { grid-template-rows:1.08fr 1.35fr 1fr; }
+    .card { border:1px solid #d5e3f1; background:var(--card); border-radius:4px; overflow:hidden; display:flex; flex-direction:column; min-height:0; }
+    .card h2 { display:flex; align-items:stretch; margin:0; min-height:34px; padding:0; background:linear-gradient(180deg,#e4e7ec,#f4f6f8); color:#53708f; font-size:15px; font-weight:700; overflow:hidden; }
+    .module-ribbon { display:inline-flex; align-items:center; flex:0 0 auto; gap:8px; min-width:max-content; padding:0 32px 0 10px; color:#fff; background:linear-gradient(105deg,#54a4f5,#2875df); clip-path:polygon(0 0,calc(100% - 17px) 0,100% 100%,0 100%); text-shadow:0 1px 1px rgba(19,67,125,.22); }
+    .title-mark { position:relative; width:16px; height:16px; flex:0 0 16px; }
+    .title-mark::before,.title-mark::after { content:""; position:absolute; width:8px; height:8px; top:4px; transform:rotate(45deg); border-radius:1px; }
+    .title-mark::before { left:0; background:#e7f3ff; }
+    .title-mark::after { right:0; background:#b9ddff; }
+    .card h2 small { align-self:center; margin-left:auto; padding:0 12px; font-size:11px; font-weight:700; color:#6380a0; }
+    .card-body { padding:14px; min-height:0; flex:1; display:flex; flex-direction:column; gap:13px; overflow:auto; }
+    .time-control { display:grid; grid-template-columns:minmax(0,1fr) 32px 32px; gap:5px; }
+    .time-control input { min-width:0; width:100%; font-size:12px; padding:7px 5px; }
+    input,select,.time-control button { border:1px solid var(--line); border-radius:5px; background:white; }
+    .time-control button { color:var(--blue); font-size:20px; }
+    .metrics { flex:1; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+    .metric { padding:10px 3px; border:1px solid #d5e3f2; background:#fff; border-radius:7px; display:grid; justify-items:center; align-content:center; gap:5px; }
+    .metric span { font-size:12px; color:var(--muted); }
+    .metric b { font-size:18px; font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap; }
+    .metric em { font-size:10px; font-style:normal; margin-left:2px; }
+    .metric.active { border-color:#3a80e6; background:#e0edff; color:#1658b9; }
+    .metric.active span { color:#1658b9; }
+    .source-note { font-size:11px; color:var(--muted); margin:0; }
+    .product { display:flex; align-items:center; justify-content:space-between; gap:10px; flex:1; padding:12px; min-height:72px; border:1px solid #cddff3; border-radius:7px; background:#f9fcff; text-align:left; }
+    .product strong { display:block; font-size:22px; color:var(--blue); }
+    .product span { display:block; font-size:12px; color:var(--muted); }
+    .product svg { width:70px; height:70px; color:#367ade; flex-shrink:0; }
+    .product.active { border-color:var(--blue); background:#dfecfe; }
+    .observation-card { border-color:#b9dbf7; background:#e9f5ff; box-shadow:inset 0 0 0 1px rgba(255,255,255,.75); }
+    .observation-card h2 { min-height:34px; border-bottom:1px solid #c8e3fb; font-size:14px; }
+    .observation-card .module-ribbon { gap:8px; padding-left:10px; padding-right:32px; }
+    .observation-card .title-mark { width:16px; height:16px; flex-basis:16px; }
+    .observation-card .title-mark::before,.observation-card .title-mark::after { width:8px; height:8px; top:4px; }
+    .observation-card .card-body { padding:8px; gap:8px; background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(213,238,255,.42)); }
+    .area-tabs { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:3px; padding:0 2px; }
+    .area-tab { min-width:0; height:25px; border:1px solid #c9e2fa; border-radius:3px; color:#2770ae; background:#f8fcff; font-size:10px; font-weight:700; }
+    .area-tab.is-active { color:#fff; border-color:#2c80e5; background:linear-gradient(180deg,#4ca0f7,#2276df); box-shadow:0 4px 8px -7px #124b94; }
+    .observation-stats { flex:1; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; padding:7px 5px; border:1px solid #d6eafc; border-radius:7px; background:rgba(255,255,255,.48); }
+    .ob-stat { min-width:0; padding:7px 3px; border:0; border-radius:5px; background:transparent; display:grid; grid-template-columns:32px minmax(0,1fr); align-items:center; column-gap:6px; text-align:left; }
+    .ob-stat svg { grid-row:span 2; width:32px; height:32px; padding:5px; color:#2680e9; background:#e1f2ff; border-radius:50%; }
+    .ob-stat b { min-width:0; color:#1b5689; font-size:21px; line-height:1.05; font-variant-numeric:tabular-nums; }
+    .ob-stat span { min-width:0; color:#6183a2; font-size:9.5px; line-height:1.2; white-space:normal; overflow-wrap:anywhere; }
+    .media-card .card-body { gap:8px; }
+    .radar-range { display:grid; grid-template-columns:minmax(0,1fr) 12px minmax(0,1fr); align-items:end; gap:5px; color:#4e7599; font-size:9px; font-weight:700; }
+    .radar-range label { min-width:0; display:grid; gap:2px; }
+    .radar-range span { padding-bottom:7px; color:#79a0c4; text-align:center; }
+    .radar-range input { min-width:0; width:100%; height:27px; padding:0 3px; border:1px solid #c8def1; border-radius:4px; background:#fff; color:#265f98; font-size:10px; }
+    .media-preview { position:relative; flex:1; min-height:96px; overflow:hidden; border:1px solid #cddfed; border-radius:4px; background:#edf5fc; }
+    .media-preview svg { width:100%; height:100%; display:block; }
+    .media-preview .media-tag { z-index:3; }
+    .media-preview:has(.radar-photo) .media-tag { display:none; }
+    .radar-dbz-legend b { font-size:0; }
+    .radar-dbz-legend b::after { content:"CR"; font-size:9px; }
+    .satellite-card .media-preview { background:#083655 url('satellite-cloud-base.png') center/cover no-repeat; }
+    .satellite-card .media-preview > svg { display:none; }
+    .satellite-card .media-preview::after { content:""; position:absolute; right:0; bottom:0; left:0; z-index:1; height:43px; background:#083655; }
+    .satellite-card .media-tabs { position:relative; z-index:4; margin-top:-37px; }
+    .satellite-time { align-self:center; display:flex; align-items:center; gap:4px; margin-left:auto; padding-right:8px; color:#6380a0; font-size:9px; font-weight:700; white-space:nowrap; }
+    .satellite-time input { width:132px; height:24px; padding:0 3px; border:1px solid #c8def1; border-radius:4px; background:#fff; color:#265f98; font-size:10px; }
+    .radar-card-legacy { display:none; }
+    .radar-photo { position:absolute; inset:0; overflow:hidden; background:#e8f0eb; }
+    .radar-photo + svg { display:none; }
+    .radar-photo svg { width:100%; height:100%; display:block; }
+    .radar-photo img { width:100%; height:100%; display:block; object-fit:cover; }
+    .radar-photo img + svg { display:none; }
+    .radar-photo { background-image:url('radar-echo-base.png'); background-size:cover; background-position:center; }
+    .radar-photo > svg { display:none; }
+    .radar-photo::before { content:""; position:absolute; inset:0 0 0 auto; z-index:1; width:48px; background:#eef5f3; border-left:1px solid rgba(76,120,157,.14); }
+    .radar-dbz-legend { position:absolute; z-index:2; top:7px; right:6px; display:grid; grid-template-columns:8px auto; gap:3px 4px; align-items:stretch; padding:3px; border-radius:2px; background:rgba(255,255,255,.9); box-shadow:0 2px 6px -4px rgba(9,42,85,.85); }
+    .radar-dbz-legend b { grid-column:1 / -1; color:#274e8b; font-size:9px; line-height:1; }
+    .radar-dbz-scale { display:grid; grid-template-rows:repeat(7,1fr); width:8px; height:84px; overflow:hidden; border:1px solid rgba(35,70,123,.22); }
+    .radar-dbz-scale i { display:block; }
+    .radar-dbz-scale i:nth-child(1) { background:#9c0b82; }
+    .radar-dbz-scale i:nth-child(2) { background:#0b13d8; }
+    .radar-dbz-scale i:nth-child(3) { background:#00a8ec; }
+    .radar-dbz-scale i:nth-child(4) { background:#14a943; }
+    .radar-dbz-scale i:nth-child(5) { background:#7ecf55; }
+    .radar-dbz-scale i:nth-child(6) { background:#fbfbfb; }
+    .radar-dbz-scale i:nth-child(7) { background:#fff; }
+    .radar-dbz-values { display:flex; flex-direction:column; justify-content:space-between; height:84px; color:#21497c; font-size:8px; line-height:1; font-variant-numeric:tabular-nums; }
+    .media-preview .media-tag { position:absolute; top:7px; right:7px; padding:2px 5px; border-radius:3px; color:#174e96; background:rgba(255,255,255,.82); font-size:10px; font-weight:800; }
+    .play-media { position:absolute; left:9px; bottom:9px; z-index:3; display:grid; place-items:center; width:27px; height:27px; padding-left:2px; border:1px solid rgba(255,255,255,.7); border-radius:50%; color:#fff; background:#176ed4; box-shadow:0 5px 11px -7px #0c3e7e; }
+    .media-time { display:grid; grid-template-columns:34px 1fr 34px; align-items:center; gap:6px; color:#527391; font-size:9px; font-variant-numeric:tabular-nums; }
+    .media-time input { width:100%; accent-color:#1678e7; }
+    .media-tabs { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:4px; }
+    .media-tabs button { min-width:0; height:27px; padding:0 3px; border:1px solid #cbdff3; border-radius:4px; color:#2f6194; background:#fff; font-size:10px; white-space:nowrap; }
+    .media-tabs button.is-active { color:#fff; border-color:#2780ea; background:#2780ea; }
+    .radar-sweep { transform-origin:53% 52%; animation:radar-sweep 3s linear infinite; }
+    @keyframes radar-sweep { to { transform:rotate(360deg); } }
+    @media (prefers-reduced-motion:reduce) { .radar-sweep { animation:none; } }
+    .main { min-width:0; display:grid; grid-template-rows:90px minmax(0,1fr) auto; gap:12px; }
+    .main-header { position:relative; isolation:isolate; display:flex; flex-direction:column; justify-content:center; align-items:center; overflow:hidden; border-bottom:1px solid #d5e5f5; background:linear-gradient(180deg,#f9fdff 0%,#e9f5ff 100%); }
+    .main-header::before { content:""; position:absolute; z-index:-1; inset:0; opacity:.72; background:radial-gradient(75% 130% at -6% 118%,transparent 53%,rgba(102,174,231,.22) 54% 60%,transparent 61%),radial-gradient(66% 118% at 106% 118%,transparent 51%,rgba(83,161,225,.22) 52% 59%,transparent 60%),linear-gradient(160deg,transparent 0 61%,rgba(131,191,237,.16) 62% 71%,transparent 72%); }
+    .service-title { display:flex; align-items:center; gap:14px; position:relative; padding:2px 18px 0; }
+    .service-title::after { content:""; position:absolute; right:-34px; bottom:1px; width:46px; height:2px; background:linear-gradient(90deg,#2673d6 0 52%,#a4d0f5 52% 72%,transparent 72%); }
+    .service-title-mark { display:grid; place-items:center; width:48px; height:42px; color:#2878d8; }
+    .service-title-mark svg { width:48px; height:42px; filter:drop-shadow(0 4px 6px rgba(32,104,186,.18)); }
+    h1 { font-size:clamp(26px,2.2vw,38px); color:#1a579d; font-weight:800; margin:0; letter-spacing:.09em; text-shadow:0 2px 7px rgba(42,102,172,.12); }
+    .main-header p { font-size:11px; color:#3f76af; margin:2px 0 0 62px; letter-spacing:.16em; font-weight:700; }
+    .back { position:absolute; top:0; left:0; padding:2px 0; border:0; background:transparent; color:#4e6c8b; font-size:11px; }
+    .map { position:relative; min-height:420px; border:1px solid #cfddeb; border-radius:10px; background:#f9fbfd; overflow:hidden; }
+    .real-map { position:absolute; inset:0; z-index:0; background:#e7edf1; }
+    .real-map .leaflet-control-attribution { font-size:9px; background:rgba(255,255,255,.72); }
+    .real-map .leaflet-popup-content { margin:9px 12px; color:#1e507f; font:12px/1.6 "Microsoft YaHei",sans-serif; }
+    .leaflet-ready .map-svg,.leaflet-ready .heatmap-canvas { display:none; }
+    .map-toolbar { position:absolute; top:14px; left:14px; right:14px; z-index:3; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .map-layer-buttons { position:absolute; top:103px; left:14px; z-index:3; display:grid; gap:7px; }
+    .map-layer-buttons button { display:grid; justify-items:center; gap:3px; min-width:54px; padding:7px 5px; border:1px solid #c7dbef; border-radius:5px; background:rgba(255,255,255,.94); color:#49708e; font-size:10px; font-weight:700; box-shadow:0 6px 13px -11px #254c74; }
+    .map-layer-buttons button svg { width:17px; height:17px; color:#2a82df; }
+    .map-layer-buttons button[aria-pressed="true"] { border-color:#287be0; background:#e8f3ff; color:#1762bd; }
+    .map-layer-buttons button[aria-pressed="true"] svg { color:#176ed0; }
+    .map-title { background:#fff; padding:8px 12px; border:1px solid var(--line); border-radius:6px; }
+    .map-title b { font-size:14px; display:block; }
+    .map-title span { font-size:10px; color:var(--muted); display:block; }
+    .map-tools { display:flex; gap:4px; }
+    .map-tools button { background:white; border:1px solid var(--line); border-radius:5px; min-width:32px; height:32px; color:var(--blue); }
+    .map-svg { width:100%; height:100%; position:absolute; inset:0; z-index:0; }
+    .heatmap-canvas { position:absolute; inset:0; z-index:1; width:100%; height:100%; pointer-events:none; opacity:.74; mix-blend-mode:multiply; }
+    .boundary { fill:#f2f6fa; stroke:#b8cde0; stroke-width:1.4; stroke-linejoin:round; }
+    .district { fill:#e2edfa; stroke:#4681bf; stroke-width:2.5; stroke-linejoin:round; }
+    .highlight { fill:#244fab; stroke:#fff; stroke-width:2.5; }
+    .map-label { fill:#75889a; font-size:15px; text-anchor:middle; }
+    .district-label { fill:#36618c; font-size:16px; font-weight:600; text-anchor:middle; }
+    .station { cursor:pointer; }
+    .station circle { fill:#2aac89; stroke:#fff; stroke-width:1.5; }
+    .station text { fill:#156a56; font-size:8px; text-anchor:middle; paint-order:stroke; stroke:#fff; stroke-width:2px; }
+    .stations-hidden #stations { display:none; }
+    .map-popover { position:absolute; z-index:2; top:35%; left:24%; width:280px; border:1px solid #cbdcf0; border-radius:4px; background:rgba(255,255,255,.97); box-shadow:0 9px 22px -13px #415c7f; overflow:hidden; }
+    .map-popover:empty { display:none; }
+    .map-popover h3 { font-size:16px; margin:0; padding:11px 14px; color:var(--blue); border-bottom:1px solid #e4edf7; }
+    .map-popover h3 small { font-size:10px; font-weight:600; background:#e7f0ff; border-radius:3px; padding:3px 6px; margin-right:7px; }
+    .map-popover dl { padding:10px 14px 13px; margin:0; display:grid; grid-template-columns:70px 1fr; gap:7px 6px; font-size:12px; }
+    .map-popover dt { color:var(--muted); }
+    .map-popover dd { margin:0; color:#215bb2; font-weight:600; }
+    .map-legend { position:absolute; z-index:2; left:14px; bottom:15px; background:rgba(255,255,255,.94); padding:9px 11px; border:1px solid var(--line); border-radius:6px; font-size:11px; }
+    .map-legend b { display:block; margin-bottom:5px; font-size:11px; }
+    .legend-scale { height:7px; width:155px; background:linear-gradient(90deg,#a9d5f1,#4ba7df,#37b995,#bdd652,#f3b755,#e7705c); }
+    .legend-ticks { display:flex; justify-content:space-between; color:var(--muted); margin-top:3px; font-size:9px; }
+    .map-stamp { position:absolute; z-index:2; right:12px; bottom:13px; color:#5e7790; font-size:10px; text-align:right; }
+    .map-stamp b { color:#335774; display:block; font-size:12px; margin-bottom:4px; }
+    .map-note { margin:0; padding:12px 15px; color:#526e89; background:#e4ecf5; border-radius:7px; font-size:12px; line-height:1.9; }
+    .map-note strong { color:#2763aa; }
+    .forecast { margin:0; padding:0; list-style:none; }
+    .forecast li { display:grid; grid-template-columns:51px 24px 1fr; gap:8px; align-items:center; padding:4px 0; border-bottom:1px solid #d8e5f3; font-size:12px; }
+    .forecast li:first-child { padding-top:0; }
+    .forecast li:last-child { border:0; }
+    .forecast time { color:#365578; font-weight:600; white-space:nowrap; }
+    .forecast svg { width:23px; height:23px; color:#407dce; }
+    .forecast span { color:var(--muted); }
+    .forecast li:first-child span { color:var(--ink); }
+    .filters { display:grid; grid-template-columns:1.1fr 1fr 1fr; gap:5px; }
+    .filters select { min-width:0; padding:6px 3px; font-size:11px; }
+    .warning-range { min-width:0; display:grid; grid-template-columns:minmax(0,1fr) 8px minmax(0,1fr); align-items:center; gap:2px; color:#7290ab; font-size:10px; }
+    .warning-range input { min-width:0; width:100%; height:29px; padding:0 2px; border:1px solid var(--line); border-radius:5px; background:#fff; color:#365f87; font-size:9px; }
+    .warning-range span { text-align:center; }
+    #warningMonth { display:none; }
+    .warning { width:100%; border:1px solid #eed2a7; border-radius:5px; padding:8px 10px; background:#fffaf1; text-align:left; }
+    .warning-top { display:flex; align-items:center; justify-content:space-between; font-size:10px; gap:8px; color:#7c6238; }
+    .warning-title { display:flex; align-items:center; gap:8px; margin:6px 0; }
+    .warning-icon { display:grid; place-items:center; width:33px; height:33px; border-radius:5px; background:#f6a521; color:#fff; flex-shrink:0; }
+    .warning-icon svg { width:22px; height:22px; }
+    .warning-title b { font-size:14px; color:#965505; }
+    .warning-title small { display:block; font-size:9px; color:#876c45; margin-top:1px; }
+    .warning-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px; border-top:1px solid #eedfc6; padding-top:6px; }
+    .warning-stats span { color:#7c6238; font-size:10px; display:block; }
+    .warning-stats b { font-size:16px; color:#a76509; font-weight:600; font-variant-numeric:tabular-nums; }
+    .warning-stats em { font-style:normal; font-size:10px; margin-left:2px; }
+    .warning-hint { display:none; }
+    .hint { color:var(--muted); font-size:11px; margin:auto 0 0; }
+    .empty { color:var(--muted); font-size:12px; text-align:center; padding:25px 10px; background:#fff; border-radius:6px; }
+    .report-filters { grid-template-columns:1.55fr 1fr; }
+    .report-range { min-width:0; display:grid; grid-template-columns:minmax(0,1fr) 8px minmax(0,1fr); align-items:center; gap:2px; color:#7290ab; font-size:10px; }
+    .report-range input { min-width:0; width:100%; height:29px; padding:0 2px; border:1px solid var(--line); border-radius:5px; background:#fff; color:#365f87; font-size:9px; }
+    .report-range span { text-align:center; }
+    .report { width:100%; display:flex; gap:8px; align-items:center; padding:7px 6px; text-align:left; border:0; border-bottom:1px solid #d9e5f1; background:transparent; font-size:12px; }
+    .report-icon { width:24px; height:24px; color:#397acd; flex-shrink:0; }
+    .report span { flex:1; }
+    .report small { display:block; color:var(--muted); margin-top:1px; font-size:10px; }
+    .report i { font-style:normal; color:#4e7caa; }
+    dialog { width:min(580px,calc(100% - 32px)); padding:0; border:1px solid #c6d8ee; border-radius:12px; color:var(--ink); box-shadow:0 24px 80px -30px #193858; }
+    dialog::backdrop { background:rgba(22,46,73,.36); }
+    .dialog-head { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:#e9f2ff; border-bottom:1px solid var(--line); }
+    .dialog-head h2 { font-size:17px; margin:0; }
+    .dialog-head button { border:0; background:transparent; font-size:24px; }
+    .dialog-body { padding:20px; font-size:13px; line-height:1.9; }
+    .dialog-body h3 { font-size:14px; color:var(--blue); }
+    .alert-active .highlight { animation:warning-pulse 1.5s ease-in-out infinite; fill:#d99021; }
+    @keyframes warning-pulse { 50% { fill:#eeb254; stroke:#f4a326; stroke-width:7px; } }
+    @media(prefers-reduced-motion:reduce) { .alert-active .highlight { animation:none; stroke:#f4a326; stroke-width:6px; } }
+    @media(min-width:1700px) { .dashboard { padding:20px; gap:18px; } .rail { gap:18px; } .card-body { padding:18px; gap:16px; } .card h2 { min-height:46px; font-size:18px; } .metric b { font-size:23px; } .forecast li { padding:10px 0; font-size:14px; } .warning { padding:16px; } .report { padding:16px 8px; font-size:14px; } }
+    @media(max-width:1150px) { .dashboard { min-height:880px; gap:9px; padding:10px; grid-template-columns:minmax(205px,20fr) minmax(0,55fr) minmax(260px,25fr); } .card-body { padding:10px; gap:10px; } .card h2 { padding:0 10px; font-size:14px; } .map-popover { left:12%; width:260px; } h1 { font-size:23px; } .main-header p { font-size:10px; } }
+    @media(max-width:800px) { .dashboard { display:flex; flex-direction:column; height:auto; min-height:100dvh; padding:12px; gap:14px; } .main { order:-1; grid-template-rows:84px 510px auto; } .left,.right { grid-template-rows:none; gap:14px; } .card { min-height:220px; } .left .card:first-child { min-height:285px; } .map-popover { left:12%; top:36%; width:260px; } h1 { font-size:24px; } .card-body { padding:14px; } .card h2 { font-size:16px; } .forecast li { padding:10px 0; } }
+    @media(max-width:800px) { .service-title { gap:8px; padding:2px 8px 0; } .service-title::after { display:none; } .service-title-mark { width:27px; height:27px; } .service-title-mark svg { width:27px; height:24px; } .main-header p { margin-left:0; letter-spacing:.08em; } }
+  </style>
+</head>
+<body>
+<!-- User-directed surface: P2 20/55/25 layout; P1 blue ribbon headers, pale blue panels and quiet map. Demonstration data and schematic geometry only. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="cloud" viewBox="0 0 32 32"><path d="M8 23a6 6 0 0 1-1-12 8 8 0 0 1 15-2 7 7 0 1 1 2 14Z" fill="currentColor" opacity=".2"/><path d="M8 23a6 6 0 0 1-1-12 8 8 0 0 1 15-2 7 7 0 1 1 2 14Z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m10 27-1 3m8-3-1 3m8-3-1 3" stroke="currentColor" stroke-width="1.6"/></symbol>
+  <symbol id="cloud-brand" viewBox="0 0 56 44"><path d="M12 36C5 36 1 31 1 24c0-8 6-14 14-14 3-7 10-10 17-8 4-3 8-3 12 0 7 1 11 7 11 14 0 8-6 14-14 14H12Z" fill="currentColor" opacity=".96"/><path d="M35 5c7 0 12 5 12 12" fill="none" stroke="#9bd5ff" stroke-width="3" stroke-linecap="round"/><circle cx="25" cy="25" r="3" fill="#d9f1ff" opacity=".8"/></symbol>
+  <symbol id="tornado" viewBox="0 0 32 32"><path d="M5 7h22M8 12h17M11 17h11M13 22h7M16 22v5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 7c3 3 13 3 18 0M10 12c2 3 8 3 12 0M13 17c1 2 5 2 7 0" fill="none" stroke="currentColor" stroke-width="1.3" opacity=".65"/></symbol>
+  <symbol id="rainstorm" viewBox="0 0 32 32"><path d="M7 19a6 6 0 0 1 1-12 8 8 0 0 1 15 3 5 5 0 1 1 1 9Z" fill="currentColor" opacity=".18"/><path d="M7 19a6 6 0 0 1 1-12 8 8 0 0 1 15 3 5 5 0 1 1 1 9Z" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="m10 23-2 5m9-5-2 5m9-5-2 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="sun" viewBox="0 0 32 32"><circle cx="16" cy="16" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 2v4m0 20v4M2 16h4m20 0h4M6 6l3 3m14 14 3 3M26 6l-3 3M9 23l-3 3" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="radar" viewBox="0 0 80 80"><g fill="none" stroke="currentColor"><circle cx="40" cy="40" r="32" opacity=".35"/><circle cx="40" cy="40" r="21" opacity=".3"/><circle cx="40" cy="40" r="10" opacity=".3"/><path d="M8 40h64M40 8v64" opacity=".2"/><path d="M40 40 63 17" stroke-width="2"/></g><path d="M40 40V8a32 32 0 0 1 23 9Z" fill="currentColor" opacity=".15"/><circle cx="28" cy="53" r="3" fill="currentColor"/><circle cx="49" cy="31" r="3" fill="currentColor"/></symbol>
+  <symbol id="file" viewBox="0 0 28 32"><path d="M5 2h12l6 6v22H5Z" fill="#e2edfe" stroke="currentColor"/><path d="M17 2v7h6M9 15h10M9 20h10M9 25h7" fill="none" stroke="currentColor"/></symbol>
+  <symbol id="station-icon" viewBox="0 0 32 32"><path d="M16 5v18m-7 4h14M12 23l4-12 4 12M9 15h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="7" r="3" fill="currentColor"/></symbol>
+  <symbol id="rain-icon" viewBox="0 0 32 32"><path d="M10 19a6 6 0 0 1 1-12 8 8 0 0 1 15 3 5 5 0 1 1 1 9Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="m10 24-2 4m9-4-2 4m9-4-2 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="satellite-icon" viewBox="0 0 32 32"><path d="m13 13 6 6m-10 4 4-4m6-6 4-4M5 12l6-6 5 5-6 6Zm11 9 5-5 6 6-5 5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="16" cy="16" r="3" fill="currentColor"/></symbol>
+  <symbol id="data-icon" viewBox="0 0 32 32"><rect x="6" y="6" width="20" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 21v-4m6 4V11m6 10v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+</defs></svg>
+<div class="dashboard">
+  <aside class="rail left" aria-label="观测与遥感产品">
+    <section class="card observation-card"><h2><span class="module-ribbon"><i class="title-mark" aria-hidden="true"></i>区域观测及监测数据</span></h2><div class="card-body">
+      <div class="area-tabs" role="tablist" aria-label="观测区域"><button class="area-tab is-active" type="button" role="tab" aria-selected="true">全市</button><button class="area-tab" type="button" role="tab" aria-selected="false">鄂城区</button><button class="area-tab" type="button" role="tab" aria-selected="false">华容区</button><button class="area-tab" type="button" role="tab" aria-selected="false">梁子湖区</button></div>
+      <div class="observation-stats" id="metrics"></div><p class="source-note" id="areaObservationNote" hidden>全市区域监测资源汇总 · 演示数据</p>
+    </div></section>
+    <section class="card media-card"><h2><span class="module-ribbon"><i class="title-mark" aria-hidden="true"></i>雷达回波</span><small>2026-09-17　16:30</small></h2><div class="card-body">
+      <div class="radar-range" role="group" aria-label="雷达回波起止时间"><label>开始时间<input id="radarStart" type="datetime-local" value="2026-09-17T16:00" aria-label="雷达回波开始时间"></label><span>至</span><label>结束时间<input id="radarEnd" type="datetime-local" value="2026-09-17T16:30" aria-label="雷达回波结束时间"></label></div>
+      <div class="media-preview"><button class="play-media" type="button" id="radarPlay" aria-label="播放雷达回波">▶</button><span class="media-tag">CR · dBZ</span><div class="radar-photo"><svg viewBox="0 0 320 150" role="img" aria-label="雷达组合反射率示意图"><rect width="320" height="150" fill="#e8f1ee"/><g fill="#f8faf7" stroke="#aebbb5" stroke-width=".75"><path d="M-7 15 41 3l39 16 28-2 24 23-14 23-42 5-28-17-35 1z"/><path d="m131 1 55 8 26 25-12 29-32 4-28-17-21-20z"/><path d="m215 7 49-3 40 25 26 2v52l-39 2-21-20-39-12-26-23z"/><path d="m-8 77 31-17 43 11 27 27-13 45-88 12z"/><path d="m83 74 39-14 46 15 22 30-26 41-58 4-30-30z"/><path d="m179 71 46-27 42 26 12 43-33 31-45-4-25-31z"/><path d="m276 89 38-18 16 1v82h-59l-15-30z"/></g><g fill="none" stroke="#9db4c7" stroke-width="1" opacity=".9"><path d="M-3 42c45 4 64 12 97 37s52 39 97 41 75-17 132-53"/><path d="M17 150c30-21 46-39 77-52 40-16 82-1 110-19 29-18 46-39 84-53"/><path d="M72 0c12 29 21 47 46 64 26 17 52 17 76 36 21 17 36 31 77 41"/></g><g fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M-15 103C23 87 47 54 78 55c29 1 36 19 54 5 22-17 17-45 49-40 34 5 34 30 60 33 23 3 36-17 63-1 16 9 26 22 41 28" stroke="#36aee7" stroke-width="30" opacity=".55"/><path d="M-14 102C21 88 49 58 78 59c29 0 35 18 53 4 21-16 18-39 48-35 30 5 34 28 59 31 22 3 35-14 58 0 17 10 25 21 42 27" stroke="#22b86c" stroke-width="21" opacity=".88"/><path d="M-9 101C24 89 51 64 79 64c27 0 34 17 51 3 19-16 18-32 45-29 26 4 29 25 53 28 19 3 33-11 53 1 17 10 24 18 42 24" stroke="#a8d33e" stroke-width="13" opacity=".96"/><path d="M19 88c18-7 29-18 46-18 22 0 28 13 43 0 13-11 18-25 34-23 18 2 23 20 40 22 15 2 25-6 39 1" stroke="#f0d33b" stroke-width="8"/><path d="M55 78c12-4 21-9 31-6 12 4 16 12 27 5 10-6 15-20 27-17 10 3 13 13 24 14" stroke="#f27928" stroke-width="5"/><path d="m88 72 15-5c9 1 10 11 17 8 6-3 9-12 16-11" stroke="#d92542" stroke-width="3.5"/></g><g font-family="Microsoft YaHei, sans-serif" font-size="9" fill="#29465c" font-weight="600"><text x="19" y="48">武汉市</text><text x="142" y="91">鄂州市</text><text x="232" y="48">黄冈市</text><text x="245" y="126">黄石市</text><text x="102" y="133">咸宁市</text></g><g fill="#0c6cbf"><circle cx="158" cy="82" r="2.8"/><circle cx="158" cy="82" r="6" fill="none" stroke="#0c6cbf" stroke-width=".8" opacity=".6"/></g></svg><div class="radar-dbz-legend" aria-label="雷达回波 dBZ 色标"><b>dBZ</b><span class="radar-dbz-scale" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="radar-dbz-values"><span>250</span><span>100</span><span>50</span><span>25</span><span>10</span><span>0.1</span><span>0</span></span></div></div>
+        <svg viewBox="0 0 320 150" aria-label="雷达回波示意图"><rect width="320" height="150" fill="#eef3ee"/><g fill="none" stroke="#8aa9a6" stroke-width="1"><path d="m-5 34 52-14 38 21 42-11 41 20 35-10 41 23 39-7 42 21"/><path d="m-4 84 38-25 57 16 37-17 50 19 34-13 47 28 57-14"/><path d="m-5 126 43-19 47 17 51-21 47 20 43-22 39 17 59-20"/></g><g fill="none" stroke="#638dcd" stroke-width="1.4"><path d="M43 11 74 61l-20 68"/><path d="m143 5-19 52 39 84"/><path d="m241 0-26 62 18 79"/></g><g class="radar-sweep"><path d="M170 75 246 34A85 85 0 0 1 250 87Z" fill="#25aadc" opacity=".28"/></g><g opacity=".9"><path d="m42 80 35-24 37 5 12 17-20 19-34-2Z" fill="#159ada"/><path d="m77 65 34-7 17 16-19 19-30-5Z" fill="#71c941"/><path d="m98 68 26-5 17 13-11 18-29 0Z" fill="#f2dd37"/><path d="m119 72 19 6 7 14-15 12-18-11Z" fill="#ec7b23"/><path d="m155 50 29-8 26 15-5 22-30 5-22-15Z" fill="#32b868"/><path d="m177 53 21 7 6 19-22 5-14-16Z" fill="#f3c72d"/><path d="m196 63 16 8 3 16-21 6-10-14Z" fill="#d85333"/></g><g fill="#234a77" font-size="9"><text x="32" y="46">武汉市</text><text x="138" y="33">华容区</text><text x="194" y="110">鄂城区</text><text x="90" y="130">梁子湖区</text></g></svg>
+      </div><div class="media-time"><span id="radarStartLabel">16:00</span><input id="radarTimeline" type="range" min="0" max="5" value="5" aria-label="雷达回波时间轴"><span id="radarTimeLabel">16:30</span></div>
+    </div></section>
+    <section class="card media-card satellite-card"><h2><span class="module-ribbon"><i class="title-mark" aria-hidden="true"></i>卫星云图</span><label class="satellite-time">时间<input id="satelliteTime" type="datetime-local" value="2026-09-17T16:30" aria-label="卫星云图时间"></label></h2><div class="card-body">
+      <div class="media-preview"><span class="media-tag" id="satelliteTag">可见光</span>
+        <svg viewBox="0 0 320 150" aria-label="卫星云图示意图"><rect width="320" height="150" fill="#073558"/><g fill="none" stroke="#d1b52b" stroke-width="1"><path d="m-5 31 62-17 44 26 51-12 43 27 48-15 82 25"/><path d="m-4 95 47-30 51 20 46-24 49 19 45-28 88 32"/><path d="m44 4 13 41-9 88M138 4l-14 52 14 89m76-141-13 64 21 72"/></g><g fill="#e7f7ff" opacity=".83"><path d="M-18 33C18 10 40 38 65 32c21-5 25-36 50-25 14 6 8 29 32 34 23 5 37-18 59-7 17 8 10 31 42 32 24 1 39-21 84-9v57c-31 10-42-1-65 5-28 7-35 28-70 19-34-8-31-33-70-27-31 5-41 30-74 22-28-6-34-21-71-13Z"/><path d="M118 78c24-18 44 1 53 17 10 18 35 10 48 30l-10 33H101c-8-26-6-57 17-80Z" opacity=".58"/></g><g fill="#afdaea" opacity=".65"><ellipse cx="68" cy="63" rx="45" ry="19"/><ellipse cx="226" cy="41" rx="51" ry="20"/><ellipse cx="269" cy="109" rx="39" ry="18"/></g><g fill="#fff" font-size="10"><text x="142" y="78">鄂州市</text><text x="28" y="108">武汉市</text><text x="238" y="95">黄石市</text></g></svg>
+      </div><div class="media-tabs"><button class="is-active" type="button" data-layer="visible" aria-pressed="true">可见光云图</button><button type="button" data-layer="infrared" aria-pressed="false">红外增强云图</button><button type="button" data-layer="radar" aria-pressed="false">水汽云图</button></div>
+    </div></section>
+  </aside>
+  <main class="main">
+    <header class="main-header"><button class="back" id="back">← 返回主界面</button><div class="service-title"><span class="service-title-mark" aria-hidden="true"><svg><use href="#cloud-brand"/></svg></span><h1>气象灾害监测预警服务</h1></div></header>
+    <section class="map" id="map" aria-label="鄂州气象监测示意地图">
+      <div class="map-toolbar"><div class="map-title"><b id="layerTitle">区域站点降水分布</b><span id="mapTime">2026-09-17 16:30 · 39 个观测站</span></div><div class="map-tools"><button id="zoomIn" aria-label="放大地图">＋</button><button id="zoomOut" aria-label="缩小地图">−</button><button id="resetMap" aria-label="重置地图">↺</button></div></div>
+      <div class="map-layer-buttons" aria-label="地图图层控制">
+        <button id="stationLayerToggle" type="button" aria-pressed="true" aria-label="显示或隐藏观测站"><svg aria-hidden="true"><use href="#station-icon"/></svg><span>观测站</span></button>
+        <button id="warningLayerToggle" type="button" aria-pressed="false" aria-label="显示或隐藏预警信号"><svg aria-hidden="true"><use href="#sun"/></svg><span>预警信号</span></button>
+      </div>
+      <div class="real-map" id="realMap" aria-label="鄂州市在线地图底图"></div>
+      <svg class="map-svg" viewBox="0 0 800 690" role="img" aria-label="鄂州市华容区、鄂城区和梁子湖区的示意地图">
+        <defs><clipPath id="regionClip"><path d="m410 166 36-15 21 18-7 49 28 21 59 9 34 21 15 44-22 27-40-6-33 21-30-2-19 33 8 45-21 39 13 24-29 18-31-16-24 6-31-20 3-32-25-25 16-39 20-20 4-39 25-21-1-38-17-27Z"/></clipPath></defs>
+        <rect width="800" height="690" fill="#f8fafc"/>
+        <g id="mapGeometry">
+          <g class="boundary"><path d="M-10 77 103 65 153 94 163 158 203 196 167 234 97 208 57 261-10 242Z"/><path d="m153 94 75-36 70 32 5 53 61 16 39 58-58 58-67-36-75-43-40-38Z"/><path d="m298 90 72-58 114 28 42 60-59 49-21-18-43 66-39-58-61-16Z"/><path d="m484 60 98 12 52 67-27 59-60 50-59-9-28-21 7-49 59-49Z"/><path d="m634 139 97-44 79 30v180l-70 15-79-49-54-73Z"/><path d="m57 261 40-53 70 26 36-38 75 43 21 76-38 51-82-25-33 38-64-40-92 12V242Z"/><path d="m278 239 67 36 46-37 1 38-25 21-4 39-20 20-29 40-53-30 38-51Z"/><path d="m581 269 26-71 54 73 79 49-38 65-72 2-56-47 22-27Z"/><path d="m740 320 70-15v218l-82-15-55-65 29-58Z"/><path d="m82 339 64 40 33-38 82 25 53 30-24 66-61 30-53-18-59 31-46-42-81 2V351Z"/><path d="m314 396 25 25-3 32 31 20 24-6 31 16 29-18-13-24 21-39 56-15 44 37-19 77-53 51-63 35-37-35-43 18-54-47-61-31 61-30Z"/><path d="m574 340 56 47 72-2-29 58 55 65-54 59-72-30-62-36 19-77-44-37 19-53Z"/><path d="m71 463 46 42 59-31 53 18 61 31-27 70-89 21-61-43-67 21-56-32v-95Z"/><path d="m290 523 54 47 43-18 37 35-39 65-84 7-38-66Z"/><path d="m487 552 53-51 62 36 72 30 11 96-102 40-96-34-63-82Z"/></g>
+          <path d="M-20 180C105 142 163 208 226 181S319 107 357 141 384 210 440 203 463 269 521 276 582 248 627 290 719 265 820 326" fill="none" stroke="#c1e0f1" stroke-width="13"/>
+          <path d="M-20 180C105 142 163 208 226 181S319 107 357 141 384 210 440 203 463 269 521 276 582 248 627 290 719 265 820 326" fill="none" stroke="#ecf8ff" stroke-width="5"/>
+          <path class="district" d="m410 166 36-15 21 18-7 49 28 21-5 34-42 11-24-17-25 9-1-38-17-27Z"/>
+          <path class="district" d="m488 239 59 9 34 21 15 44-22 27-40-6-33 21-30-2-19 33-57-13-32-17 4-59 25-21 25-9 24 17 42-11Z"/>
+          <path d="m363 356 32 17 57 13 8 45-21 39 13 24-29 18-31-16-24 6-31-20 3-32-25-25 16-39Z" fill="#244fab" stroke="#a6c8ef" stroke-width="12"/>
+          <path class="highlight" d="m363 356 32 17 57 13 8 45-21 39 13 24-29 18-31-16-24 6-31-20 3-32-25-25 16-39Z"/>
+          <g id="weatherOverlay" clip-path="url(#regionClip)" pointer-events="none"></g>
+          <g class="map-label"><text x="116" y="146">东西湖区</text><text x="259" y="144">江岸区</text><text x="353" y="89">新洲区</text><text x="558" y="159">团风县</text><text x="696" y="209">浠水县</text><text x="551" y="223">黄州区</text><text x="216" y="279">洪山区</text><text x="112" y="303">蔡甸区</text><text x="169" y="422">江夏区</text><text x="542" y="441">大冶市</text><text x="650" y="368">黄石市</text><text x="172" y="556">嘉鱼县</text><text x="342" y="610">咸安区</text><text x="632" y="610">阳新县</text></g>
+          <g id="stations"></g><text class="district-label" x="433" y="226">华容区</text><text class="district-label" x="526" y="304">鄂城区</text><text x="391" y="447" fill="white" font-size="17" font-weight="600" text-anchor="middle">梁子湖区</text>
+        </g>
+      </svg>
+      <canvas class="heatmap-canvas" id="heatmapCanvas" aria-label="连续热力图"></canvas>
+      <div class="map-popover" id="mapPopover" aria-live="polite"></div>
+      <div class="map-legend"><b id="legendTitle">降水量 / mm</b><div class="legend-scale"></div><div class="legend-ticks"><span>0</span><span>0.1</span><span>10</span><span>25</span><span>50</span><span>100</span></div></div>
+      <div class="map-stamp"><b>鄂州市 / EZHOU</b>区域边界及观测数值为原型示意</div>
+    </section>
+  </main>
+  <aside class="rail right" aria-label="天气预报与预警评估">
+    <section class="card"><h2><span class="module-ribbon"><i class="title-mark" aria-hidden="true"></i>天气预报（一周）</span><small>09.17 — 09.23</small></h2><div class="card-body"><ol class="forecast" id="forecast"></ol></div></section>
+    <section class="card"><h2><span class="module-ribbon"><i class="title-mark" aria-hidden="true"></i>预警信号及发布</span><small id="warningCount">1 条</small></h2><div class="card-body">
+      <div class="filters"><select id="warningMonth" aria-label="预警时间"><option value="all">全部时间</option><option value="07">2026年7月</option><option value="09">2026年9月</option></select><select id="warningType" aria-label="预警类型"><option value="all">全部类型</option><option>高温</option><option>暴雨</option><option>雷电</option></select><select id="warningLevel" aria-label="预警等级"><option value="all">全部等级</option><option>橙色</option><option>黄色</option><option>红色</option><option>蓝色</option></select></div>
+      <div id="warnings"><button class="warning" id="warningCard" aria-pressed="false"><div class="warning-top"><span>鄂州市气象台</span><time>07月10日 06:54</time></div><div class="warning-title"><span class="warning-icon"><svg aria-hidden="true"><use href="#sun"/></svg></span><div><b>高温橙色预警</b><small>历史预警 · 2026年07月10日</small></div></div><div class="warning-stats"><div><span>应急责任人</span><b>1,862<em>人</em></b></div><div><span>靶向发布</span><b>5<em>乡镇</em></b></div><div><span>短信送达</span><b>100<em>%</em></b></div></div><p class="warning-hint">点击查看影响范围与发布对象 →</p></button></div>
+      <p class="hint">（可根据时间、类型、等级筛选）<br>发布统计为演示数据。</p>
+    </div></section>
+    <section class="card"><h2><span class="module-ribbon"><i class="title-mark" aria-hidden="true"></i>过程总结评估</span></h2><div class="card-body">
+      <div class="filters report-filters"><div class="report-range" role="group" aria-label="评估时间段"><input id="reportStart" type="date" value="2026-06-01" aria-label="评估开始日期"><span>至</span><input id="reportEnd" type="date" value="2026-07-31" aria-label="评估结束日期"></div><select id="reportType" aria-label="评估类型"><option value="all">全部类型</option><option>龙卷</option><option>暴雨强对流</option></select></div>
+      <div id="reports"></div><p class="hint">（可根据时间、类型）</p>
+    </div></section>
+  </aside>
+</div>
+<dialog id="reportDialog" aria-labelledby="reportTitle"><div class="dialog-head"><h2 id="reportTitle"></h2><button id="closeReport" aria-label="关闭评估详情">×</button></div><div class="dialog-body" id="reportBody"></div></dialog>
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const metrics = [
+    {name:'气温',value:'24.6',unit:'℃',range:[22,29]}, {name:'降水',value:'12.8',unit:'mm',range:[0,25]},
+    {name:'湿度',value:'86',unit:'%',range:[65,99]}, {name:'风速',value:'2.8',unit:'m/s',range:[1,7]},
+    {name:'风向',value:'偏北',unit:'',range:[0,0]}, {name:'气压',value:'1008',unit:'hPa',range:[1002,1013]}
+  ];
+  const observationStats = [
+    {label:'气象观测站',value:'156',icon:'station-icon',metric:0}, {label:'雨量站',value:'38',icon:'rain-icon',metric:1},
+    {label:'雷达站',value:'12',icon:'radar',metric:3}, {label:'卫星遥感',value:'9',icon:'satellite-icon',metric:4},
+    {label:'机械自动观测',value:'286',icon:'data-icon',metric:2}, {label:'数据在线率',value:'100%',icon:'data-icon',metric:5}
+  ];
+  const areaStats = {
+    '全市':['156','38','12','9','286','100%'], '鄂城区':['48','12','4','3','92','100%'],
+    '华容区':['37','9','3','2','71','99%'], '梁子湖区':['31','8','2','2','56','100%']
+  };
+  let activeArea = '全市';
+  let activeLayer = '降水', zoom = 1, timeOffset = 0, warningActive = false;
+  let radarStartDate = new Date($('radarStart').value);
+  let radarCurrentDate = new Date($('radarEnd').value);
+  const initialPopover = $('mapPopover').innerHTML;
+  const reportData = [{title:'7月6日龙卷过程总结评估',date:'2026-07-06',start:'2026-07-06',end:'2026-07-06',type:'龙卷',icon:'tornado'}, {title:'6月18-19日暴雨强对流过程总结评估',date:'2026-06-18 — 06-19',start:'2026-06-18',end:'2026-06-19',type:'暴雨强对流',icon:'rainstorm'}];
+  const positions = Array.from({length:39}, (_,i) => {
+    if(i<9) return [408+(i%3)*16,184+Math.floor(i/3)*29];
+    if(i<25) return [407+((i-9)%4)*44,290+Math.floor((i-9)/4)*17];
+    return [354+((i-25)%4)*25,386+Math.floor((i-25)/4)*27];
+  });
+  let onlineMap=null, onlineStations=null, onlineWarning=null;
+  function initializeOnlineMap() {
+    if (!window.L || onlineMap) return;
+    onlineMap=L.map('realMap',{zoomControl:false,attributionControl:true,preferCanvas:true}).setView([30.36,114.73],11);
+    const onlineTiles=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles &copy; Esri'});
+    onlineTiles.once('load',()=>document.body.classList.add('leaflet-ready'));
+    onlineTiles.addTo(onlineMap);
+    onlineStations=L.layerGroup().addTo(onlineMap);
+    Array.from({length:39},(_,i)=>{
+      const lat=30.23+((i*17)%100)/300, lng=114.56+((i*29)%100)/240;
+      L.circleMarker([lat,lng],{radius:4,color:'#fff',weight:1.5,fillColor:'#168e70',fillOpacity:.96}).bindPopup('<b>自动站 - 站点信息</b><br>站名：长港<br>标准名称：鄂州长港气象观测站<br>站号：Q8911<br>省：湖北省　市：鄂州市　县：鄂城区<br>经度：114.7208　纬度：30.3477<br>海拔：18.2 m　行政编码：420704<br>站点类型：区域站<br><strong>24H降水：0 mm</strong>').addTo(onlineStations);
+    });
+    onlineWarning=L.polygon([[30.46,114.61],[30.49,114.78],[30.39,114.91],[30.25,114.84],[30.23,114.68],[30.32,114.58]],{color:'#e28e20',weight:3,fillColor:'#f0a32a',fillOpacity:0}).addTo(onlineMap);
+  }
+  window.addEventListener('leaflet-ready',initializeOnlineMap);
+  initializeOnlineMap();
+  const heatStops = [[0,[59,194,215]],[.28,[36,181,119]],[.52,[205,214,48]],[.74,[244,154,46]],[1,[215,67,57]]];
+  function heatColor(value) {
+    const index=Math.min(heatStops.length-2,heatStops.findIndex(([stop],i)=>i&&value<=stop)-1);
+    const [fromStop,from]=heatStops[index<0?0:index], [toStop,to]=heatStops[index<0?1:index+1];
+    const t=Math.max(0,Math.min(1,(value-fromStop)/(toStop-fromStop)));
+    return from.map((channel,i)=>Math.round(channel+(to[i]-channel)*t));
+  }
+  function drawContinuousHeatmap() {
+    const canvas=$('heatmapCanvas'), rect=$('map').getBoundingClientRect();
+    const width=Math.max(180,Math.round(rect.width*.52)), height=Math.max(155,Math.round(rect.height*.52));
+    if (!rect.width || !rect.height) return;
+    canvas.width=width; canvas.height=height;
+    const ctx=canvas.getContext('2d'), pixels=ctx.createImageData(width,height), sigma=Math.max(18,width*.055);
+    const values=positions.map((_,i)=>Math.min(1,Math.max(.12,Number(metricValue(1,i))/25)));
+    for (let y=0;y<height;y+=1) for (let x=0;x<width;x+=1) {
+      let field=0;
+      positions.forEach(([pointX,pointY],i)=>{
+        const dx=x-pointX/800*width, dy=y-pointY/690*height;
+        field += values[i]*Math.exp(-(dx*dx+dy*dy)/(2*sigma*sigma));
+      });
+      const strength=Math.min(1,field*.34);
+      if (strength < .055) continue;
+      const [red,green,blue]=heatColor(strength), alpha=Math.round(Math.min(.6,.14+strength*.46)*255);
+      const offset=(y*width+x)*4;
+      pixels.data[offset]=red; pixels.data[offset+1]=green; pixels.data[offset+2]=blue; pixels.data[offset+3]=alpha;
+    }
+    ctx.putImageData(pixels,0,0);
+  }
+  function metricValue(index, station=0) {
+    const metric=metrics[index];
+    if(index===4) return ['偏北','东北','西北'][Math.abs(station+timeOffset)%3];
+    const ratio=((station*17+Math.abs(timeOffset)*13+23)%100)/100;
+    return (metric.range[0]+ratio*(metric.range[1]-metric.range[0])).toFixed(index===2||index===5?0:1);
+  }
+  function renderMetrics() {
+    $('metrics').innerHTML=observationStats.map((item,i)=>`<button class="ob-stat ${i===1&&activeLayer==='降水'?'active':''}" data-metric="${item.metric}" aria-pressed="${i===1&&activeLayer==='降水'}"><svg aria-hidden="true"><use href="#${item.icon}"/></svg><b>${areaStats[activeArea][i]}</b><span>${item.label}</span></button>`).join('');
+  }
+  function timeGroup() { return activeLayer==='radar'?'radar':['visible','infrared'].includes(activeLayer)?'satellite':'observation'; }
+  function renderLayer() {
+    const m=metrics.findIndex(m=>m.name===activeLayer), isMetric=m>=0;
+    const names={radar:'CR 组合反射率',visible:'可见光云图',infrared:'红外增强云图'};
+    $('layerTitle').textContent=isMetric?`区域站点${activeLayer}分布`:names[activeLayer];
+    const timeInput=document.querySelector(`[data-time-group="${timeGroup()}"] input`);
+    const time=timeInput?.value || (activeLayer==='radar' ? formatDateTime(radarCurrentDate) : '2026-09-17T16:30');
+    timeOffset=time?Math.round((new Date(time)-new Date('2026-09-17T16:30'))/60000):0;
+    $('mapTime').textContent=`${time.replace('T',' ')} · ${isMetric?'39 个观测站':'演示图层'}`;
+    $('legendTitle').textContent=isMetric?`${activeLayer}${metrics[m].unit?' / '+metrics[m].unit:''}`:activeLayer==='radar'?'反射率 / dBZ':activeLayer==='visible'?'可见光反射率 / %':'亮温 / ℃';
+    const ticks=isMetric? activeLayer==='降水'?['0','0.1','10','25','50','100']:activeLayer==='风向'?['北','东北','东','南','西','西北']:Array.from({length:6},(_,i)=>(metrics[m].range[0]+(metrics[m].range[1]-metrics[m].range[0])*i/5).toFixed(0)):activeLayer==='radar'?['0','10','20','30','40','50']:activeLayer==='visible'?['0','20','40','60','80','100']:['-80','-60','-40','-20','0','20'];
+    document.querySelector('.legend-ticks').innerHTML=ticks.map(t=>`<span>${t}</span>`).join('');
+    $('stations').innerHTML=positions.map(([x,y],i)=>`<g class="station" tabindex="0" role="button" aria-label="观测站${String(i+1).padStart(2,'0')}" data-station="${i}" transform="translate(${x},${y})"><circle r="3.8"/><text x="0" y="-7">${isMetric?metricValue(m,i):''}</text></g>`).join('');
+    const colors=activeLayer==='radar'?['#56b6d8','#69c997','#cede59','#eac15a']:activeLayer==='infrared'?['#64a8d6','#54bec3','#f2bd57','#d95a6b']:['#aebfce','#c1d0df','#d8e3ee','#ffffff'];
+    $('weatherOverlay').innerHTML=isMetric?'':Array.from({length:12},(_,i)=>`<ellipse cx="${330+(i*37+Math.abs(timeOffset)*9)%250}" cy="${195+(i*43)%280}" rx="${35+i%3*15}" ry="${24+i%4*9}" fill="${colors[i%4]}" opacity=".48"/>`).join('');
+    drawContinuousHeatmap();
+    document.querySelectorAll('[data-layer]').forEach(b=>{const selected=b.dataset.layer===activeLayer;b.classList.toggle('active',selected);b.setAttribute('aria-pressed',String(selected));});
+    renderMetrics();
+  }
+  function resetWarning() { warningActive=false; $('map').classList.remove('alert-active'); $('warningCard').setAttribute('aria-pressed','false'); $('mapPopover').innerHTML=initialPopover; onlineWarning?.setStyle({fillOpacity:0,opacity:0}); }
+  $('metrics').addEventListener('click',e=>{const b=e.target.closest('[data-metric]');if(b){activeLayer=metrics[+b.dataset.metric].name;renderLayer();}});
+  document.querySelectorAll('[data-layer]').forEach(b=>b.addEventListener('click',()=>{activeLayer=b.dataset.layer;renderLayer();}));
+  document.querySelectorAll('.area-tab').forEach(tab=>tab.addEventListener('click',()=>{
+    activeArea=tab.textContent.trim();
+    document.querySelectorAll('.area-tab').forEach(item=>{const active=item===tab;item.classList.toggle('is-active',active);item.setAttribute('aria-selected',String(active));});
+    $('areaObservationNote').textContent=`${activeArea}区域监测资源汇总 · 演示数据`;
+    renderMetrics();
+  }));
+  document.querySelectorAll('.time-control').forEach(group=>{
+    const input=group.querySelector('input');
+    const update=()=>{if(!input.value||!input.validity.valid)return;timeOffset=Math.round((new Date(input.value)-new Date('2026-09-17T16:30'))/60000);if(group.dataset.timeGroup==='radar')activeLayer='radar';else if(group.dataset.timeGroup==='satellite'&&!['visible','infrared'].includes(activeLayer))activeLayer='visible';else if(group.dataset.timeGroup==='observation'&&!metrics.some(m=>m.name===activeLayer))activeLayer='降水';renderLayer();};
+    input.addEventListener('change',update);
+    group.querySelectorAll('[data-step]').forEach(b=>b.addEventListener('click',()=>{const d=new Date(input.value||'2026-09-17T16:30');d.setMinutes(d.getMinutes()+Number(b.dataset.step)*(group.dataset.timeGroup==='radar'?6:group.dataset.timeGroup==='satellite'?15:60));input.value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}T${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;update();}));
+  });
+  const formatDateTime = date => `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}T${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}`;
+  const formatClock = date => `${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}`;
+  function changeRadarFrame(value) {
+    radarCurrentDate = new Date(radarStartDate.getTime() + Number(value) * 6 * 60 * 1000);
+    $('radarTimeline').value=value;
+    $('radarTimeLabel').textContent=formatClock(radarCurrentDate);
+    activeLayer='radar';
+    renderLayer();
+  }
+  $('radarTimeline').addEventListener('input',event=>changeRadarFrame(event.target.value));
+  $('radarPlay').addEventListener('click',()=>{
+    const timeline=$('radarTimeline');
+    const next=Number(timeline.value)>=Number(timeline.max) ? Number(timeline.min) : Number(timeline.value)+1;
+    changeRadarFrame(next);
+  });
+  function applyRadarDateRange() {
+    const start=new Date($('radarStart').value), end=new Date($('radarEnd').value);
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) {
+      $('radarEnd').setCustomValidity('结束时间需晚于开始时间');
+      $('radarEnd').reportValidity();
+      return;
+    }
+    $('radarEnd').setCustomValidity('');
+    radarStartDate=start;
+    const frames=Math.max(1,Math.round((end-start)/(6*60*1000)));
+    const timeline=$('radarTimeline');
+    timeline.min=0; timeline.max=frames;
+    $('radarStartLabel').textContent=formatClock(start);
+    changeRadarFrame(frames);
+  }
+  $('radarStart').addEventListener('change',applyRadarDateRange);
+  $('radarEnd').addEventListener('change',applyRadarDateRange);
+  $('satelliteTime').addEventListener('change',()=>{
+    if (!$('satelliteTime').value || !$('satelliteTime').validity.valid) return;
+    if (!['visible','infrared','radar'].includes(activeLayer)) activeLayer='visible';
+    renderLayer();
+  });
+  document.querySelectorAll('.media-tabs [data-layer]').forEach(button=>button.addEventListener('click',()=>{
+    activeLayer=button.dataset.layer;
+    document.querySelectorAll('.media-tabs [data-layer]').forEach(tab=>{const active=tab===button;tab.classList.toggle('is-active',active);tab.setAttribute('aria-pressed',String(active));});
+    $('satelliteTag').textContent=button.textContent.replace('云图','');
+    renderLayer();
+  }));
+  const forecastData=['小雨到中雨，偏北风2到3级，气温21至26度','阴天有小雨，偏北风2到3级，气温20至25度','多云转阴，偏北风1到2级，气温19至26度','晴到多云，偏北风1到2级，气温20至28度','多云有阵雨，偏东风2到3级，气温21至27度','阴天有小雨，偏东风2到3级，气温20至25度','多云转晴，偏北风1到2级，气温19至26度'];
+  $('forecast').innerHTML=forecastData.map((text,i)=>`<li><time>9月${17+i}日</time><svg aria-hidden="true"><use href="#cloud"/></svg><span>${text}</span></li>`).join('');
+  Object.assign($('warningCard').dataset,{month:'07',date:'2026-07-10',type:'高温',level:'橙色',area:'梁子湖区 · 5个乡镇',people:'约18.2万人',receivers:'1,862名应急责任人'});
+  const warningExamples=[
+    {month:'09',date:'09月16日 14:20',dateValue:'2026-09-16',type:'雷电',level:'黄色',title:'雷电黄色预警',area:'华容区、鄂城区 · 3个乡镇',people:'约9.6万人',receivers:'960名应急责任人',count:'960',towns:'3'},
+    {month:'09',date:'09月18日 09:15',dateValue:'2026-09-18',type:'暴雨',level:'蓝色',title:'暴雨蓝色预警',area:'鄂城区 · 4个乡镇',people:'约12.4万人',receivers:'1,245名应急责任人',count:'1,245',towns:'4'},
+    {month:'09',date:'09月20日 16:40',dateValue:'2026-09-20',type:'大风',level:'黄色',title:'大风黄色预警',area:'全市 · 6个乡镇',people:'约21.6万人',receivers:'2,160名应急责任人',count:'2,160',towns:'6'}
+  ];
+  $('warnings').insertAdjacentHTML('beforeend',warningExamples.map(w=>`<button class="warning warning-sample" type="button" data-month="${w.month}" data-date="${w.dateValue}" data-type="${w.type}" data-level="${w.level}" data-area="${w.area}" data-people="${w.people}" data-receivers="${w.receivers}" aria-pressed="false"><div class="warning-top"><span>鄂州市气象台</span><time>${w.date}</time></div><div class="warning-title"><span class="warning-icon"><svg aria-hidden="true"><use href="#sun"/></svg></span><div><b>${w.title}</b><small>预警示例 · 2026年${w.month}月</small></div></div><div class="warning-stats"><div><span>应急责任人</span><b>${w.count}<em>人</em></b></div><div><span>靶向发布</span><b>${w.towns}<em>乡镇</em></b></div><div><span>短信送达</span><b>100<em>%</em></b></div></div><p class="warning-hint">点击查看影响范围与发布对象 →</p></button>`).join(''));
+  $('warningMonth').insertAdjacentHTML('beforebegin','<div class="warning-range" role="group" aria-label="预警时间段"><input id="warningStart" type="date" value="2026-09-14" aria-label="预警开始日期"><span>至</span><input id="warningEnd" type="date" value="2026-09-20" aria-label="预警结束日期"></div>');
+  function filterWarnings(){const start=$('warningStart').value,end=$('warningEnd').value,type=$('warningType').value,level=$('warningLevel').value;let count=0;$('warnings').querySelectorAll('.warning').forEach(card=>{const show=(!start||card.dataset.date>=start)&&(!end||card.dataset.date<=end)&&(type==='all'||card.dataset.type===type)&&(level==='all'||card.dataset.level===level);card.hidden=!show;if(show)count++;});$('warningCount').textContent=`${count} 条`;$('warnings').querySelector('.empty')?.remove();if(!count){$('warnings').insertAdjacentHTML('beforeend','<div class="empty">暂无符合条件的预警信号<br>请调整筛选条件</div>');resetWarning();}}
+  ['warningMonth','warningType','warningLevel'].forEach(id=>$(id).addEventListener('change',filterWarnings));
+  ['warningStart','warningEnd'].forEach(id=>$(id).addEventListener('change',filterWarnings));
+  $('warningCard').addEventListener('click',()=>{warningActive=!warningActive;if(!warningActive){resetWarning();return;}$('map').classList.add('alert-active');$('warningCard').setAttribute('aria-pressed','true');$('mapPopover').innerHTML='<h3><small>影响范围</small>高温橙色预警</h3><dl><dt>覆盖区域</dt><dd>梁子湖区 · 5个乡镇</dd><dt>影响人口</dt><dd>约18.2万人（演示）</dd><dt>发布对象</dt><dd>1,862名应急责任人</dd><dt>发布渠道</dt><dd>短信 / 靶向发布</dd></dl>';});
+  document.querySelectorAll('.warning-sample').forEach(card=>card.addEventListener('click',()=>{const wasActive=card.getAttribute('aria-pressed')==='true';resetWarning();document.querySelectorAll('#warnings .warning').forEach(item=>item.setAttribute('aria-pressed','false'));if(wasActive)return;warningActive=true;$('map').classList.add('alert-active');card.setAttribute('aria-pressed','true');$('mapPopover').innerHTML=`<h3><small>影响范围</small>${card.dataset.type}${card.dataset.level}预警</h3><dl><dt>覆盖区域</dt><dd>${card.dataset.area}</dd><dt>影响人口</dt><dd>${card.dataset.people}（演示）</dd><dt>发布对象</dt><dd>${card.dataset.receivers}</dd><dt>发布渠道</dt><dd>短信 / 靶向发布</dd></dl>`;}));
+  function showStation(target){const s=target.closest('[data-station]');if(!s)return;resetWarning();$('mapPopover').innerHTML='<h3><small>自动站</small>站点信息</h3><dl><dt>站名</dt><dd>长港</dd><dt>标准名称</dt><dd>鄂州长港气象观测站</dd><dt>站号</dt><dd>Q8911</dd><dt>省 / 市 / 县</dt><dd>湖北省 · 鄂州市 · 鄂城区</dd><dt>经度 / 纬度</dt><dd>114.7208 · 30.3477</dd><dt>海拔</dt><dd>18.2 m</dd><dt>行政编码</dt><dd>420704</dd><dt>站点类型</dt><dd>区域站</dd><dt>24H降水</dt><dd><strong>0 mm</strong></dd></dl>';}
+  $('stations').addEventListener('click',e=>showStation(e.target));$('stations').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showStation(e.target);}});
+  let stationsVisible=true;
+  $('stationLayerToggle').addEventListener('click',()=>{
+    stationsVisible=!stationsVisible;
+    $('map').classList.toggle('stations-hidden',!stationsVisible);
+    $('stationLayerToggle').setAttribute('aria-pressed',String(stationsVisible));
+  });
+  $('stationLayerToggle').addEventListener('click',()=>requestAnimationFrame(()=>{if(!onlineMap)return;stationsVisible?onlineStations.addTo(onlineMap):onlineMap.removeLayer(onlineStations);}));
+  $('warningLayerToggle').addEventListener('click',()=>$('warningCard').click());
+  const syncOnlineWarning=()=>requestAnimationFrame(()=>{if(onlineWarning)onlineWarning.setStyle({fillOpacity:warningActive?.26:0,opacity:warningActive?1:0});});
+  $('warningCard').addEventListener('click',()=>requestAnimationFrame(()=>$('warningLayerToggle').setAttribute('aria-pressed',String(warningActive))));
+  $('warningCard').addEventListener('click',syncOnlineWarning);
+  document.querySelectorAll('.warning-sample').forEach(card=>card.addEventListener('click',()=>requestAnimationFrame(()=>$('warningLayerToggle').setAttribute('aria-pressed',String(warningActive)))));
+  document.querySelectorAll('.warning-sample').forEach(card=>card.addEventListener('click',syncOnlineWarning));
+  $('zoomIn').addEventListener('click',()=>onlineMap?.zoomIn());$('zoomOut').addEventListener('click',()=>onlineMap?.zoomOut());$('resetMap').addEventListener('click',()=>onlineMap?.setView([30.36,114.73],11));
+  ['warningMonth','warningType','warningLevel'].forEach(id=>$(id).addEventListener('change',()=>$('warningLayerToggle').setAttribute('aria-pressed',String(warningActive))));
+  const setZoom=()=>{$('mapGeometry').setAttribute('transform',`translate(${400*(1-zoom)},${345*(1-zoom)}) scale(${zoom})`);$('zoomIn').disabled=zoom>=1.8;$('zoomOut').disabled=zoom<=.8;};
+  $('zoomIn').addEventListener('click',()=>{zoom=Math.min(1.8,+(zoom+.2).toFixed(1));setZoom();});$('zoomOut').addEventListener('click',()=>{zoom=Math.max(.8,+(zoom-.2).toFixed(1));setZoom();});$('resetMap').addEventListener('click',()=>{zoom=1;setZoom();activeLayer='降水';resetWarning();renderLayer();});
+  function renderReports(){const start=$('reportStart').value,end=$('reportEnd').value,type=$('reportType').value;const rows=reportData.filter(r=>(!start||r.start>=start)&&(!end||r.end<=end)&&(type==='all'||type===r.type));$('reports').innerHTML=rows.length?rows.map(r=>`<button class="report" data-report="${reportData.indexOf(r)}"><svg class="report-icon" aria-hidden="true"><use href="#${r.icon}"/></svg><span>${r.title}<small>${r.date} · ${r.type}</small></span><i>›</i></button>`).join(''):'<div class="empty">暂无符合条件的过程评估</div>';}
+  ['reportStart','reportEnd','reportType'].forEach(id=>$(id).addEventListener('change',renderReports));
+  $('reports').addEventListener('click',e=>{const b=e.target.closest('[data-report]');if(!b)return;const r=reportData[+b.dataset.report];$('reportTitle').textContent=r.title;$('reportBody').innerHTML=`<p class="source-note">过程日期：${r.date} · ${r.type} · 原型示例</p><h3>天气过程回顾</h3><p>此处展示${r.type}过程的发生时段、影响区域以及观测站实况。正式内容待接入对应过程报告。</p><h3>预警发布与服务评估</h3><p>汇总预警发布时间、提前量、覆盖乡镇、责任人接收情况及靶向发布情况。</p><h3>影响与改进建议</h3><p>结合灾情核实信息评估服务效果，形成针对性的监测和预警改进建议。</p>`;$('reportDialog').showModal();});
+  $('closeReport').addEventListener('click',()=>$('reportDialog').close());
+  $('back').addEventListener('click',()=>{if(parent!==window)parent.postMessage({type:'weather-dashboard-close'},'*');else location.href='../index.html';});
+  window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('reportDialog').open){e.stopPropagation();if(warningActive)resetWarning();else if(parent!==window)parent.postMessage({type:'weather-dashboard-close'},'*');}});
+  window.addEventListener('resize',drawContinuousHeatmap);
+  renderLayer();renderReports();filterWarnings();
+})();
+</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer onload="window.dispatchEvent(new Event('leaflet-ready'))"></script>
+</body>
+</html>
